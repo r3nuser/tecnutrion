@@ -8,7 +8,6 @@ import javax.swing.JOptionPane;
 import sql.Sql;
 import bean.Cliente;
 import bean.Telefone;
-import gui.abas.Painel_cliente;
 
 public class ClienteDAO extends Sql {
 
@@ -47,13 +46,7 @@ public class ClienteDAO extends Sql {
 
             stmt.executeUpdate();
 
-            stmt = con.prepareStatement("insert into telefone values ((select cliente_cod from clientes where cliente_nome=? and dt_nasc=?),?,?,?)");
-            stmt.setString(1, c.getNome());
-            stmt.setDate(2, c.getData_nascimento());
-            stmt.setString(3, t.getDdd());
-            stmt.setString(4, t.getAntesh());
-            stmt.setString(5, t.getDepoish());
-            stmt.executeUpdate();
+            
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
