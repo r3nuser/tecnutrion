@@ -102,33 +102,33 @@ public class Cadastrar_cliente extends JFrame {
         this.complemento_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.cadastrar_cliente.setFont(new java.awt.Font("Dialog", 1, 16));
 
-        getContentPane().add(this.cadastro);
-        getContentPane().add(this.option);
+        add(this.cadastro);
+        add(this.option);
 
-        getContentPane().add(this.nome);
-        getContentPane().add(this.ddd);
-        getContentPane().add(this.antesh);
-        getContentPane().add(this.depoish);
-        getContentPane().add(this.data_nascimento);
-        getContentPane().add(this.tipolog);
-        getContentPane().add(this.log);
-        getContentPane().add(this.bairro);
-        getContentPane().add(this.municipio);
-        getContentPane().add(this.cep);
-        getContentPane().add(this.estado);
-        getContentPane().add(this.complemento);
+        add(this.nome);
+        add(this.ddd);
+        add(this.antesh);
+        add(this.depoish);
+        add(this.data_nascimento);
+        add(this.tipolog);
+        add(this.log);
+        add(this.bairro);
+        add(this.municipio);
+        add(this.cep);
+        add(this.estado);
+        add(this.complemento);
 
-        getContentPane().add(this.nome_l);
-        getContentPane().add(this.telefone_l);
-        getContentPane().add(this.data_nascimento_l);
-        getContentPane().add(this.log_l);
-        getContentPane().add(this.tipolog_l);
-        getContentPane().add(this.bairro_l);
-        getContentPane().add(this.municipio_l);
-        getContentPane().add(this.cep_l);
-        getContentPane().add(this.estado_l);
-        getContentPane().add(this.complemento_l);
-        getContentPane().add(this.cadastrar_cliente);
+        add(this.nome_l);
+        add(this.telefone_l);
+        add(this.data_nascimento_l);
+        add(this.log_l);
+        add(this.tipolog_l);
+        add(this.bairro_l);
+        add(this.municipio_l);
+        add(this.cep_l);
+        add(this.estado_l);
+        add(this.complemento_l);
+        add(this.cadastrar_cliente);
 
         this.nome.setBounds(12, 146, 585, 19);
         this.ddd.setBounds(12, 192, 34, 19);
@@ -214,12 +214,11 @@ public class Cadastrar_cliente extends JFrame {
             }
         });
 
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(null);
         setSize(610, 510);
-        setTitle("Cadastro de novo cliente !");
         setLocationRelativeTo(null);
-        setResizable(false);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle("Cadastro de novo cliente !");
         setVisible(true);
 
     }

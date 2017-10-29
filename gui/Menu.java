@@ -1,14 +1,20 @@
 package gui;
 
+
 import java.awt.BorderLayout;
 import gui.abas.*;
-import java.awt.event.ComponentEvent;
+
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+
+import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
+
+
 
 public class Menu extends JFrame {
 
@@ -45,7 +51,7 @@ public class Menu extends JFrame {
     public Menu(String username, String password) {
         this.currentusername = username;
         this.currentpassword = password;
-
+        
         initComponents();
 
     }
@@ -105,33 +111,39 @@ public class Menu extends JFrame {
         painel_produto = new Painel_produto();
         painel_estoque = new Painel_vendas();
 
-        abas.add("Inicio", painel_inicio);
-        abas.add("Vendas", painel_vendas);
-        abas.add("Clientes", painel_cliente);
-        abas.add("Produtos", painel_produto);
-        abas.add("Fornecedores", painel_fornecedor);
-        abas.add("Estoque", painel_estoque);
-
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")),painel_inicio);
+        
+        abas.setMnemonicAt(0, KeyEvent.VK_1);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_vendas.png")),painel_vendas);
+        abas.setMnemonicAt(1, KeyEvent.VK_2);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_clientes.png")),painel_cliente);
+        abas.setMnemonicAt(2, KeyEvent.VK_3);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_produtos.png")),painel_produto);
+        abas.setMnemonicAt(3, KeyEvent.VK_4);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_fornecedor.png")),painel_fornecedor);
+        abas.setMnemonicAt(4, KeyEvent.VK_5);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")),painel_estoque);
+        abas.setMnemonicAt(5, KeyEvent.VK_6);
+        
         //ADICIONANDO TODOS COMPONENTES NA JFRAME
-        add(barra_do_menu, BorderLayout.PAGE_START);
+        setJMenuBar(barra_do_menu);
         add(abas, BorderLayout.CENTER);
         //PROPRIEDADES DA JFRAME
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1024, 768);
         setLocationRelativeTo(null);
+        //setUndecorated(true);
         setTitle("Tecnutrion");
+
+        //getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
+        
+        
         setVisible(true);
-        addComponentListener(new java.awt.event.ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                resize();
-            }
-        });
+        
+        
     }
 
-    private void resize() {
-
-    }
+    
 }
 //CODE OF GRAPHICS
 /*
