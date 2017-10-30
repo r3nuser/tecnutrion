@@ -217,6 +217,7 @@ public class Cadastrar_cliente extends JFrame {
         setLayout(null);
         setSize(610, 510);
         setLocationRelativeTo(null);
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de novo cliente !");
         setVisible(true);

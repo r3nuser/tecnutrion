@@ -20,36 +20,37 @@ public class Sql {
         }
         return null;
     }
-    public static void closeConnection(Connection con){
-	try{    	
-		if(con!=null){
-		    con.close();
-		}
-	}catch(Exception e){
-		System.out.println(e);	
-	}
+
+    public static void closeConnection(Connection con) {
+        try {
+            if (con != null) {
+                con.close();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-    
-    public static void closeConnection(Connection con, PreparedStatement stmt){
-	closeConnection(con);
-	try{    	
-		if(stmt != null){
-			stmt.close();
-		}
-	}catch(Exception e){
-		System.out.println(e);	
-	}
+
+    public static void closeConnection(Connection con, PreparedStatement stmt) {
+        closeConnection(con);
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-	
-    public static void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs){
-	closeConnection(con, stmt);
-	try{    	
-		if(rs != null){
-			rs.close();
-		}
-	}catch(Exception e){
-		System.out.println(e);	
-	}
+
+    public static void closeConnection(Connection con, PreparedStatement stmt, ResultSet rs) {
+        closeConnection(con, stmt);
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
-	
+
 }

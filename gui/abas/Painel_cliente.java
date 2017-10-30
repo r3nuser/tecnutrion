@@ -1,7 +1,9 @@
 package gui.abas;
 
 import bean.Cliente;
+import bean.Telefone;
 import dao.ClienteDAO;
+import dao.TelefoneDAO;
 import gui.Cadastrar_cliente;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -27,6 +29,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+
 /*import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -37,7 +40,6 @@ import javax.swing.border.Border;
 import javax.swing.BoxLayout;
 import java.awt.Graphics;
 import java.awt.GridBagLayout;*/
-
 public class Painel_cliente extends JPanel {
 
     private final String username;
@@ -59,7 +61,6 @@ public class Painel_cliente extends JPanel {
     private ChartPanel cp_mais_rentaveis_mes;
     private ChartPanel cp_mais_rentaveis_semana;
     private DefaultCategoryDataset dt;*/
-
     private JPanel painel_de_dados;
     private JLabel nome_cliente_l;
     private JLabel data_nascimento_l;
@@ -196,7 +197,10 @@ public class Painel_cliente extends JPanel {
         deletar_cliente.addActionListener((ActionEvent) -> {
             Cliente c = new Cliente();
             c.setId(Integer.parseInt(id.getText()));
+            Telefone t = new Telefone();
+            t.setFk_cliente_cod(c.getId());
             System.out.println(c.getId());
+            TelefoneDAO.delete(username, password, t);
             ClienteDAO.delete(username, password, c);
             atualizar_tabela();
         });
@@ -226,7 +230,6 @@ public class Painel_cliente extends JPanel {
         add(painel_de_graficos, BorderLayout.LINE_END);
 
     }*/
-
     private void inicializa_painel_de_botoes() {
         painel_de_botoes = new JPanel(new FlowLayout());
         cadastrar_clientes = new JButton("Cadastrar Novo Cliente", new ImageIcon(getClass().getResource("ico_mais.png")));
@@ -293,10 +296,12 @@ public class Painel_cliente extends JPanel {
     private void atualizar_tabela() {
         modelo_tabela.setNumRows(0);
         ArrayList<Cliente> dados_cliente = ClienteDAO.read(this.username, this.password);
+        ArrayList<Telefone> dados_telefone = TelefoneDAO.read(this.username, this.password);
         for (int i = 0; i < dados_cliente.size(); i++) {
             Cliente c = dados_cliente.get(i);
-            modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento()});
-
+            Telefone t = dados_telefone.get(i);
+            modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento(),
+                t.getDdd(), t.getAntesh(), t.getDepoish()});
         }
         tabela.getColumnModel().getColumn(0).setPreferredWidth(70);
         tabela.getColumnModel().getColumn(0).setMaxWidth(70);

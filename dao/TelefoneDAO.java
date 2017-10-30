@@ -81,7 +81,6 @@ public class TelefoneDAO extends Sql {
             stmt = con.prepareStatement("DELETE FROM telefone WHERE fk_cliente_cod=?");
             stmt.setInt(1, t.getFk_cliente_cod());
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Apagado com sucesso!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao apagar!");
         } finally {

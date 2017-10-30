@@ -125,6 +125,7 @@ public class Menu extends JFrame {
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")),painel_estoque);
         abas.setMnemonicAt(5, KeyEvent.VK_6);
         
+        
         //ADICIONANDO TODOS COMPONENTES NA JFRAME
         setJMenuBar(barra_do_menu);
         add(abas, BorderLayout.CENTER);
