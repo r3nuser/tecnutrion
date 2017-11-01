@@ -107,8 +107,8 @@ public class Menu extends JFrame {
         painel_inicio = new Painel_inicio();
         painel_vendas = new Painel_vendas();
         painel_cliente = new Painel_cliente(this.currentusername, this.currentpassword);
-        painel_fornecedor = new Painel_fornecedor();
-        painel_produto = new Painel_produto();
+        painel_fornecedor = new Painel_fornecedor(this.currentusername, this.currentpassword);
+        painel_produto = new Painel_produto(this.currentusername, this.currentpassword);
         painel_estoque = new Painel_vendas();
 
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")),painel_inicio);
@@ -124,7 +124,6 @@ public class Menu extends JFrame {
         abas.setMnemonicAt(4, KeyEvent.VK_5);
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")),painel_estoque);
         abas.setMnemonicAt(5, KeyEvent.VK_6);
-        
         
         //ADICIONANDO TODOS COMPONENTES NA JFRAME
         setJMenuBar(barra_do_menu);

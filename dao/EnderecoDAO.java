@@ -11,6 +11,34 @@ import bean.Endereco;
 import java.awt.List;
 
 public class EnderecoDAO extends Sql {
+    
+    public static Endereco search_endereco_por_id(String username, String password, int id){
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        Endereco e = new Endereco();
+        try{
+            con = getConnection(username,password);
+            stmt = con.prepareStatement("SELECT * from endereco where fk_cliente_cod=?");
+            stmt.setInt(1,id);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                e.setTipolog(rs.getString("tipolog"));
+                e.setLog(rs.getString("logradouro"));
+                e.setBairro(rs.getString("bairro"));
+                e.setComplemento(rs.getString("complemento"));
+                e.setEstado(rs.getString("estado"));
+                e.setMunicipio(rs.getString("cidade"));
+                e.setCep(rs.getString("cep"));
+                
+            }
+        }catch(Exception en){
+            System.out.println(en);
+        }finally{
+            closeConnection(con,stmt,rs);
+        }
+        return e;
+    }
 
     public static void create(String username, String password, Endereco e, Cliente c){
     	PreparedStatement stmt = null;

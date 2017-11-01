@@ -1,6 +1,5 @@
 package dao;
 
-import java.awt.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +32,8 @@ public class FornecedorDAO extends Sql{
         ArrayList<Fornecedor> fornecedores = new ArrayList<Fornecedor>();
         Connection con = null;
         try{
-            stmt = con.prepareStatement("SELECT * FROM fornecedores");
+            con = getConnection(username,password);
+            stmt = con.prepareStatement("SELECT * FROM fornecedor");
             rs = stmt.executeQuery();
 
             while(rs.next()){
@@ -44,7 +44,7 @@ public class FornecedorDAO extends Sql{
             }
 
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null,"Erro ao consultar !");
+            JOptionPane.showMessageDialog(null,e);
         }finally{
             closeConnection(con,stmt,rs);
         }

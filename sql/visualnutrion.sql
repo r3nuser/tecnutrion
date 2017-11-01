@@ -23,10 +23,9 @@ create table if not exists produtos(
 	fk_cod_fornecedor int not null,
 	preco_uni_compra decimal(8,2) not null,
         preco_uni_venda decimal(8,2) not null,
-        unidade_medida varchar(4),
-	categoria enum('Proteina','Multivitaminico','Acessorio','Pro-Hormonal',
+        categoria enum('Proteina','Multivitaminico','Acessorio','Pro-Hormonal',
 	'Hipercalorico','Termogenico','Anti-oxidante','Repositor energetico',
-	'Repositor hidroeletrolico','Aminoacidos','Outro') not null,
+	'Repositor hidroeletrolitico','Aminoacidos','Outro') not null,
 	descricao_produto varchar(255),
         unidade_medida_peso varchar(255),
 	peso_produto decimal(8,2),
@@ -41,11 +40,11 @@ create table if not exists fornecedor(
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 create table if not exists estoque(
-	estoque_cod int not null,
+	estoque_cod int not null auto_increment,
 	qnt_estoque int not null,
 	validade date,
 	primary key(estoque_cod)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 create table if not exists endereco(
 	fk_cliente_cod int not null,

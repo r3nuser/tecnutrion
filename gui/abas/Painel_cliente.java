@@ -1,8 +1,10 @@
 package gui.abas;
 
 import bean.Cliente;
+import bean.Endereco;
 import bean.Telefone;
 import dao.ClienteDAO;
+import dao.EnderecoDAO;
 import dao.TelefoneDAO;
 import gui.Cadastrar_cliente;
 import java.awt.BorderLayout;
@@ -72,6 +74,9 @@ public class Painel_cliente extends JPanel {
     private JLabel municipio_l;
     private JLabel complemento_l;
     private JLabel cep_l;
+    private JLabel ddd_l;
+    private JLabel antesh_l;
+    private JLabel depoish_l;
 
     private JTextField nome_cliente;
     private JTextField data_nascimento;
@@ -83,6 +88,9 @@ public class Painel_cliente extends JPanel {
     private JTextField municipio;
     private JTextField complemento;
     private JTextField cep;
+    private JTextField ddd;
+    private JTextField antesh;
+    private JTextField depoish;
 
     private JButton deletar_cliente;
 
@@ -181,7 +189,7 @@ public class Painel_cliente extends JPanel {
         painel_de_dados.add(complemento_l);
         painel_de_dados.add(complemento);
         complemento.setEditable(false);
-        complemento.setPreferredSize(new Dimension(300, 18));
+        complemento.setPreferredSize(new Dimension(330, 18));
 
         cep_l = new JLabel("CEP:");
         cep = new JTextField();
@@ -191,6 +199,30 @@ public class Painel_cliente extends JPanel {
         cep.setEditable(false);
         cep.setPreferredSize(new Dimension(80, 18));
 
+        ddd_l = new JLabel("DDD:");
+        ddd = new JTextField();
+        
+        painel_de_dados.add(ddd_l);
+        painel_de_dados.add(ddd);
+        ddd.setEditable(false);
+        ddd.setPreferredSize(new Dimension(30,18));
+        
+        antesh_l = new JLabel("Prefixo:");
+        antesh = new JTextField();
+        
+        painel_de_dados.add(antesh_l);
+        painel_de_dados.add(antesh);
+        antesh.setEditable(false);
+        antesh.setPreferredSize(new Dimension(50,18));
+        
+        depoish_l = new JLabel("Sufixo:");
+        depoish = new JTextField();
+        
+        painel_de_dados.add(depoish_l);
+        painel_de_dados.add(depoish);
+        depoish.setEditable(false);
+        depoish.setPreferredSize(new Dimension(40,18));
+        
         deletar_cliente = new JButton("Deletar Cliente", new ImageIcon(getClass().getResource("ico_deletar.png")));
         painel_de_dados.add(deletar_cliente);
 
@@ -258,20 +290,21 @@ public class Painel_cliente extends JPanel {
             }
         };
         tabela = new JTable(modelo_tabela);
-        tabela.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                atualizar_caixas_de_texto();
-            }
-        });
         tabela.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent ke) {
+            public void keyReleased(KeyEvent ke) {
                 if ((ke.getKeyCode() == KeyEvent.VK_UP) || (ke.getKeyCode() == KeyEvent.VK_DOWN)) {
-                    atualizar_caixas_de_texto();
+                    atualizar_caixas_de_texto(0);
                 }
             }
         });
+        tabela.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                atualizar_caixas_de_texto(1);
+            }
+        });
+        
         modelo_tabela.addColumn("ID");
         modelo_tabela.addColumn("Nome");
         modelo_tabela.addColumn("Data Nascimento");
@@ -286,11 +319,31 @@ public class Painel_cliente extends JPanel {
         add(painel_da_tabela, BorderLayout.CENTER);
     }
 
-    private void atualizar_caixas_de_texto() {
+    private void atualizar_caixas_de_texto(int dif) {
         Cliente c = ClienteDAO.search_cliente_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         nome_cliente.setText(c.getNome());
         id.setText("" + c.getId());
         data_nascimento.setText("" + c.getData_nascimento());
+        try{
+            Telefone t = TelefoneDAO.search_telefone_por_id(username, password, c.getId());
+            ddd.setText(t.getDdd());
+            antesh.setText(t.getAntesh());
+            depoish.setText(t.getDepoish());
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        try{
+            Endereco e = EnderecoDAO.search_endereco_por_id(username,password,c.getId());
+            tipolog.setText(e.getTipolog());
+            log.setText(e.getLog());
+            bairro.setText(e.getBairro());
+            complemento.setText(e.getComplemento());
+            estado.setText(e.getEstado());
+            municipio.setText(e.getMunicipio());
+            cep.setText(e.getCep());
+        }catch(Exception e){
+            System.out.println(e);
+        }
     }
 
     private void atualizar_tabela() {
