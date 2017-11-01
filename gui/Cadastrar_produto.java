@@ -196,12 +196,15 @@ public class Cadastrar_produto extends JFrame {
         unidade_medida.addItem("g");
         unidade_medida.addItem("ml");
         unidade_medida.addItem("L");
+        unidade_medida.addItem("Capsulas");
 
         unidade_medida.addActionListener((ActionEvent) -> {
             if (unidade_medida.getSelectedItem() == "Kg" || unidade_medida.getSelectedItem() == "g") {
                 peso_l.setText("Peso:");
-            } else {
+            } else if(unidade_medida.getSelectedItem()== "ml" || unidade_medida.getSelectedItem()== "L") {
                 peso_l.setText("Volume:");
+            }else{
+                peso_l.setText("Unidades:");
             }
         });
 
