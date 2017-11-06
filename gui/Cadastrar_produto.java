@@ -5,18 +5,12 @@ import bean.Fornecedor;
 import bean.Produto;
 import dao.EstoqueDAO;
 import dao.FornecedorDAO;
+import dao.MiscDAO;
 import dao.ProdutoDAO;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-import java.awt.image.WritableRaster;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -247,7 +241,7 @@ public class Cadastrar_produto extends JFrame {
             e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
 
             EstoqueDAO.create(this.currentusername, this.currentpassword, e);
-            p.setFk_estoque_cod(EstoqueDAO.pega_ultimo_id(currentusername, currentpassword));
+            p.setFk_estoque_cod(MiscDAO.get_ultimo_estoque_id(currentusername, currentpassword));
             ProdutoDAO.create(this.currentusername, this.currentpassword, p);
             dispose();
         });

@@ -10,6 +10,8 @@ import sql.Sql;
 
 public class ProdutoDAO extends Sql {
 
+    
+
     public static void create(String username, String password, Produto p) {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -26,7 +28,7 @@ public class ProdutoDAO extends Sql {
             stmt.setString(7, p.getDescricao_produto());
             stmt.setString(8, p.getUnidade_medida_peso());
             stmt.setFloat(9, p.getPeso_produto());
-            
+
             stmt.setInt(10, p.getFk_estoque_cod());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Produto Salvo com Sucesso !");
@@ -44,11 +46,11 @@ public class ProdutoDAO extends Sql {
         ArrayList<Produto> produtos = new ArrayList<>();
 
         try {
-            con = getConnection(username,password);
+            con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT * FROM produtos");
-            
+
             rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
                 Produto p = new Produto();
                 p.setProduto_foto(rs.getBytes("produto_foto"));
@@ -65,7 +67,7 @@ public class ProdutoDAO extends Sql {
                 produtos.add(p);
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,"Erro ao consultar produtos !");
+            JOptionPane.showMessageDialog(null, "Erro ao consultar produtos !");
         } finally {
             closeConnection(con, stmt, rs);
         }
@@ -77,5 +79,18 @@ public class ProdutoDAO extends Sql {
     }
 
     public static void delete(String username, String password, Produto p) {
+        PreparedStatement stmt = null;
+        Connection con = null;
+
+        try {
+            con = getConnection(username,password);
+            stmt = con.prepareStatement("DELETE FROM produtos WHERE produto_cod=?");
+            stmt.setInt(1,p.getProduto_cod());
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt);
+        }
     }
 }

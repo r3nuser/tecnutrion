@@ -15,28 +15,7 @@ import static sql.Sql.getConnection;
 
 public class TelefoneDAO extends Sql {
 
-    public static Telefone search_telefone_por_id(String username, String password, int id){
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        Connection con = null;
-        Telefone t = new Telefone();
-        try{
-            con = getConnection(username,password);
-            stmt = con.prepareStatement("SELECT * from telefone where fk_cliente_cod=?");
-            stmt.setInt(1,id);
-            rs = stmt.executeQuery();
-            while(rs.next()){
-                t.setDdd(rs.getString("ddd"));
-                t.setAntesh(rs.getString("antesh"));
-                t.setDepoish(rs.getString("depoish"));
-            }
-        }catch(Exception e){
-            System.out.println(e);
-        }finally{
-            closeConnection(con,stmt,rs);
-        }
-        return t;
-    }
+    
     
     public static void create(String username, String password, Telefone t) {
         PreparedStatement stmt = null;

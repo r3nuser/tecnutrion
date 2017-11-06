@@ -5,6 +5,7 @@ import bean.Endereco;
 import bean.Telefone;
 import dao.ClienteDAO;
 import dao.EnderecoDAO;
+import dao.MiscDAO;
 import dao.TelefoneDAO;
 import gui.Cadastrar_cliente;
 import java.awt.BorderLayout;
@@ -201,28 +202,28 @@ public class Painel_cliente extends JPanel {
 
         ddd_l = new JLabel("DDD:");
         ddd = new JTextField();
-        
+
         painel_de_dados.add(ddd_l);
         painel_de_dados.add(ddd);
         ddd.setEditable(false);
-        ddd.setPreferredSize(new Dimension(30,18));
-        
+        ddd.setPreferredSize(new Dimension(30, 18));
+
         antesh_l = new JLabel("Prefixo:");
         antesh = new JTextField();
-        
+
         painel_de_dados.add(antesh_l);
         painel_de_dados.add(antesh);
         antesh.setEditable(false);
-        antesh.setPreferredSize(new Dimension(50,18));
-        
+        antesh.setPreferredSize(new Dimension(50, 18));
+
         depoish_l = new JLabel("Sufixo:");
         depoish = new JTextField();
-        
+
         painel_de_dados.add(depoish_l);
         painel_de_dados.add(depoish);
         depoish.setEditable(false);
-        depoish.setPreferredSize(new Dimension(40,18));
-        
+        depoish.setPreferredSize(new Dimension(40, 18));
+
         deletar_cliente = new JButton("Deletar Cliente", new ImageIcon(getClass().getResource("ico_deletar.png")));
         painel_de_dados.add(deletar_cliente);
 
@@ -231,8 +232,19 @@ public class Painel_cliente extends JPanel {
             c.setId(Integer.parseInt(id.getText()));
             Telefone t = new Telefone();
             t.setFk_cliente_cod(c.getId());
+            Endereco e = new Endereco();
+            e.setClientecod(c.getId());
             System.out.println(c.getId());
-            TelefoneDAO.delete(username, password, t);
+            try {
+                TelefoneDAO.delete(username, password, t);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+            try {
+                EnderecoDAO.delete(username, password, e);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
             ClienteDAO.delete(username, password, c);
             atualizar_tabela();
         });
@@ -294,17 +306,17 @@ public class Painel_cliente extends JPanel {
             @Override
             public void keyReleased(KeyEvent ke) {
                 if ((ke.getKeyCode() == KeyEvent.VK_UP) || (ke.getKeyCode() == KeyEvent.VK_DOWN)) {
-                    atualizar_caixas_de_texto(0);
+                    atualizar_caixas_de_texto();
                 }
             }
         });
         tabela.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                atualizar_caixas_de_texto(1);
+                atualizar_caixas_de_texto();
             }
         });
-        
+
         modelo_tabela.addColumn("ID");
         modelo_tabela.addColumn("Nome");
         modelo_tabela.addColumn("Data Nascimento");
@@ -319,21 +331,21 @@ public class Painel_cliente extends JPanel {
         add(painel_da_tabela, BorderLayout.CENTER);
     }
 
-    private void atualizar_caixas_de_texto(int dif) {
-        Cliente c = ClienteDAO.search_cliente_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+    private void atualizar_caixas_de_texto() {
+        Cliente c = MiscDAO.search_cliente_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         nome_cliente.setText(c.getNome());
         id.setText("" + c.getId());
         data_nascimento.setText("" + c.getData_nascimento());
-        try{
-            Telefone t = TelefoneDAO.search_telefone_por_id(username, password, c.getId());
+        try {
+            Telefone t = MiscDAO.search_telefone_por_id(username, password, c.getId());
             ddd.setText(t.getDdd());
             antesh.setText(t.getAntesh());
             depoish.setText(t.getDepoish());
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-        try{
-            Endereco e = EnderecoDAO.search_endereco_por_id(username,password,c.getId());
+        try {
+            Endereco e = MiscDAO.search_endereco_por_id(username, password, c.getId());
             tipolog.setText(e.getTipolog());
             log.setText(e.getLog());
             bairro.setText(e.getBairro());
@@ -341,7 +353,7 @@ public class Painel_cliente extends JPanel {
             estado.setText(e.getEstado());
             municipio.setText(e.getMunicipio());
             cep.setText(e.getCep());
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -352,7 +364,13 @@ public class Painel_cliente extends JPanel {
         ArrayList<Telefone> dados_telefone = TelefoneDAO.read(this.username, this.password);
         for (int i = 0; i < dados_cliente.size(); i++) {
             Cliente c = dados_cliente.get(i);
-            Telefone t = dados_telefone.get(i);
+            Telefone t = new Telefone();
+            try {
+                t = dados_telefone.get(i);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
+
             modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento(),
                 t.getDdd(), t.getAntesh(), t.getDepoish()});
         }

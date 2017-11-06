@@ -6,6 +6,8 @@ import bean.Endereco;
 import bean.Telefone;
 import dao.ClienteDAO;
 import dao.EnderecoDAO;
+import dao.MiscDAO;
+import dao.TelefoneDAO;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.text.DateFormat;
@@ -186,7 +188,10 @@ public class Cadastrar_cliente extends JFrame {
                 t.setAntesh(this.antesh.getText());
                 t.setDepoish(this.depoish.getText());
                 
-                ClienteDAO.create(this.currentusername, this.currentpassword, c,t);
+                ClienteDAO.create(this.currentusername, this.currentpassword, c);
+                c.setId(MiscDAO.get_ultimo_cliente_id(this.currentusername, this.currentpassword));
+                t.setFk_cliente_cod(c.getId());
+                TelefoneDAO.create(this.currentusername, this.currentpassword, t);
                 //CONDIÇÃO QUE CONTROLA SE O USUÁRIO CLICOU EM CADASTRAR O ENDEREÇO
                 //CASO SIM, CHAMA O METODO DE CADASTRO DE ENDEREÇO
                 if (option.isSelected()) {
@@ -198,7 +203,8 @@ public class Cadastrar_cliente extends JFrame {
                     e.setLog(this.log.getText());
                     e.setMunicipio(this.municipio.getText());
                     e.setTipolog(this.tipolog.getText());
-                    EnderecoDAO.create(currentusername, currentpassword, e, c);
+                    e.setClientecod(c.getId());
+                    EnderecoDAO.create(currentusername, currentpassword, e);
                 }
                 dispose();
             } catch (Exception e) {
