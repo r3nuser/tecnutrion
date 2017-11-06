@@ -58,12 +58,6 @@ public class Painel_cliente extends JPanel {
     private DefaultTableModel modelo_tabela;
     private JScrollPane scroll;
 
-    /*private JPanel painel_de_graficos;
-    private JFreeChart grafico_mais_rentaveis_mes;
-    private JFreeChart grafico_mais_rentaveis_semana;
-    private ChartPanel cp_mais_rentaveis_mes;
-    private ChartPanel cp_mais_rentaveis_semana;
-    private DefaultCategoryDataset dt;*/
     private JPanel painel_de_dados;
     private JLabel nome_cliente_l;
     private JLabel data_nascimento_l;

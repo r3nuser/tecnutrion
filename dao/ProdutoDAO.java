@@ -10,8 +10,6 @@ import sql.Sql;
 
 public class ProdutoDAO extends Sql {
 
-    
-
     public static void create(String username, String password, Produto p) {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -83,9 +81,9 @@ public class ProdutoDAO extends Sql {
         Connection con = null;
 
         try {
-            con = getConnection(username,password);
+            con = getConnection(username, password);
             stmt = con.prepareStatement("DELETE FROM produtos WHERE produto_cod=?");
-            stmt.setInt(1,p.getProduto_cod());
+            stmt.setInt(1, p.getProduto_cod());
             stmt.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);

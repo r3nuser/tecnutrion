@@ -1,10 +1,12 @@
 package dao;
 
-//fk_cod_cliente int
-//fk_cod_pedido int
-//fk_cod_produto int
-//quantidade int
-//pedido_item_vl_tot decimal
+import bean.Pedido_item;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import sql.Sql;
+
 
 public class Pedido_itemDAO extends Sql{
 
@@ -13,7 +15,7 @@ public class Pedido_itemDAO extends Sql{
 		PreparedStatement stmt = null;
 		try{
 			con = getConnection(username,password);
-			stmt = con.prepareStatement("INSERT INTO pedido_item VALUES (?,?,?,?,?);")
+			stmt = con.prepareStatement("INSERT INTO pedido_item VALUES (?,?,?,?,?);");
 			stmt.setInt(1,pi.getFk_cod_cliente());
 			stmt.setInt(2,pi.getFk_cod_pedido());
 			stmt.setInt(3,pi.getFk_cod_produto());
