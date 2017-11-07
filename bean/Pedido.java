@@ -7,6 +7,15 @@ public class Pedido {
     private int cod_pedido;
     private Date dt_pedido;
     private float pedido_vl_tot;
+    private String pagamento;
+
+    public String getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(String pagamento) {
+        this.pagamento = pagamento;
+    }
 
     public int getCod_pedido() {
         return cod_pedido;

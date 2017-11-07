@@ -94,7 +94,8 @@ public class Realizar_venda extends JFrame {
         botoes_pedido.add(remover_produto);
         
         adicionar_produto.addActionListener((ActionEvent)->{
-            new Buscar_produto(this.username,this.password);
+            new Buscar_produto(this.username,this.password,this.modelo_tabela,
+                    pedido_vl_tot,lucro_liquido,qnt_itens);
         });
 
         botoes_pedido.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -156,19 +157,19 @@ public class Realizar_venda extends JFrame {
         dados_financeiros = new JPanel(new FlowLayout());
 
         pedido_vl_tot_l = new JLabel("Valor Tot. Pedido:    R$");
-        pedido_vl_tot = new JTextField();
+        pedido_vl_tot = new JTextField("0");
 
         pedido_vl_tot.setPreferredSize(new Dimension(240, 18));
         pedido_vl_tot.setEditable(false);
 
         lucro_liquido_l = new JLabel("Valor Lucro Liquido: R$");
-        lucro_liquido = new JTextField();
+        lucro_liquido = new JTextField("0");
 
         lucro_liquido.setPreferredSize(new Dimension(240, 18));
         lucro_liquido.setEditable(false);
 
         qnt_itens_l = new JLabel("Quantidade de Itens:");
-        qnt_itens = new JTextField();
+        qnt_itens = new JTextField("0");
 
         qnt_itens.setEditable(false);
         qnt_itens.setPreferredSize(new Dimension(130, 18));

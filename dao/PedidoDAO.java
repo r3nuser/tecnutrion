@@ -15,9 +15,10 @@ public class PedidoDAO extends Sql {
 
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("INSERT INTO pedido VALUES (NULL,?,?);");
+            stmt = con.prepareStatement("INSERT INTO pedido VALUES (NULL,?,?,?);");
             stmt.setDate(1, p.getDt_pedido());
             stmt.setFloat(2, p.getPedido_vl_tot());
+            stmt.setString(3, p.getPagamento());
             stmt.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
@@ -41,6 +42,7 @@ public class PedidoDAO extends Sql {
                 p.setCod_pedido(rs.getInt("cod_pedido"));
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
                 pedidos.add(p);
             }
         } catch (Exception e) {
@@ -56,10 +58,12 @@ public class PedidoDAO extends Sql {
         PreparedStatement stmt = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("UPDATE pedido SET dt_pedido=?,pedido_vl_tot=? WHERE cod_pedido=?");
+            stmt = con.prepareStatement("UPDATE pedido SET dt_pedido=?,pedido_vl_tot=?,pagamento=? WHERE cod_pedido=?");
             stmt.setDate(1,p.getDt_pedido());
             stmt.setFloat(2,p.getPedido_vl_tot());
-            stmt.setInt(3,p.getCod_pedido());
+            stmt.setString(3,p.getPagamento());
+            stmt.setInt(4,p.getCod_pedido());
+            
             stmt.executeUpdate();
         } catch (Exception e) {
             System.out.println(e);
