@@ -74,6 +74,35 @@ public class ProdutoDAO extends Sql {
     }
 
     public static void update(String username, String password, Produto p) {
+        PreparedStatement stmt = null;
+        Connection con = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("UPDATE produtos SET produto_foto=?,"
+                    + "produto_nome=?,fk_cod_fornecedor=?,preco_uni_compra=?,"
+                    + "preco_uni_venda=?,categoria=?,descricao_produto=?,"
+                    + "unidade_medida_peso=?,peso_produto=?,fk_estoque_cod=? where produto_cod=?");
+
+            stmt.setBytes(1, p.getProduto_foto());
+            stmt.setString(2, p.getProduto_nome());
+            stmt.setInt(3, p.getFk_fornecedor_cod());
+            stmt.setFloat(4, p.getPreco_uni_compra());
+            stmt.setFloat(5, p.getPreco_uni_venda());
+            stmt.setString(6, p.getCategoria());
+            stmt.setString(7, p.getDescricao_produto());
+            stmt.setString(8, p.getUnidade_medida_peso());
+            stmt.setFloat(9, p.getPeso_produto());
+            stmt.setInt(10, p.getFk_estoque_cod());
+            stmt.setInt(11, p.getProduto_cod());
+            
+            stmt.executeUpdate();
+            
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt);
+        }
     }
 
     public static void delete(String username, String password, Produto p) {

@@ -105,11 +105,11 @@ public class Menu extends JFrame {
         abas = new JTabbedPane();
 
         painel_inicio = new Painel_inicio();
-        painel_vendas = new Painel_vendas();
+        painel_vendas = new Painel_vendas(this.currentusername, this.currentpassword);
         painel_cliente = new Painel_cliente(this.currentusername, this.currentpassword);
         painel_fornecedor = new Painel_fornecedor(this.currentusername, this.currentpassword);
         painel_produto = new Painel_produto(this.currentusername, this.currentpassword);
-        painel_estoque = new Painel_vendas();
+        painel_estoque = new Painel_vendas(this.currentusername, this.currentpassword);
 
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")),painel_inicio);
         

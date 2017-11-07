@@ -7,9 +7,6 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import sql.Sql;
 import bean.Cliente;
-import bean.Telefone;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class ClienteDAO extends Sql {
 

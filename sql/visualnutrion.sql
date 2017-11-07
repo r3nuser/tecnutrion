@@ -60,7 +60,8 @@ create table if not exists endereco(
 create table if not exists pedido(
 	cod_pedido int not null,
 	dt_pedido date not null,
-	pedido_vl_tot decimal(8,2) not null
+	pedido_vl_tot decimal(8,2) not null,
+        pagamento enum('Cartao de Debito','Cartao de Credito','Boleto','A Vista') not null
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 create table if not exists pedido_item(

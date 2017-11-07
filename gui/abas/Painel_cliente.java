@@ -52,6 +52,8 @@ public class Painel_cliente extends JPanel {
     private JButton cadastrar_clientes;
     private JButton realizar_consulta;
     private JButton editar_dados;
+    private JButton busca_cliente_b;
+    private JTextField busca_cliente;
 
     private JPanel painel_da_tabela;
     private JTable tabela;
@@ -240,7 +242,7 @@ public class Painel_cliente extends JPanel {
                 System.out.println(ex);
             }
             ClienteDAO.delete(username, password, c);
-            atualizar_tabela();
+            atualizar_tabela((byte)0);
         });
 
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -273,18 +275,29 @@ public class Painel_cliente extends JPanel {
         cadastrar_clientes = new JButton("Cadastrar Novo Cliente", new ImageIcon(getClass().getResource("ico_mais.png")));
         realizar_consulta = new JButton("Consultar Clientes", new ImageIcon(getClass().getResource("ico_lupa.png")));
         editar_dados = new JButton("Editar Dados do Cliente", new ImageIcon(getClass().getResource("ico_editar.png")));
-        painel_de_botoes.add(cadastrar_clientes, BorderLayout.LINE_START);
-        painel_de_botoes.add(realizar_consulta, BorderLayout.CENTER);
-        painel_de_botoes.add(editar_dados, BorderLayout.LINE_END);
+
+        busca_cliente_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));;
+        busca_cliente = new JTextField();
+        busca_cliente.setPreferredSize(new Dimension(270, 24));
+
+        painel_de_botoes.add(cadastrar_clientes);
+        painel_de_botoes.add(realizar_consulta);
+        painel_de_botoes.add(editar_dados);
+        painel_de_botoes.add(busca_cliente);
+        painel_de_botoes.add(busca_cliente_b);
 
         add(painel_de_botoes, BorderLayout.PAGE_START);
 
         realizar_consulta.addActionListener((ActionEvent) -> {
 
-            atualizar_tabela();
+            atualizar_tabela((byte) 0);
         });
         cadastrar_clientes.addActionListener((ActionEvent) -> {
             new Cadastrar_cliente(this.username, this.password);
+        });
+
+        busca_cliente_b.addActionListener((ActionEvent) -> {
+            atualizar_tabela((byte) 1);
         });
     }
 
@@ -317,6 +330,23 @@ public class Painel_cliente extends JPanel {
         modelo_tabela.addColumn("DDD");
         modelo_tabela.addColumn("Prefixo");
         modelo_tabela.addColumn("Sufixo");
+
+        tabela.getColumnModel().getColumn(0).setPreferredWidth(70);
+        tabela.getColumnModel().getColumn(0).setMaxWidth(70);
+
+        tabela.getColumnModel().getColumn(1).setPreferredWidth(400);
+
+        tabela.getColumnModel().getColumn(2).setMaxWidth(80);
+        tabela.getColumnModel().getColumn(2).setMinWidth(80);
+
+        tabela.getColumnModel().getColumn(3).setMaxWidth(40);
+        tabela.getColumnModel().getColumn(3).setMinWidth(40);
+
+        tabela.getColumnModel().getColumn(4).setMaxWidth(60);
+        tabela.getColumnModel().getColumn(4).setMinWidth(60);
+
+        tabela.getColumnModel().getColumn(5).setMaxWidth(50);
+        tabela.getColumnModel().getColumn(5).setMinWidth(50);
 
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
@@ -352,15 +382,20 @@ public class Painel_cliente extends JPanel {
         }
     }
 
-    private void atualizar_tabela() {
+    private void atualizar_tabela(byte mode) {
         modelo_tabela.setNumRows(0);
-        ArrayList<Cliente> dados_cliente = ClienteDAO.read(this.username, this.password);
-        ArrayList<Telefone> dados_telefone = TelefoneDAO.read(this.username, this.password);
+        ArrayList<Cliente> dados_cliente;
+
+        if (mode == 0) {
+            dados_cliente = ClienteDAO.read(this.username, this.password);
+        } else {
+            dados_cliente = MiscDAO.search_cliente_por_nome(username, password, busca_cliente.getText());
+        }
         for (int i = 0; i < dados_cliente.size(); i++) {
             Cliente c = dados_cliente.get(i);
             Telefone t = new Telefone();
             try {
-                t = dados_telefone.get(i);
+                t = MiscDAO.search_telefone_por_id(username, password, i);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -368,22 +403,6 @@ public class Painel_cliente extends JPanel {
             modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento(),
                 t.getDdd(), t.getAntesh(), t.getDepoish()});
         }
-        tabela.getColumnModel().getColumn(0).setPreferredWidth(70);
-        tabela.getColumnModel().getColumn(0).setMaxWidth(70);
-
-        tabela.getColumnModel().getColumn(1).setPreferredWidth(400);
-
-        tabela.getColumnModel().getColumn(2).setMaxWidth(80);
-        tabela.getColumnModel().getColumn(2).setMinWidth(80);
-
-        tabela.getColumnModel().getColumn(3).setMaxWidth(40);
-        tabela.getColumnModel().getColumn(3).setMinWidth(40);
-
-        tabela.getColumnModel().getColumn(4).setMaxWidth(60);
-        tabela.getColumnModel().getColumn(4).setMinWidth(60);
-
-        tabela.getColumnModel().getColumn(5).setMaxWidth(50);
-        tabela.getColumnModel().getColumn(5).setMinWidth(50);
 
     }
 

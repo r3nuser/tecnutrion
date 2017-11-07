@@ -57,10 +57,13 @@ public class Cadastrar_produto extends JFrame {
     private JTextField uni_compradas;
     private JTextField validade = null;
 
-    private ArrayList<Fornecedor> fornecedores;
-    private JComboBox fornecedor;
+    private JButton buscar_fornecedor;
+    private JTextField fornecedor;
+
     private JComboBox categoria;
     private JComboBox unidade_medida;
+
+    private Fornecedor f;
 
     private BufferedImage imagem;
     private Produto p;
@@ -92,7 +95,7 @@ public class Cadastrar_produto extends JFrame {
         validade_l = new JLabel("Validade:");
         foto = new JLabel("");
         produto_nome = new JTextField();
-        fornecedor = new JComboBox();
+        fornecedor = new JTextField();
         preco_uni_compra = new JTextField();
         preco_uni_venda = new JTextField();
         peso = new JTextField();
@@ -102,6 +105,8 @@ public class Cadastrar_produto extends JFrame {
         unidade_medida = new JComboBox();
         cadastrar = new JButton("Cadastrar !");
         inserir_foto = new JButton("Procurar...");
+        buscar_fornecedor = new JButton(new ImageIcon(getClass().getResource("abas/ico_lupa2.png")));
+        f= new Fornecedor();
 
         setSize(555, 600);
         setLocationRelativeTo(null);
@@ -131,10 +136,11 @@ public class Cadastrar_produto extends JFrame {
         add(cadastrar);
         add(inserir_foto);
         add(foto);
+        add(buscar_fornecedor);
 
         titulo_l.setBounds(148, 40, 400, 30);
         titulo_l.setFont(new java.awt.Font("Arial", 1, 19));
-
+        
         produto_nome_l.setBounds(30, 100, 200, 30);
         produto_nome_l.setFont(new java.awt.Font("Arial", 1, 13));
 
@@ -143,7 +149,9 @@ public class Cadastrar_produto extends JFrame {
         fornecedor_l.setBounds(30, 160, 200, 30);
         fornecedor_l.setFont(new java.awt.Font("Arial", 1, 13));
 
-        fornecedor.setBounds(30, 190, 200, 30);
+        fornecedor.setBounds(30, 190, 175, 30);
+        fornecedor.setEditable(false);
+        buscar_fornecedor.setBounds(30 + 175 + 5, 190, 30, 30);
 
         preco_uni_c_l.setBounds(30, 220, 200, 30);
         preco_uni_c_l.setFont(new java.awt.Font("Arial", 1, 13));
@@ -191,13 +199,14 @@ public class Cadastrar_produto extends JFrame {
         unidade_medida.addItem("ml");
         unidade_medida.addItem("L");
         unidade_medida.addItem("Capsulas");
+        unidade_medida.addItem("Tabletes");
 
         unidade_medida.addActionListener((ActionEvent) -> {
             if (unidade_medida.getSelectedItem() == "Kg" || unidade_medida.getSelectedItem() == "g") {
                 peso_l.setText("Peso:");
-            } else if(unidade_medida.getSelectedItem()== "ml" || unidade_medida.getSelectedItem()== "L") {
+            } else if (unidade_medida.getSelectedItem() == "ml" || unidade_medida.getSelectedItem() == "L") {
                 peso_l.setText("Volume:");
-            }else{
+            } else {
                 peso_l.setText("Unidades:");
             }
         });
@@ -223,12 +232,7 @@ public class Cadastrar_produto extends JFrame {
             p.setDescricao_produto(descricao.getText());
             p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
             p.setPeso_produto(Float.parseFloat(peso.getText()));
-            for (int i = 0; i < fornecedores.size(); i++) {
-                Fornecedor f = fornecedores.get(i);
-                if (f.getNome() == fornecedor.getItemAt(fornecedor.getSelectedIndex())) {
-                    p.setFk_fornecedor_cod(f.getId());
-                }
-            }
+            p.setFk_fornecedor_cod(f.getId());
             Estoque e = new Estoque();
             String validade = this.validade.getText();
             DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
@@ -278,20 +282,16 @@ public class Cadastrar_produto extends JFrame {
                 foto.setIcon(new ImageIcon(img.getImage().getScaledInstance(100, 100, 100)));
             }
         });
+
+        buscar_fornecedor.addActionListener((ActionEvent) -> {
+            new Buscar_fornecedor(this.currentusername, this.currentpassword, f,fornecedor);
+        });
         setTitle("Cadastro de Produto !");
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-        preenche_fornecedores();
 
     }
 
-    private void preenche_fornecedores() {
-        fornecedores = FornecedorDAO.read(currentusername, currentpassword);
-        for (int i = 0; i < fornecedores.size(); i++) {
-            Fornecedor f = fornecedores.get(i);
-            fornecedor.addItem(f.getNome());
-        }
-    }
 }

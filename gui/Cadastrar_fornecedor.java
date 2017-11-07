@@ -15,7 +15,7 @@ public class Cadastrar_fornecedor extends JFrame {
     private javax.swing.JTextField nome;
     private javax.swing.JButton cadastro;
 
-    Cadastrar_fornecedor(String user, String pass) {
+    public Cadastrar_fornecedor(String user, String pass) {
         initComponents();
         this.currentusername = user;
         this.currentpassword = pass;

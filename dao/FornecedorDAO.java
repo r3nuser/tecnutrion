@@ -10,8 +10,6 @@ import bean.Fornecedor;
 
 public class FornecedorDAO extends Sql {
 
-    
-
     public static void create(String username, String password, Fornecedor f) {
         PreparedStatement stmt = null;
         Connection con = null;

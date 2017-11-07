@@ -4,7 +4,6 @@ import bean.Estoque;
 import bean.Fornecedor;
 import bean.Produto;
 import dao.EstoqueDAO;
-import dao.FornecedorDAO;
 import dao.MiscDAO;
 import dao.ProdutoDAO;
 import gui.Cadastrar_produto;
@@ -43,6 +42,8 @@ public class Painel_produto extends JPanel {
     private JButton cadastrar_produtos;
     private JButton realizar_consulta;
     private JButton editar_dados;
+    private JButton busca_produto_b;
+    private JTextField busca_produto;
 
     private JPanel painel_de_dados;
 
@@ -183,7 +184,7 @@ public class Painel_produto extends JPanel {
             f.setId(p.getFk_fornecedor_cod());
             ProdutoDAO.delete(username, password, p);
             EstoqueDAO.delete(username, password, e);
-            atualizar_tabela();
+            atualizar_tabela((byte)0);
         });
 
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -196,16 +197,26 @@ public class Painel_produto extends JPanel {
         cadastrar_produtos = new JButton("Cadastrar Novo Produto", new ImageIcon(getClass().getResource("ico_mais.png")));
         realizar_consulta = new JButton("Consultar Produtos", new ImageIcon(getClass().getResource("ico_lupa.png")));
         editar_dados = new JButton("Editar Dados do Produto", new ImageIcon(getClass().getResource("ico_editar.png")));
-        painel_de_botoes.add(cadastrar_produtos, BorderLayout.LINE_START);
-        painel_de_botoes.add(realizar_consulta, BorderLayout.CENTER);
-        painel_de_botoes.add(editar_dados, BorderLayout.LINE_END);
+
+        busca_produto_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));
+        busca_produto = new JTextField();
+        busca_produto.setPreferredSize(new Dimension(270, 24));
+
+        painel_de_botoes.add(cadastrar_produtos);
+        painel_de_botoes.add(realizar_consulta);
+        painel_de_botoes.add(editar_dados);
+        painel_de_botoes.add(busca_produto);
+        painel_de_botoes.add(busca_produto_b);
         add(painel_de_botoes, BorderLayout.PAGE_START);
 
         realizar_consulta.addActionListener((ActionEvent) -> {
-            atualizar_tabela();
+            atualizar_tabela((byte)0);
         });
         cadastrar_produtos.addActionListener((ActionEvent) -> {
             new Cadastrar_produto(this.username, this.password);
+        });
+        busca_produto_b.addActionListener((ActionEvent)->{
+            atualizar_tabela((byte)1);
         });
     }
 
@@ -249,6 +260,23 @@ public class Painel_produto extends JPanel {
         modelo_tabela.addColumn("Preco uni. V");
         modelo_tabela.addColumn("Categoria");
 
+        tabela.setRowHeight(100);
+
+        tabela.getColumnModel().getColumn(0).setMaxWidth(100);
+        tabela.getColumnModel().getColumn(0).setMinWidth(100);
+
+        tabela.getColumnModel().getColumn(1).setMaxWidth(70);
+        tabela.getColumnModel().getColumn(1).setMinWidth(70);
+
+        tabela.getColumnModel().getColumn(3).setMaxWidth(150);
+        tabela.getColumnModel().getColumn(3).setMinWidth(150);
+
+        tabela.getColumnModel().getColumn(4).setMaxWidth(150);
+        tabela.getColumnModel().getColumn(4).setMinWidth(150);
+
+        tabela.getColumnModel().getColumn(5).setMaxWidth(180);
+        tabela.getColumnModel().getColumn(5).setMinWidth(180);
+
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
         painel_da_tabela.add(scroll);
@@ -290,9 +318,14 @@ public class Painel_produto extends JPanel {
         }
     }
 
-    private void atualizar_tabela() {
+    private void atualizar_tabela(byte mode) {
         modelo_tabela.setNumRows(0);
-        ArrayList<Produto> dados_produtos = ProdutoDAO.read(username, password);
+        ArrayList<Produto> dados_produtos;
+        if (mode == 0) {
+            dados_produtos = ProdutoDAO.read(username, password);
+        } else {
+            dados_produtos = MiscDAO.search_produto_por_nome(this.username, this.password, busca_produto.getText());
+        }
 
         for (int i = 0; i < dados_produtos.size(); i++) {
             Produto p = dados_produtos.get(i);
@@ -305,21 +338,6 @@ public class Painel_produto extends JPanel {
                         p.getCategoria()}
             );
         }
-        tabela.setRowHeight(100);
 
-        tabela.getColumnModel().getColumn(0).setMaxWidth(100);
-        tabela.getColumnModel().getColumn(0).setMinWidth(100);
-
-        tabela.getColumnModel().getColumn(1).setMaxWidth(70);
-        tabela.getColumnModel().getColumn(1).setMinWidth(70);
-
-        tabela.getColumnModel().getColumn(3).setMaxWidth(150);
-        tabela.getColumnModel().getColumn(3).setMinWidth(150);
-
-        tabela.getColumnModel().getColumn(4).setMaxWidth(150);
-        tabela.getColumnModel().getColumn(4).setMinWidth(150);
-
-        tabela.getColumnModel().getColumn(5).setMaxWidth(180);
-        tabela.getColumnModel().getColumn(5).setMinWidth(180);
     }
 }
