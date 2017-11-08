@@ -28,6 +28,7 @@ public class Buscar_produto extends JFrame {
     private JPanel painel_de_botoes;
     private JTextField busca_produto;
     private JButton busca_produto_b;
+    private JButton cadastrar_produto;
 
     private JPanel painel_da_tabela;
     private JTable tabela;
@@ -73,10 +74,12 @@ public class Buscar_produto extends JFrame {
 
             float sum;
             sum = p.getPreco_uni_venda();
+            sum *= Float.parseFloat(unidades.getText());
             sum += Float.parseFloat(vl_tot.getText());
             vl_tot.setText(""+sum);
             
             sum = p.getPreco_uni_venda()-p.getPreco_uni_compra();
+            sum *= Float.parseFloat(unidades.getText());
             sum += Float.parseFloat(vl_liq.getText());
             vl_liq.setText(""+sum);
             
@@ -100,6 +103,7 @@ public class Buscar_produto extends JFrame {
     private void inicializa_painel_de_botoes() {
         painel_de_botoes = new JPanel(new FlowLayout());
         busca_produto = new JTextField();
+        cadastrar_produto = new JButton("Cadastrar Novo Produto", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
         busca_produto.setPreferredSize(new Dimension(300, 24));
         busca_produto_b = new JButton(new ImageIcon(getClass().getResource("abas/ico_lupa2.png")));
         painel_de_botoes.add(busca_produto);
@@ -111,9 +115,15 @@ public class Buscar_produto extends JFrame {
 
         painel_de_botoes.add(unidades_l);
         painel_de_botoes.add(unidades);
+        
+        painel_de_botoes.add(cadastrar_produto);
 
         busca_produto_b.addActionListener((ActionEvent) -> {
             atualizar_tabela();
+        });
+        
+        cadastrar_produto.addActionListener((ActionEvent)->{
+            new Cadastrar_produto(username,password);
         });
 
         add(painel_de_botoes, BorderLayout.PAGE_START);

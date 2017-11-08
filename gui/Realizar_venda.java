@@ -1,10 +1,16 @@
 package gui;
 
+import bean.Pedido;
+import bean.Pedido_item;
+import dao.MiscDAO;
+import dao.PedidoDAO;
+import dao.Pedido_itemDAO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.sql.Date;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -50,6 +56,8 @@ public class Realizar_venda extends JFrame {
     private DefaultTableModel modelo_tabela;
     private JScrollPane scroll;
 
+    private JButton realizar_venda;
+    
     public Realizar_venda(String currentusername, String currentpassword) {
         this.username = currentusername;
         this.password = currentpassword;
@@ -61,8 +69,39 @@ public class Realizar_venda extends JFrame {
         inicializa_dados_cliente();
         inicializa_dados_financeiros();
         inicializa_itens_pedido();
-
-        setSize(1024, 768);
+        
+        realizar_venda= new JButton("Finalizar Venda", new ImageIcon(getClass().getResource("abas/ico_money.png")));
+        realizar_venda.setLocation(402,750);
+        realizar_venda.setSize(220,30);
+        add(realizar_venda);
+        
+        realizar_venda.addActionListener((ActionEvent)->{
+            Pedido p = new Pedido();
+            p.setDt_pedido(new Date(System.currentTimeMillis()));
+            p.setPedido_vl_tot(Float.parseFloat(pedido_vl_tot.getText()));
+            p.setPagamento(""+tipo_pagamento.getSelectedItem());
+            
+            PedidoDAO.create(username, password, p);
+            p.setCod_pedido(MiscDAO.get_ultimo_pedido_id(username, password));
+            
+            Pedido_item pi = new Pedido_item();
+            
+            pi.setFk_cod_cliente(Integer.parseInt(cliente_id.getText()));
+            pi.setFk_cod_pedido(p.getCod_pedido());
+            
+            
+            for(int i = 0; i< modelo_tabela.getRowCount() ; i++){
+                pi.setFk_cod_produto(Integer.parseInt(""+tabela.getValueAt(i, 1)));
+                pi.setQuantidade(Integer.parseInt(""+tabela.getValueAt(i,5)));
+                pi.setPedido_item_vl_tot(pi.getQuantidade()*Float.parseFloat(""+tabela.getValueAt(i, 4)));
+                Pedido_itemDAO.create(username, password, pi);
+            }
+            
+            dispose();
+            
+        });
+        
+        setSize(1024, 820);
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -92,10 +131,31 @@ public class Realizar_venda extends JFrame {
 
         botoes_pedido.add(adicionar_produto);
         botoes_pedido.add(remover_produto);
-        
-        adicionar_produto.addActionListener((ActionEvent)->{
-            new Buscar_produto(this.username,this.password,this.modelo_tabela,
-                    pedido_vl_tot,lucro_liquido,qnt_itens);
+
+        adicionar_produto.addActionListener((ActionEvent) -> {
+            new Buscar_produto(this.username, this.password, this.modelo_tabela,
+                    pedido_vl_tot, lucro_liquido, qnt_itens);
+        });
+
+        remover_produto.addActionListener((ActionEvent) -> {
+            float subt;
+            subt = Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 4));
+            subt *= -1 * Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 5));
+            subt += Float.parseFloat(pedido_vl_tot.getText());
+            pedido_vl_tot.setText(subt + "");
+            subt = Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 4))
+                    - Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 3));
+            subt *= -1 * Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 5));
+            subt += Float.parseFloat(lucro_liquido.getText());
+            lucro_liquido.setText(subt + "");
+            subt = Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 5));
+            subt *= -1;
+            subt += Float.parseFloat(qnt_itens.getText());
+            qnt_itens.setText(subt + "");
+            tabela.getValueAt(tabela.getSelectedRow(), 3);
+            tabela.getValueAt(tabela.getSelectedRow(), 4);
+            tabela.getValueAt(tabela.getSelectedRow(), 5);
+            modelo_tabela.removeRow(tabela.getSelectedRow());
         });
 
         botoes_pedido.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -209,10 +269,10 @@ public class Realizar_venda extends JFrame {
 
         buscar_cliente = new JButton("Buscar Cliente", new ImageIcon(getClass().getResource("abas/ico_lupa.png")));
 
-        buscar_cliente.addActionListener((ActionEvent)->{
-            new Buscar_cliente(this.username,this.password);
+        buscar_cliente.addActionListener((ActionEvent) -> {
+            new Buscar_cliente(this.username, this.password, cliente_id, cliente_nome);
         });
-        
+
         dados_cliente.add(cliente_id_l);
         dados_cliente.add(cliente_id);
         dados_cliente.add(cliente_nome_l);

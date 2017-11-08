@@ -217,6 +217,28 @@ public class MiscDAO extends Sql {
         return e;
     }
 
+    public static int get_ultimo_pedido_id(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        int p = 0;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT max(cod_pedido) FROM pedido");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                p = (rs.getInt("max(cod_pedido)"));
+            }
+            return p;
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return 0;
+    }
+
     public static int get_ultimo_cliente_id(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;

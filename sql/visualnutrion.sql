@@ -53,16 +53,17 @@ create table if not exists endereco(
 	bairro varchar(255) not null,
 	complemento varchar(255),
 	cidade varchar(255) not null,
-	estado varchar(2) not null,
+	estado varchar(255) not null,
     cep varchar(15) not null
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 create table if not exists pedido(
-	cod_pedido int not null,
+	cod_pedido int not null auto_increment,
 	dt_pedido date not null,
 	pedido_vl_tot decimal(8,2) not null,
-        pagamento enum('Cartao de Debito','Cartao de Credito','Boleto','A Vista') not null
-)ENGINE=InnoDB DEFAULT CHARSET=latin1;
+	pagamento enum('Cartao de Debito','Cartao de Credito','Boleto','A Vista') not null,
+	primary key(cod_pedido)
+)ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 create table if not exists pedido_item(
 	fk_cod_cliente int not null,
@@ -71,8 +72,6 @@ create table if not exists pedido_item(
 	quantidade int not null,
 	pedido_item_vl_tot decimal(8,2) not null
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-alter table pedido add primary key (cod_pedido);
 
 alter table pedido_item add constraint fk_cod_cli2
 foreign key(fk_cod_cliente) references clientes(cliente_cod);
