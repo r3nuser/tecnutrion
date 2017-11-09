@@ -62,8 +62,6 @@ public class Painel_vendas extends JPanel {
     private JButton realizar_venda;
     private JButton realizar_consulta;
     private JButton realizar_troca;
-    
-  
 
     public Painel_vendas(String currentusername, String currentpassword) {
         this.username = currentusername;
@@ -112,16 +110,16 @@ public class Painel_vendas extends JPanel {
         cliente_id.setEditable(false);
         tipo_pagamento.setEditable(false);
         quantidade_de_itens.setEditable(false);
-        
-        id_pedido.setPreferredSize(new Dimension(70,18));
-        dt_pedido.setPreferredSize(new Dimension(120,18));
-        pedido_vl_tot.setPreferredSize(new Dimension(130,18));
-        pedido_lucro_liquido.setPreferredSize(new Dimension(130,18));
-        cliente_nome.setPreferredSize(new Dimension(400,18));
-        cliente_id.setPreferredSize(new Dimension(70,18));
-        tipo_pagamento.setPreferredSize(new Dimension(170,18));
-        quantidade_de_itens.setPreferredSize(new Dimension(70,18));
-        
+
+        id_pedido.setPreferredSize(new Dimension(70, 18));
+        dt_pedido.setPreferredSize(new Dimension(120, 18));
+        pedido_vl_tot.setPreferredSize(new Dimension(130, 18));
+        pedido_lucro_liquido.setPreferredSize(new Dimension(130, 18));
+        cliente_nome.setPreferredSize(new Dimension(400, 18));
+        cliente_id.setPreferredSize(new Dimension(70, 18));
+        tipo_pagamento.setPreferredSize(new Dimension(170, 18));
+        quantidade_de_itens.setPreferredSize(new Dimension(70, 18));
+
         painel_de_dados.add(id_pedido_l);
         painel_de_dados.add(id_pedido);
         painel_de_dados.add(dt_pedido_l);
@@ -211,11 +209,14 @@ public class Painel_vendas extends JPanel {
     }
 
     private void atualizar_caixas_de_texto() {
-        Pedido p = MiscDAO.search_pedido_por_id(username,password,(int) tabela.getValueAt(tabela.getSelectedRow(), 0));
-        id_pedido.setText(""+p.getCod_pedido());
-        dt_pedido.setText(""+p.getDt_pedido());
-        pedido_vl_tot.setText(""+p.getPedido_vl_tot());
-        tipo_pagamento.setText(""+p.getPagamento());
+        Pedido p = MiscDAO.search_pedido_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+        id_pedido.setText("" + p.getCod_pedido());
+        dt_pedido.setText("" + p.getDt_pedido());
+        pedido_vl_tot.setText("" + p.getPedido_vl_tot());
+        tipo_pagamento.setText("" + p.getPagamento());
+        Cliente c = MiscDAO.search_cliente_por_id(username, password, MiscDAO.get_id_pedido_item_por_fk(username, password, p.getCod_pedido()));
+        cliente_nome.setText("" + c.getNome());
+        cliente_id.setText("" + c.getId());
     }
 
     private void atualizar_tabela() {
