@@ -111,8 +111,6 @@ public class Painel_cliente extends JPanel {
     }
 
     private void inicializa_painel_de_dados() {
-
-        GridBagConstraints gbc = new GridBagConstraints();
         painel_de_dados = new JPanel(new FlowLayout());
 
         id_l = new JLabel("ID");
@@ -242,7 +240,7 @@ public class Painel_cliente extends JPanel {
                 System.out.println(ex);
             }
             ClienteDAO.delete(username, password, c);
-            atualizar_tabela((byte)0);
+            atualizar_tabela((byte) 0);
         });
 
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));

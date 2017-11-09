@@ -26,6 +26,7 @@ public class Buscar_fornecedor extends JFrame {
     private JPanel painel_de_botoes;
     private JTextField busca_fornecedor;
     private JButton busca_fornecedor_b;
+    private JButton cadastrar_fornecedor;
 
     private JPanel painel_da_tabela;
     private JTable tabela;
@@ -79,10 +80,17 @@ public class Buscar_fornecedor extends JFrame {
             atualizar_tabela();
         });
         
+        cadastrar_fornecedor = new JButton("Cadastrar Novo Fornecedor",new ImageIcon(getClass().getResource("abas/ico_mais.png")));
+        cadastrar_fornecedor.addActionListener((ActionEvent)->{
+            new Cadastrar_fornecedor(this.username,this.password);
+        });
+        
+        
 
         painel_de_botoes.add(busca_fornecedor);
         painel_de_botoes.add(busca_fornecedor_b);
-
+        painel_de_botoes.add(cadastrar_fornecedor);
+        
         painel_de_botoes.setBorder(BorderFactory.createLineBorder(Color.black));
 
         add(painel_de_botoes, BorderLayout.PAGE_START);

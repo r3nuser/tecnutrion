@@ -4,6 +4,7 @@ import bean.Cliente;
 import bean.Endereco;
 import bean.Estoque;
 import bean.Fornecedor;
+import bean.Pedido;
 import bean.Produto;
 import bean.Telefone;
 import java.sql.Connection;
@@ -15,6 +16,55 @@ import java.util.ArrayList;
 import sql.Sql;
 
 public class MiscDAO extends Sql {
+
+    public static Pedido search_pedido_por_id(String username, String password, int id) {
+        Pedido p = new Pedido();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE cod_pedido = ?");
+            stmt.setInt(1,id);
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                p.setCod_pedido(id);
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPagamento(rs.getString("pagamento"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+
+        return p;
+    }
+
+    public static int get_id_pedido_item_por_fk(String username, String password, int fk) {
+        int pi = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT fk_cod_cliente FROM pedido_item WHERE fk_cod_pedido=?");
+            stmt.setInt(1, fk);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                pi = rs.getInt("fk_cod_cliente");
+
+                return pi;
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return 0;
+    }
 
     public static ArrayList<Fornecedor> search_fornecedor_por_nome(String username, String password, String nome) {
         PreparedStatement stmt = null;
