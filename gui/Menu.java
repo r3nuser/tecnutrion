@@ -28,6 +28,9 @@ public class Menu extends JFrame {
     JMenu financeiro;
     JMenu relatorios;
     JMenu estoque;
+    JMenu configuracoes;
+    
+    JMenuItem funcoes_administrativas;
 
     JMenuItem cadastrar_cliente;
     JMenuItem cadastrar_produto;
@@ -64,7 +67,12 @@ public class Menu extends JFrame {
         ajuda = new JMenu("Ajuda");
         financeiro = new JMenu("Financeiro");
         relatorios = new JMenu("Relatórios");
-
+        configuracoes = new JMenu("Configurações");
+        
+        funcoes_administrativas = new JMenuItem("Funções Administrativas");
+        
+        configuracoes.add(funcoes_administrativas);
+      
         cadastrar_cliente = new JMenuItem("Cadastrar Cliente");
         cadastrar_produto = new JMenuItem("Cadastrar Produto");
         cadastrar_fornecedor = new JMenuItem("Cadastrar Fornecedor");
@@ -91,6 +99,7 @@ public class Menu extends JFrame {
         barra_do_menu.add(cadastros);
         barra_do_menu.add(gerencia);
         barra_do_menu.add(financeiro);
+        barra_do_menu.add(configuracoes);
         barra_do_menu.add(ajuda);
 
         //  AREA DE EVENTOS DE CADA BOTÃO DO MENU
@@ -100,7 +109,9 @@ public class Menu extends JFrame {
         cadastrar_cliente.addActionListener((ActionEvent) -> {
             new Cadastrar_cliente(this.currentusername, this.currentpassword);
         });
-
+        cadastrar_produto.addActionListener((ActionEvent)->{
+            new Cadastrar_produto(this.currentusername, this.currentpassword);
+        });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();
 
@@ -109,7 +120,7 @@ public class Menu extends JFrame {
         painel_cliente = new Painel_cliente(this.currentusername, this.currentpassword);
         painel_fornecedor = new Painel_fornecedor(this.currentusername, this.currentpassword);
         painel_produto = new Painel_produto(this.currentusername, this.currentpassword);
-        painel_estoque = new Painel_vendas(this.currentusername, this.currentpassword);
+        painel_estoque = new Painel_estoque(this.currentusername, this.currentpassword);
 
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")),painel_inicio);
         

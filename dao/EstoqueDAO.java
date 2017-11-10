@@ -33,7 +33,7 @@ public class EstoqueDAO extends Sql {
     }
 
     public static ArrayList<Estoque> read(String username, String password) {
-        ArrayList<Estoque> estoque = new ArrayList<>();
+        ArrayList<Estoque> dados_estoque = new ArrayList<>();
         Connection con = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
@@ -52,13 +52,14 @@ public class EstoqueDAO extends Sql {
                 e.setValidade(dt);
                 
                 e.setQnt_estoque(rs.getInt("qnt_estoque"));
+                dados_estoque.add(e);
             }
         } catch (Exception ex) {
             System.out.println(ex);
         } finally {
             closeConnection(con, stmt, rs);
         }
-        return estoque;
+        return dados_estoque;
     }
 
     public static void update(String username, String password, Estoque e) {

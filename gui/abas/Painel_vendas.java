@@ -3,6 +3,7 @@ package gui.abas;
 import bean.Cliente;
 import bean.Pedido;
 import bean.Pedido_item;
+import bean.Produto;
 import dao.MiscDAO;
 import dao.PedidoDAO;
 import gui.Realizar_troca;
@@ -41,6 +42,9 @@ public class Painel_vendas extends JPanel {
     private JLabel cliente_id_l;
     private JLabel tipo_pagamento_l;
     private JLabel quantidade_de_itens_l;
+    private DefaultTableModel modelo_tabela_itens;
+    private JTable tabela_itens;
+    private JScrollPane scroll_itens;
 
     private JTextField id_pedido;
     private JTextField dt_pedido;
@@ -91,6 +95,29 @@ public class Painel_vendas extends JPanel {
         tipo_pagamento_l = new JLabel("Tipo de Pagamento:");
         quantidade_de_itens_l = new JLabel("Quantidade Itens:");
 
+        modelo_tabela_itens = new DefaultTableModel() {
+            public boolean isCellEditable(int rowIndex, int mColIndex) {
+                return false;
+            }
+        };
+
+        tabela_itens = new JTable(modelo_tabela_itens);
+        
+        modelo_tabela_itens.addColumn("ID");
+        modelo_tabela_itens.addColumn("Nome do Produto");
+        modelo_tabela_itens.addColumn("Preço Uni. Venda");
+        modelo_tabela_itens.addColumn("Quantidade");
+        
+        tabela_itens.getColumnModel().getColumn(0).setMaxWidth(70);
+        tabela_itens.getColumnModel().getColumn(0).setMinWidth(70);
+        tabela_itens.getColumnModel().getColumn(2).setMaxWidth(120);
+        tabela_itens.getColumnModel().getColumn(2).setMinWidth(120);
+        tabela_itens.getColumnModel().getColumn(3).setMaxWidth(70);
+        tabela_itens.getColumnModel().getColumn(3).setMinWidth(70);
+        scroll_itens = new JScrollPane(tabela_itens);
+        
+        scroll_itens.setPreferredSize(new Dimension(550,200));
+
         id_pedido = new JTextField();
         dt_pedido = new JTextField();
         pedido_vl_tot = new JTextField();
@@ -136,7 +163,9 @@ public class Painel_vendas extends JPanel {
         painel_de_dados.add(tipo_pagamento);
         painel_de_dados.add(quantidade_de_itens_l);
         painel_de_dados.add(quantidade_de_itens);
+        painel_de_dados.add(scroll_itens);
         painel_de_dados.add(deletar_pedido);
+        
 
         add(painel_de_dados, BorderLayout.LINE_START);
     }
@@ -217,6 +246,22 @@ public class Painel_vendas extends JPanel {
         Cliente c = MiscDAO.search_cliente_por_id(username, password, MiscDAO.get_id_pedido_item_por_fk(username, password, p.getCod_pedido()));
         cliente_nome.setText("" + c.getNome());
         cliente_id.setText("" + c.getId());
+        quantidade_de_itens.setText("" + MiscDAO.get_quantidade_de_itens_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0)));
+        pedido_lucro_liquido.setText("" + MiscDAO.get_lucro_liquido_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0)));
+        atualizar_tabela_lucro();
+    }
+
+    private void atualizar_tabela_lucro() {
+        modelo_tabela_itens.setNumRows(0);
+        ArrayList<Produto> dados_produto;
+        dados_produto = MiscDAO.get_produtos_contidos_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+        for (int i = 0; i < dados_produto.size(); i++) {
+            Produto p = dados_produto.get(i);
+            modelo_tabela_itens.addRow(new Object[]{
+                p.getProduto_cod(),p.getProduto_nome(),p.getPreco_uni_venda(),
+                p.getFk_fornecedor_cod()
+            });
+        }
     }
 
     private void atualizar_tabela() {
