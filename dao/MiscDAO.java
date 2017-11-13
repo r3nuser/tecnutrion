@@ -8,6 +8,7 @@ import bean.Pedido;
 import bean.Produto;
 import bean.Telefone;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,6 +18,38 @@ import java.util.ArrayList;
 import sql.Sql;
 
 public class MiscDAO extends Sql {
+    
+    public static ArrayList<Pedido> relatorio_por_data(String username, String password, Date inicio, Date fim){
+        
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE dt_pedido BETWEEN ? and ?");
+            stmt.setDate(1,inicio);
+            stmt.setDate(2,fim);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                pedidos.add(p);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+        
+        
+    }
+            
     
     public static Produto get_produto_por_fk_cod_estoque(String username, String password, int id) {
         Produto p = new Produto();

@@ -34,12 +34,14 @@ public class Menu extends JFrame {
 
     JMenuItem cadastrar_cliente;
     JMenuItem cadastrar_produto;
-    JMenuItem cadastrar_fornecedor;
 
+    JMenuItem cadastrar_fornecedor;
     JMenuItem gerenciar_cliente;
     JMenuItem gerenciar_produto;
     JMenuItem gerenciar_fornecedor;
 
+    JMenuItem relatorio_de_vendas;
+    
     JMenuItem financeiro_estatisticas;
     JMenuItem financeiro_lucro;
 
@@ -95,6 +97,10 @@ public class Menu extends JFrame {
         financeiro.add(financeiro_estatisticas);
         financeiro.add(financeiro_lucro);
         financeiro.add(relatorios);
+        
+        relatorio_de_vendas = new JMenuItem("Relatório de Vendas");
+        
+        relatorios.add(relatorio_de_vendas);
 
         barra_do_menu.add(cadastros);
         barra_do_menu.add(gerencia);
@@ -111,6 +117,9 @@ public class Menu extends JFrame {
         });
         cadastrar_produto.addActionListener((ActionEvent)->{
             new Cadastrar_produto(this.currentusername, this.currentpassword);
+        });
+        relatorio_de_vendas.addActionListener((ActionEvent)->{
+            new Relatorio_de_vendas(this.currentusername,this.currentpassword);
         });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();
