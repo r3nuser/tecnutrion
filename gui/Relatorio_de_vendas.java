@@ -1,17 +1,21 @@
 package gui;
 
+import bean.Cliente;
 import bean.Pedido;
 import dao.MiscDAO;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
@@ -52,14 +56,14 @@ public class Relatorio_de_vendas extends JFrame {
         data_relatorio_inicio_l = new JLabel("Data de início:");
         data_relatorio_fim_l = new JLabel("Data de fim:");
 
-        gerar = new JButton("Gerar Relatório");
+        gerar = new JButton("Gerar Relatório",new ImageIcon(getClass().getResource("abas/ico_relatorios.png")));
 
         informativo.setBounds(10, 10, 200, 18);
         data_relatorio_inicio_l.setBounds(40, 28, 200, 18);
         data_relatorio_inicio.setBounds(40, 46, 120, 18);
         data_relatorio_fim_l.setBounds(40, 64, 200, 18);
         data_relatorio_fim.setBounds(40, 82, 120, 18);
-        gerar.setBounds(90, 180, 120, 18);
+        gerar.setBounds(40, 170, 180, 24);
 
         add(informativo);
 
@@ -80,27 +84,34 @@ public class Relatorio_de_vendas extends JFrame {
 
                 String dados_tabela="";
                 int tamanho = 137;
+                int quantidade = 0 ;
+                float pedido_vl_tot = 0;
+                float pedido_lucro_tot = 0;
+                
                 for(int i = 0 ; i < dados_relatorio.size() ; i++){
                     Pedido p  = dados_relatorio.get(i);
-                    
+                    Cliente c = MiscDAO.search_cliente_por_id(username, password, MiscDAO.get_id_cliente_pedido_item_por_fk(username, password, p.getCod_pedido()));
                     dados_tabela+="<tr>"+
                             "<td>"+p.getCod_pedido()+
                             "</td>"+
                             "<td>"+p.getDt_pedido()+
                             "</td>"+
-                            "<td>"+"ID CLIENTE"+
+                            "<td>"+c.getId()+
                             "</td>"+
-                            "<td>"+"NOME CLIENTE"+
+                            "<td>"+c.getNome()+
                             "</td>"+
                             "<td>"+MiscDAO.get_quantidade_de_itens_pedido(username, password, p.getCod_pedido())+
                             "</td>"+
                             "<td>"+p.getPedido_vl_tot()+
                             "</td>"+
-                            "<td>"+p.getPedido_vl_tot()/2+
+                            "<td>"+MiscDAO.get_lucro_liquido_pedido(username, password,p.getCod_pedido())+
                             "</td>"+
-                            "</tr>";
+                            "</tr>\n";
                     
                     tamanho+=11;
+                    pedido_vl_tot += p.getPedido_vl_tot();
+                    pedido_lucro_tot += MiscDAO.get_lucro_liquido_pedido(username, password,p.getCod_pedido());
+                    quantidade++;
                 }
                 String texto;
                 texto = "<!DOCTYPE html>\n"
@@ -212,24 +223,24 @@ public class Relatorio_de_vendas extends JFrame {
                         + "</head>\n"
                         + "<body>\n"
                         + "	<div class=\"margem\">\n"
-                        + "		<header class=\"cabecalho\"> RELATÓRIO DE VENDAS (16/08/2011 - 26/11/2017)</header>\n"
+                        + "		<header class=\"cabecalho\"> RELATÓRIO DE VENDAS ("+data_relatorio_inicio.getText()+" - "+data_relatorio_fim.getText()+")</header>\n"
                         + "		<valores>\n"
-                        + "			<texto>Lucro valor bruto: R$: 4560,00</texto>\n"
+                        + "			<texto>Lucro valor bruto: R$: "+pedido_vl_tot+"</texto>\n"
                         + "\n"
-                        + "			<texto1>Lucro valor líquido: R$: 2040,00</texto1>\n"
-                        + "			<texto2>Número de vendas:  10</texto2>\n"
+                        + "			<texto1>Lucro valor líquido: R$:"+pedido_lucro_tot+"</texto1>\n"
+                        + "			<texto2>Número de vendas:  "+quantidade+"</texto2>\n"
                         + "			<table border=\"1px\" bordercolor=\"#ff26fb\">\n"
                         + "				<tr>\n"
                         + "					<th>Id Venda</th>\n"
                         + "					<th>Data Da Venda</th>\n"
                         + "					<th>ID Cliente</th>\n"
                         + "					<th>Nome Do Cliente</th>\n"
-                        + "					<th>Items Comprados</th>\n"
+                        + "					<th>Itens Comprados</th>\n"
                         + "					<th>Lucro Bruto</th>\n"
                         + "					<th>Lucro Líquido</th>\n"
                         + "				</tr>\n"
                         + "				\n"
-                        + "				"+dados_tabela
+                        + ""+dados_tabela
                         + "				\n"
                         + "				\n"
                         + "			</table>\n"
@@ -242,8 +253,10 @@ public class Relatorio_de_vendas extends JFrame {
                         + "</html>";
                 System.out.println(texto);
                 gravarArq.print(texto);
-
                 arq.close();
+                File html = new File("relatorio.html");
+                JOptionPane.showMessageDialog(null,"Arquivo criado em:"+html.getAbsolutePath());
+                dispose();
             } catch (Exception e) {
                 System.out.println(e);
             }

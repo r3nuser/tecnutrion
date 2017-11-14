@@ -243,7 +243,7 @@ public class Painel_vendas extends JPanel {
         dt_pedido.setText("" + p.getDt_pedido());
         pedido_vl_tot.setText("" + p.getPedido_vl_tot());
         tipo_pagamento.setText("" + p.getPagamento());
-        Cliente c = MiscDAO.search_cliente_por_id(username, password, MiscDAO.get_id_pedido_item_por_fk(username, password, p.getCod_pedido()));
+        Cliente c = MiscDAO.search_cliente_por_id(username, password, MiscDAO.get_id_cliente_pedido_item_por_fk(username, password, p.getCod_pedido()));
         cliente_nome.setText("" + c.getNome());
         cliente_id.setText("" + c.getId());
         quantidade_de_itens.setText("" + MiscDAO.get_quantidade_de_itens_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0)));
@@ -273,7 +273,7 @@ public class Painel_vendas extends JPanel {
             Pedido_item pi = new Pedido_item();
             Cliente c = new Cliente();
             try {
-                pi.setFk_cod_cliente(MiscDAO.get_id_pedido_item_por_fk(username, password, p.getCod_pedido()));
+                pi.setFk_cod_cliente(MiscDAO.get_id_cliente_pedido_item_por_fk(username, password, p.getCod_pedido()));
                 c = MiscDAO.search_cliente_por_id(username, password, pi.getFk_cod_cliente());
             } catch (Exception e) {
                 System.out.println(e);

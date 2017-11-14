@@ -121,6 +121,10 @@ public class Menu extends JFrame {
         relatorio_de_vendas.addActionListener((ActionEvent)->{
             new Relatorio_de_vendas(this.currentusername,this.currentpassword);
         });
+        funcoes_administrativas.addActionListener((ActionEvent)->{
+            new Funcoes_administrativas(this.currentusername,this.currentpassword);
+        });
+        
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();
 

@@ -218,7 +218,7 @@ public class MiscDAO extends Sql {
         return p;
     }
     
-    public static int get_id_pedido_item_por_fk(String username, String password, int fk) {
+    public static int get_id_cliente_pedido_item_por_fk(String username, String password, int fk) {
         int pi = 0;
         PreparedStatement stmt = null;
         ResultSet rs = null;
