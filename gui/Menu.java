@@ -36,10 +36,7 @@ public class Menu extends JFrame {
     JMenuItem cadastrar_produto;
 
     JMenuItem cadastrar_fornecedor;
-    JMenuItem gerenciar_cliente;
-    JMenuItem gerenciar_produto;
-    JMenuItem gerenciar_fornecedor;
-
+    
     JMenuItem relatorio_de_vendas;
     
     JMenuItem financeiro_estatisticas;
@@ -65,7 +62,7 @@ public class Menu extends JFrame {
         //DEFINIÇÃO E INICIALIZAÇÃO DA BARRA DO MENU E SEUS RESPECTIVOS ITENS.
         barra_do_menu = new JMenuBar();
         cadastros = new JMenu("Cadastros");
-        gerencia = new JMenu("Gerência");
+        
         ajuda = new JMenu("Ajuda");
         financeiro = new JMenu("Financeiro");
         relatorios = new JMenu("Relatórios");
@@ -83,14 +80,7 @@ public class Menu extends JFrame {
         cadastros.add(cadastrar_produto);
         cadastros.add(cadastrar_fornecedor);
 
-        gerenciar_cliente = new JMenuItem("Gerenciar Cliente");
-        gerenciar_produto = new JMenuItem("Gerenciar Produto");
-        gerenciar_fornecedor = new JMenuItem("Gerenciar Fornecedor");
-
-        gerencia.add(gerenciar_cliente);
-        gerencia.add(gerenciar_produto);
-        gerencia.add(gerenciar_fornecedor);
-
+       
         financeiro_estatisticas = new JMenuItem("Estatísticas");
         financeiro_lucro = new JMenuItem("Lucro e Vendas");
 
@@ -103,7 +93,6 @@ public class Menu extends JFrame {
         relatorios.add(relatorio_de_vendas);
 
         barra_do_menu.add(cadastros);
-        barra_do_menu.add(gerencia);
         barra_do_menu.add(financeiro);
         barra_do_menu.add(configuracoes);
         barra_do_menu.add(ajuda);
@@ -124,7 +113,9 @@ public class Menu extends JFrame {
         funcoes_administrativas.addActionListener((ActionEvent)->{
             new Funcoes_administrativas(this.currentusername,this.currentpassword);
         });
-        
+        financeiro_estatisticas.addActionListener((ActionEvent)->{
+            new Estatisticas(this.currentusername,this.currentpassword);
+        });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();
 
