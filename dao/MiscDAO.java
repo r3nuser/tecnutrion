@@ -19,6 +19,343 @@ import sql.Sql;
 
 public class MiscDAO extends Sql {
 
+    public static int clientes_cadastrados(String username, String password) {
+        int total = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT count(cliente_cod) FROM clientes");
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("count(cliente_cod)");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return total;
+    }
+
+    public  static int produtos_cadastrados(String username, String password) {
+        int total = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT count(produto_cod) FROM produtos");
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("count(produto_cod)");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return total;
+    }
+
+    public  static int fornecedores_cadastrados(String username, String password) {
+        int total = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT count(fornecedor_cod) FROM fornecedor");
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("count(fornecedor_cod)");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return total;
+    }
+
+    public static int total_item_estoque_cadastrados(String username, String password) {
+        int total = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT sum(qnt_estoque) FROM estoque");
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("sum(qnt_estoque)");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return total;
+    }
+
+    public static int total_de_vendas_cadastrados(String username, String password) {
+        int total = 0;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT count(cod_pedido) FROM pedido");
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                total = rs.getInt("count(cod_pedido)");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return total;
+    }
+
+    public static ArrayList<Pedido> vendas_semana_passada(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("select * from pedido WHERE YEARWEEK(dt_pedido) = YEARWEEK(NOW())-1");
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                pedidos.add(p);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+    }
+
+    public static ArrayList<Pedido> vendas_semana(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE week(dt_pedido)= week(now()) and year(data) = year(now())");
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                pedidos.add(p);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+    }
+
+    public static ArrayList<Pedido> vendas_ano(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE year(dt_pedido)= year(now())");
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                pedidos.add(p);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+    }
+
+    public static ArrayList<Pedido> vendas_mes(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE month(dt_pedido)= month(now())");
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                pedidos.add(p);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+    }
+
+    public static ArrayList<Pedido> vendas_dia(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE day(dt_pedido)= day(now())");
+
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                pedidos.add(p);
+
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+    }
+
+    public static ArrayList<Cliente> search_aniversariantes_do_mes(String username, String password) {
+        ArrayList<Cliente> dados_cliente = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM clientes Where Month(dt_nasc) = Month(Now());");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Cliente c = new Cliente();
+                c.setData_nascimento(rs.getDate("dt_nasc"));
+                c.setId(rs.getInt("cliente_cod"));
+                c.setNome(rs.getString("cliente_nome"));
+                dados_cliente.add(c);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+
+        return dados_cliente;
+    }
+
+    public static ArrayList<Estoque> search_produtos_fora_de_estoque(String username, String password) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        ArrayList<Estoque> dados_estoque = new ArrayList<>();
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT qnt_estoque,estoque_cod FROM estoque WHERE qnt_estoque<5 ORDER BY qnt_estoque");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Estoque e = new Estoque();
+                e.setQnt_estoque(rs.getInt("qnt_estoque"));
+                e.setEstoque_cod(rs.getInt("estoque_cod"));
+                dados_estoque.add(e);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+
+        return dados_estoque;
+    }
+
+    public static ArrayList<Estoque> search_produtos_perto_de_vencer(String username, String password, Date dia) {
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+
+        ArrayList<Estoque> dados_estoque = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT validade,estoque_cod from estoque where validade<=? ORDER BY validade");
+            stmt.setDate(1, dia);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Estoque e = new Estoque();
+                e.setValidade(rs.getDate("validade"));
+                e.setEstoque_cod(rs.getInt("estoque_cod"));
+                dados_estoque.add(e);
+            }
+
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+
+        return dados_estoque;
+
+    }
+
     public static ArrayList<Pedido> relatorio_por_data(String username, String password, Date inicio, Date fim) {
 
         PreparedStatement stmt = null;

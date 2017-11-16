@@ -10,7 +10,7 @@ public class Sql {
     public static Connection getConnection(String username, String password) {
         try {
             String driver = "com.mysql.jdbc.Driver";
-            String url = "jdbc:mysql://localhost:3306/visualnutrion";
+            String url = "jdbc:mysql://192.168.15.4:3306/visualnutrion";
             Class.forName(driver);
             Connection con = DriverManager.getConnection(url, username, password);
             System.out.println(username + " Connected !");

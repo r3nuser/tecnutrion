@@ -1,18 +1,16 @@
 package gui.abas;
 
 import bean.Pedido;
+import bean.Produto;
 import dao.MiscDAO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -22,12 +20,14 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 public class Painel_inicio extends JPanel {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     private JScrollPane scroll;
 
@@ -72,6 +72,31 @@ public class Painel_inicio extends JPanel {
     private JLabel img_indice_de_lucro_b;
     private JLabel img_indice_de_lucro_l;
 
+    // PAINEL INFORMATIVO
+    private JPanel painel_informativo;
+
+    private JPanel informativo_total_cadastros;
+    private JLabel produtos_cadastrados;
+    private JLabel clientes_cadastrados;
+    private JLabel fornecedores_cadastrados;
+    private JLabel total_de_item_estoque;
+    private JLabel total_de_vendas;
+
+//tabela
+    private JPanel painel_tabela;
+
+    private JTable tabela_estoque;
+    private JTable tabela_validade;
+    private JTable tabela_aniversario;
+
+    private DefaultTableModel dtm_estoque;
+    private DefaultTableModel dtm_validade;
+    private DefaultTableModel dtm_aniversario;
+
+    private JScrollPane scroll_estoque;
+    private JScrollPane scroll_validade;
+    private JScrollPane scroll_aniversario;
+
     private Border b;
     private Font f;
 
@@ -99,14 +124,143 @@ public class Painel_inicio extends JPanel {
 
         setLayout(new BorderLayout());
         painel_principal = new JPanel(new BorderLayout());
-        painel_principal.setPreferredSize(new Dimension(1024, 3000));
+        painel_principal.setPreferredSize(new Dimension(1024, 1000));
         painel_principal.setBorder(b);
 
         inicializa_itens_painel_logistica();
+        inicializa_painel_da_tabela();
         scroll = new JScrollPane(painel_principal);
+
         add(scroll);
 
         setVisible(true);
+    }
+
+    private void inicializa_painel_da_tabela() {
+        painel_tabela = new JPanel(new GridLayout(3, 1));
+        painel_tabela.setBorder(b);
+        inicializa_itens_painel_tabela();
+        painel_principal.add(painel_tabela, BorderLayout.CENTER);
+    }
+
+    private void inicializa_itens_painel_tabela() {
+        inicializa_painel_da_tabela_validade();
+        inicializa_painel_da_tabela_estoque();
+        inicializa_painel_da_tabela_aniversariante();
+    }
+
+    private void inicializa_painel_da_tabela_estoque() {
+        dtm_estoque = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int a, int b) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return ImageIcon.class;
+                    default:
+                        return Object.class;
+                }
+            }
+        };
+        tabela_estoque = new JTable(dtm_estoque);
+        dtm_estoque.addColumn("Foto");
+        dtm_estoque.addColumn("ID");
+        dtm_estoque.addColumn("Nome");
+        dtm_estoque.addColumn("Qnt. Estoque");
+
+        tabela_estoque.setRowHeight(100);
+        tabela_estoque.getColumnModel().getColumn(0).setMaxWidth(100);
+        tabela_estoque.getColumnModel().getColumn(0).setMinWidth(100);
+
+        scroll_estoque = new JScrollPane(tabela_estoque);
+
+        scroll_estoque.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS QUASE FORA DE ESTOQUE", 1, 1, f));
+
+        painel_tabela.add(scroll_estoque);
+
+    }
+
+    private void inicializa_painel_da_tabela_validade() {
+        dtm_validade = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int rowIndex, int mColIndex) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return ImageIcon.class;
+                    default:
+                        return Object.class;
+                }
+            }
+        };
+        tabela_validade = new JTable(dtm_validade);
+        dtm_validade.addColumn("Foto");
+        dtm_validade.addColumn("ID");
+        dtm_validade.addColumn("Nome");
+        dtm_validade.addColumn("Validade");
+
+        tabela_validade.setRowHeight(100);
+
+        tabela_validade.getColumnModel().getColumn(0).setMaxWidth(100);
+        tabela_validade.getColumnModel().getColumn(0).setMinWidth(100);
+
+        scroll_validade = new JScrollPane(tabela_validade);
+        scroll_validade.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS PERTO DA VALIDADE", 1, 1, f));
+
+        painel_tabela.add(scroll_validade);
+
+    }
+
+    private void inicializa_painel_da_tabela_aniversariante() {
+        dtm_aniversario = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int rowIndex, int mColIndex) {
+                return false;
+            }
+        };
+        tabela_aniversario = new JTable(dtm_aniversario);
+
+        dtm_aniversario.addColumn("ID");
+        dtm_aniversario.addColumn("Nome");
+        dtm_aniversario.addColumn("Aniversario");
+
+        scroll_aniversario = new JScrollPane(tabela_aniversario);
+        scroll_aniversario.setBorder(BorderFactory.createTitledBorder(b, "ANIVERSARIANTES DO MÊS", 1, 1, f));
+
+        painel_tabela.add(scroll_aniversario);
+    }
+
+    private void atualizar_dados_tabelas(GregorianCalendar calendar) {
+        dtm_aniversario.setNumRows(0);
+        dtm_validade.setNumRows(0);
+        dtm_estoque.setNumRows(0);
+
+        Date dia = converterData(
+                (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 7)
+                + "/"
+                + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                + "/"
+                + (calendar.get(GregorianCalendar.YEAR))
+        );
+        MiscDAO.search_produtos_perto_de_vencer(username, password, dia).stream().forEach((e) -> {
+            Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
+            dtm_validade.addRow(new Object[]{p.getProduto_foto_para_tabela(), p.getProduto_cod(), p.getProduto_nome(), e.getValidade()});
+        });
+        MiscDAO.search_produtos_fora_de_estoque(username, password).stream().forEach((e) -> {
+            Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
+            dtm_estoque.addRow(new Object[]{p.getProduto_foto_para_tabela(), p.getProduto_cod(), p.getProduto_nome(), e.getQnt_estoque()});
+        });
+        MiscDAO.search_aniversariantes_do_mes(username, password).stream().forEach((c) -> {
+            dtm_aniversario.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento()});
+        });
     }
 
     private void inicializa_itens_painel_logistica() {
@@ -124,43 +278,70 @@ public class Painel_inicio extends JPanel {
             GregorianCalendar calendar = new GregorianCalendar();
             SimpleDateFormat formatador = new SimpleDateFormat("dd' de 'MMMMM' de 'yyyy' - 'HH':'mm'h'", locale);
             atualizacao.setText("Dados atualizados em " + formatador.format(calendar.getTime()));
+            painel_logistica_anual();
+            painel_logistica_mensal();
+            painel_logistica_diario();
+            atualizar_dados_tabelas(calendar);
+            atualizar_dados_do_rendimento((byte) periodo.getSelectedIndex(), calendar);
 
-            painel_logistica_anual(calendar);
-            painel_logistica_mensal(calendar);
-            painel_logistica_diario(calendar);
+            produtos_cadastrados.setText("Total de Produtos Cadastrados : " + MiscDAO.produtos_cadastrados(username, password));
+            clientes_cadastrados.setText("Total de Clientes Cadastrados : " + MiscDAO.clientes_cadastrados(username, password));
+            fornecedores_cadastrados.setText("Total de Fornecedores Cadastrados : " + MiscDAO.fornecedores_cadastrados(username, password));
+            total_de_item_estoque.setText("Total de Itens no Estoque : " + MiscDAO.total_item_estoque_cadastrados(username, password));
+            total_de_vendas.setText("Total de Vendas Realizadas : " + MiscDAO.total_de_vendas_cadastrados(username, password));
+
         });
-        painel_logistica.setPreferredSize(new Dimension(900, 3000));
+        painel_logistica.setPreferredSize(new Dimension(900, 2000));
         painel_logistica.setBorder(b);
         painel_logistica.add(atualizacao);
         painel_logistica.add(atualizar_dados);
         painel_principal.add(painel_logistica, BorderLayout.LINE_START);
         inicializa_painel_de_vendas();
         inicializa_painel_de_rendimento();
+        inicializa_painel_informativo();
     }
 
-    private void painel_logistica_anual(GregorianCalendar calendar) {
-        Date inicio = converterData(
-                calendar.get(GregorianCalendar.DAY_OF_MONTH)
-                + "/"
-                + (calendar.get(GregorianCalendar.MONTH) - (-1))
-                + "/"
-                + (calendar.get(GregorianCalendar.YEAR) - 1)
-        );
-        Date fim = converterData(
-                calendar.get(GregorianCalendar.DAY_OF_MONTH)
-                + "/"
-                + (calendar.get(GregorianCalendar.MONTH) - (-1))
-                + "/"
-                + (calendar.get(GregorianCalendar.YEAR))
-        );
+    private void inicializa_painel_informativo() {
+        painel_informativo = new JPanel(null);
+        painel_informativo.setBorder(BorderFactory.createTitledBorder(b, "INFORMATIVO", 1, 1, f));
+        painel_informativo.setBounds(10, 500, 880, 470);
 
-        System.out.println(inicio + " - " + fim);
+        informativo_total_cadastros = new JPanel(null);
+        informativo_total_cadastros.setBorder(BorderFactory.createTitledBorder(b, "TOTAL DE CADASTROS"));
+
+        informativo_total_cadastros.setBounds(10, 40, 860, 150);
+
+        produtos_cadastrados = new JLabel("Total de Produtos Cadastrados:");
+        clientes_cadastrados = new JLabel("Total de Clientes Cadastrados:");
+        fornecedores_cadastrados = new JLabel("Total de Fornecedores Cadastrados:");
+        total_de_item_estoque = new JLabel("Total de Itens no Estoque:");
+        total_de_vendas = new JLabel("Total de Vendas Realizadas: ");
+
+        informativo_total_cadastros.add(produtos_cadastrados);
+        informativo_total_cadastros.add(clientes_cadastrados);
+        informativo_total_cadastros.add(fornecedores_cadastrados);
+        informativo_total_cadastros.add(total_de_item_estoque);
+        informativo_total_cadastros.add(total_de_vendas);
+
+        produtos_cadastrados.setBounds(10, 30, 400, 20);
+        clientes_cadastrados.setBounds(10, 50, 400, 20);
+        fornecedores_cadastrados.setBounds(10, 70, 400, 20);
+        total_de_item_estoque.setBounds(10, 90, 400, 20);
+        total_de_vendas.setBounds(10, 110, 400, 20);
+
+        painel_informativo.add(informativo_total_cadastros);
+
+        painel_logistica.add(painel_informativo);
+
+    }
+
+    private void painel_logistica_anual() {
 
         int quantidade = 0;
         float pedido_vl_tot = 0;
         float pedido_lucro_tot = 0;
 
-        for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+        for (Pedido p : MiscDAO.vendas_ano(username, password)) {
             quantidade++;
             pedido_vl_tot += p.getPedido_vl_tot();
             pedido_lucro_tot += MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
@@ -171,29 +352,13 @@ public class Painel_inicio extends JPanel {
         total_de_lucro_liquido_a.setText("Total de Lucro Liquido: R$:" + pedido_lucro_tot);
     }
 
-    private void painel_logistica_mensal(GregorianCalendar calendar) {
-        Date inicio = converterData(
-                calendar.get(GregorianCalendar.DAY_OF_MONTH)
-                + "/"
-                + (calendar.get(GregorianCalendar.MONTH))
-                + "/"
-                + (calendar.get(GregorianCalendar.YEAR))
-        );
-        Date fim = converterData(
-                calendar.get(GregorianCalendar.DAY_OF_MONTH)
-                + "/"
-                + (calendar.get(GregorianCalendar.MONTH) - (-1))
-                + "/"
-                + (calendar.get(GregorianCalendar.YEAR))
-        );
-
-        System.out.println(inicio + " - " + fim);
+    private void painel_logistica_mensal() {
 
         int quantidade = 0;
         float pedido_vl_tot = 0;
         float pedido_lucro_tot = 0;
 
-        for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+        for (Pedido p : MiscDAO.vendas_mes(username, password)) {
             quantidade++;
             pedido_vl_tot += p.getPedido_vl_tot();
             pedido_lucro_tot += MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
@@ -204,29 +369,13 @@ public class Painel_inicio extends JPanel {
         total_de_lucro_liquido_m.setText("Total de Lucro Liquido: R$:" + pedido_lucro_tot);
     }
 
-    private void painel_logistica_diario(GregorianCalendar calendar) {
-        Date inicio = converterData(
-                (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 1)
-                + "/"
-                + (calendar.get(GregorianCalendar.MONTH) - (-1))
-                + "/"
-                + (calendar.get(GregorianCalendar.YEAR))
-        );
-        Date fim = converterData(
-                calendar.get(GregorianCalendar.DAY_OF_MONTH)
-                + "/"
-                + (calendar.get(GregorianCalendar.MONTH) - (-1))
-                + "/"
-                + (calendar.get(GregorianCalendar.YEAR))
-        );
-
-        System.out.println(inicio + " - " + fim);
+    private void painel_logistica_diario() {
 
         int quantidade = 0;
         float pedido_vl_tot = 0;
         float pedido_lucro_tot = 0;
 
-        for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+        for (Pedido p : MiscDAO.vendas_dia(username, password)) {
             quantidade++;
             pedido_vl_tot += p.getPedido_vl_tot();
             pedido_lucro_tot += MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
@@ -296,6 +445,160 @@ public class Painel_inicio extends JPanel {
         painel_logistica.add(painel_de_vendas);
     }
 
+    private void atualizar_dados_do_rendimento(byte mode, GregorianCalendar calendar) {
+        int qnt_venda = 0;
+        float lucro_b = 0;
+        float lucro_l = 0;
+
+        try {
+            if (mode == 0) {
+                Date inicio = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 7)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                Date fim = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    qnt_venda++;
+                    lucro_b += p.getPedido_vl_tot();
+                    lucro_l += MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                }
+                inicio = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 14)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                fim = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 7)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    qnt_venda--;
+                    lucro_b -= p.getPedido_vl_tot();
+                    lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                }
+            } else if (mode == 1) {
+                Date inicio = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 30)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                Date fim = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    qnt_venda++;
+                    lucro_b += p.getPedido_vl_tot();
+                    lucro_l += MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                }
+                inicio = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 60)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                fim = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 30)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    qnt_venda--;
+                    lucro_b -= p.getPedido_vl_tot();
+                    lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                }
+            } else {
+                Date inicio = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 365)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                Date fim = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    qnt_venda++;
+                    lucro_b += p.getPedido_vl_tot();
+                    lucro_l += MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                }
+                inicio = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 730)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                fim = converterData(
+                        (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 365)
+                        + "/"
+                        + (calendar.get(GregorianCalendar.MONTH) - (-1))
+                        + "/"
+                        + (calendar.get(GregorianCalendar.YEAR))
+                );
+                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    qnt_venda--;
+                    lucro_b -= p.getPedido_vl_tot();
+                    lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            indice_de_vendas_texto.setText("" + qnt_venda);
+            indice_de_lucro_b_texto.setText("" + lucro_b);
+            indice_de_lucro_l_texto.setText("" + lucro_l);
+            if (Integer.parseInt(indice_de_vendas_texto.getText()) >= 0) {
+                indice_de_vendas_texto.setForeground(new Color(0, 120, 0));
+                img_indice_de_vendas.setIcon(new ImageIcon(getClass().getResource("seta_positiva.png")));
+            } else {
+                indice_de_vendas_texto.setForeground(new Color(120, 0, 0));
+                img_indice_de_vendas.setIcon(new ImageIcon(getClass().getResource("seta_negativa.png")));
+            }
+            if (Float.parseFloat(indice_de_lucro_b_texto.getText()) >= 0) {
+                indice_de_lucro_b_texto.setForeground(new Color(0, 120, 0));
+                img_indice_de_lucro_b.setIcon(new ImageIcon(getClass().getResource("seta_positiva.png")));
+            } else {
+                indice_de_lucro_b_texto.setForeground(new Color(120, 0, 0));
+                img_indice_de_lucro_b.setIcon(new ImageIcon(getClass().getResource("seta_negativa.png")));
+            }
+            if (Float.parseFloat(indice_de_lucro_l_texto.getText()) >= 0) {
+                indice_de_lucro_l_texto.setForeground(new Color(0, 120, 0));
+                img_indice_de_lucro_l.setIcon(new ImageIcon(getClass().getResource("seta_positiva.png")));
+            } else {
+                indice_de_lucro_l_texto.setForeground(new Color(120, 0, 0));
+                img_indice_de_lucro_l.setIcon(new ImageIcon(getClass().getResource("seta_negativa.png")));
+            }
+        }
+    }
+
     private void inicializa_painel_de_rendimento() {
         painel_de_rendimento = new JPanel(null);
         painel_de_rendimento.setBounds(10, 300, 880, 170);
@@ -307,7 +610,7 @@ public class Painel_inicio extends JPanel {
         periodo.addItem("mês atual x mês passado");
         periodo.addItem("ano atual x ano passado");
         periodo.setBounds(10, 35, 300, 22);
-
+        
         indice_de_vendas = new JPanel(null);
         indice_de_lucro_b = new JPanel(null);
         indice_de_lucro_l = new JPanel(null);
@@ -321,9 +624,9 @@ public class Painel_inicio extends JPanel {
         indice_de_lucro_b.setLocation(300, 65);
         indice_de_lucro_l.setLocation(590, 65);
 
-        indice_de_vendas_texto = new JLabel("-1000000");
-        indice_de_lucro_b_texto = new JLabel("500000000");
-        indice_de_lucro_l_texto = new JLabel("-500000000");
+        indice_de_vendas_texto = new JLabel("0");
+        indice_de_lucro_b_texto = new JLabel("0");
+        indice_de_lucro_l_texto = new JLabel("0");
 
         img_indice_de_vendas = new JLabel(new ImageIcon(getClass().getResource("seta_positiva.png")));
         img_indice_de_lucro_b = new JLabel(new ImageIcon(getClass().getResource("seta_positiva.png")));
@@ -332,28 +635,6 @@ public class Painel_inicio extends JPanel {
         img_indice_de_vendas.setBounds(200, 20, 64, 64);
         img_indice_de_lucro_b.setBounds(200, 20, 64, 64);
         img_indice_de_lucro_l.setBounds(200, 20, 64, 64);
-
-        if (Integer.parseInt(indice_de_vendas_texto.getText()) >= 0) {
-            indice_de_vendas_texto.setForeground(new Color(0, 120, 0));
-            img_indice_de_vendas.setIcon(new ImageIcon(getClass().getResource("seta_positiva.png")));
-        } else {
-            indice_de_vendas_texto.setForeground(new Color(120, 0, 0));
-            img_indice_de_vendas.setIcon(new ImageIcon(getClass().getResource("seta_negativa.png")));
-        }
-        if (Integer.parseInt(indice_de_lucro_b_texto.getText()) >= 0) {
-            indice_de_lucro_b_texto.setForeground(new Color(0, 120, 0));
-            img_indice_de_lucro_b.setIcon(new ImageIcon(getClass().getResource("seta_positiva.png")));
-        } else {
-            indice_de_lucro_b_texto.setForeground(new Color(120, 0, 0));
-            img_indice_de_lucro_b.setIcon(new ImageIcon(getClass().getResource("seta_negativa.png")));
-        }
-        if (Integer.parseInt(indice_de_lucro_l_texto.getText()) >= 0) {
-            indice_de_lucro_l_texto.setForeground(new Color(0, 120, 0));
-            img_indice_de_lucro_l.setIcon(new ImageIcon(getClass().getResource("seta_positiva.png")));
-        } else {
-            indice_de_lucro_l_texto.setForeground(new Color(120, 0, 0));
-            img_indice_de_lucro_l.setIcon(new ImageIcon(getClass().getResource("seta_negativa.png")));
-        }
 
         indice_de_vendas_texto.setFont(f);
         indice_de_lucro_b_texto.setFont(f);
