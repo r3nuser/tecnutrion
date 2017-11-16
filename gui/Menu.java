@@ -1,8 +1,8 @@
 package gui;
 
-
 import java.awt.BorderLayout;
 import gui.abas.*;
+import java.awt.Color;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -13,8 +13,9 @@ import javax.swing.JMenuItem;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
-
-
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 
 public class Menu extends JFrame {
 
@@ -29,16 +30,16 @@ public class Menu extends JFrame {
     JMenu relatorios;
     JMenu estoque;
     JMenu configuracoes;
-    
+
     JMenuItem funcoes_administrativas;
 
     JMenuItem cadastrar_cliente;
     JMenuItem cadastrar_produto;
 
     JMenuItem cadastrar_fornecedor;
-    
+
     JMenuItem relatorio_de_vendas;
-    
+
     JMenuItem financeiro_estatisticas;
     JMenuItem financeiro_lucro;
 
@@ -53,7 +54,7 @@ public class Menu extends JFrame {
     public Menu(String username, String password) {
         this.currentusername = username;
         this.currentpassword = password;
-        
+
         initComponents();
 
     }
@@ -62,16 +63,16 @@ public class Menu extends JFrame {
         //DEFINIÇÃO E INICIALIZAÇÃO DA BARRA DO MENU E SEUS RESPECTIVOS ITENS.
         barra_do_menu = new JMenuBar();
         cadastros = new JMenu("Cadastros");
-        
+
         ajuda = new JMenu("Ajuda");
         financeiro = new JMenu("Financeiro");
         relatorios = new JMenu("Relatórios");
         configuracoes = new JMenu("Configurações");
-        
+
         funcoes_administrativas = new JMenuItem("Funções Administrativas");
-        
+
         configuracoes.add(funcoes_administrativas);
-      
+
         cadastrar_cliente = new JMenuItem("Cadastrar Cliente");
         cadastrar_produto = new JMenuItem("Cadastrar Produto");
         cadastrar_fornecedor = new JMenuItem("Cadastrar Fornecedor");
@@ -80,16 +81,15 @@ public class Menu extends JFrame {
         cadastros.add(cadastrar_produto);
         cadastros.add(cadastrar_fornecedor);
 
-       
         financeiro_estatisticas = new JMenuItem("Estatísticas");
         financeiro_lucro = new JMenuItem("Lucro e Vendas");
 
         financeiro.add(financeiro_estatisticas);
         financeiro.add(financeiro_lucro);
         financeiro.add(relatorios);
-        
+
         relatorio_de_vendas = new JMenuItem("Relatório de Vendas");
-        
+
         relatorios.add(relatorio_de_vendas);
 
         barra_do_menu.add(cadastros);
@@ -104,42 +104,42 @@ public class Menu extends JFrame {
         cadastrar_cliente.addActionListener((ActionEvent) -> {
             new Cadastrar_cliente(this.currentusername, this.currentpassword);
         });
-        cadastrar_produto.addActionListener((ActionEvent)->{
+        cadastrar_produto.addActionListener((ActionEvent) -> {
             new Cadastrar_produto(this.currentusername, this.currentpassword);
         });
-        relatorio_de_vendas.addActionListener((ActionEvent)->{
-            new Relatorio_de_vendas(this.currentusername,this.currentpassword);
+        relatorio_de_vendas.addActionListener((ActionEvent) -> {
+            new Relatorio_de_vendas(this.currentusername, this.currentpassword);
         });
-        funcoes_administrativas.addActionListener((ActionEvent)->{
-            new Funcoes_administrativas(this.currentusername,this.currentpassword);
+        funcoes_administrativas.addActionListener((ActionEvent) -> {
+            new Funcoes_administrativas(this.currentusername, this.currentpassword);
         });
-        financeiro_estatisticas.addActionListener((ActionEvent)->{
-            new Estatisticas(this.currentusername,this.currentpassword);
+        financeiro_estatisticas.addActionListener((ActionEvent) -> {
+            new Estatisticas(this.currentusername, this.currentpassword);
         });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();
 
-        painel_inicio = new Painel_inicio();
+        painel_inicio = new Painel_inicio(this.currentusername, this.currentpassword);
         painel_vendas = new Painel_vendas(this.currentusername, this.currentpassword);
         painel_cliente = new Painel_cliente(this.currentusername, this.currentpassword);
         painel_fornecedor = new Painel_fornecedor(this.currentusername, this.currentpassword);
         painel_produto = new Painel_produto(this.currentusername, this.currentpassword);
         painel_estoque = new Painel_estoque(this.currentusername, this.currentpassword);
 
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")),painel_inicio);
-        
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")), painel_inicio);
+
         abas.setMnemonicAt(0, KeyEvent.VK_1);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_vendas.png")),painel_vendas);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_vendas.png")), painel_vendas);
         abas.setMnemonicAt(1, KeyEvent.VK_2);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_clientes.png")),painel_cliente);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_clientes.png")), painel_cliente);
         abas.setMnemonicAt(2, KeyEvent.VK_3);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_produtos.png")),painel_produto);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_produtos.png")), painel_produto);
         abas.setMnemonicAt(3, KeyEvent.VK_4);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_fornecedor.png")),painel_fornecedor);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_fornecedor.png")), painel_fornecedor);
         abas.setMnemonicAt(4, KeyEvent.VK_5);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")),painel_estoque);
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")), painel_estoque);
         abas.setMnemonicAt(5, KeyEvent.VK_6);
-        
+
         //ADICIONANDO TODOS COMPONENTES NA JFRAME
         setJMenuBar(barra_do_menu);
         add(abas, BorderLayout.CENTER);
@@ -152,13 +152,11 @@ public class Menu extends JFrame {
 
         //getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
         
-        
+
         setVisible(true);
-        
-        
+
     }
 
-    
 }
 //CODE OF GRAPHICS
 /*
