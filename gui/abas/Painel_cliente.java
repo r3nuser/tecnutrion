@@ -8,6 +8,7 @@ import dao.EnderecoDAO;
 import dao.MiscDAO;
 import dao.TelefoneDAO;
 import gui.Cadastrar_cliente;
+import gui.Editar_clientes;
 import java.awt.BorderLayout;
 import java.awt.Color;
 
@@ -71,9 +72,6 @@ public class Painel_cliente extends JPanel {
     private JLabel municipio_l;
     private JLabel complemento_l;
     private JLabel cep_l;
-    private JLabel ddd_l;
-    private JLabel antesh_l;
-    private JLabel depoish_l;
 
     private JTextField nome_cliente;
     private JTextField data_nascimento;
@@ -85,9 +83,10 @@ public class Painel_cliente extends JPanel {
     private JTextField municipio;
     private JTextField complemento;
     private JTextField cep;
-    private JTextField ddd;
-    private JTextField antesh;
-    private JTextField depoish;
+
+    private JTable tabela_telefone;
+    private DefaultTableModel modelo_telefone;
+    private JScrollPane scroll_telefone;
 
     private JButton deletar_cliente;
 
@@ -103,7 +102,7 @@ public class Painel_cliente extends JPanel {
 
         inicializa_painel_de_botoes();
         inicializa_painel_da_tabela();
-        //inicializa_painel_de_graficos();
+       
         inicializa_painel_de_dados();
 
         setVisible(true);
@@ -194,29 +193,29 @@ public class Painel_cliente extends JPanel {
         cep.setEditable(false);
         cep.setPreferredSize(new Dimension(80, 18));
 
-        ddd_l = new JLabel("DDD:");
-        ddd = new JTextField();
+        modelo_telefone = new DefaultTableModel() {
+            public boolean isCellEditable(int a, int b) {
+                return false;
+            }
+        };
+        tabela_telefone = new JTable(modelo_telefone);
 
-        painel_de_dados.add(ddd_l);
-        painel_de_dados.add(ddd);
-        ddd.setEditable(false);
-        ddd.setPreferredSize(new Dimension(30, 18));
+        modelo_telefone.addColumn("DDD");
+        modelo_telefone.addColumn("Prefixo");
+        modelo_telefone.addColumn("Sufixo");
 
-        antesh_l = new JLabel("Prefixo:");
-        antesh = new JTextField();
+        scroll_telefone = new JScrollPane(tabela_telefone);
 
-        painel_de_dados.add(antesh_l);
-        painel_de_dados.add(antesh);
-        antesh.setEditable(false);
-        antesh.setPreferredSize(new Dimension(50, 18));
+        scroll_telefone.setPreferredSize(new Dimension(550, 200));
+        scroll_telefone.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.black),
+                "Telefones",
+                1,
+                1,
+                new java.awt.Font("Dialog", 1, 14)
+        ));
 
-        depoish_l = new JLabel("Sufixo:");
-        depoish = new JTextField();
-
-        painel_de_dados.add(depoish_l);
-        painel_de_dados.add(depoish);
-        depoish.setEditable(false);
-        depoish.setPreferredSize(new Dimension(40, 18));
+        painel_de_dados.add(scroll_telefone);
 
         deletar_cliente = new JButton("Deletar Cliente", new ImageIcon(getClass().getResource("ico_deletar.png")));
         painel_de_dados.add(deletar_cliente);
@@ -242,7 +241,13 @@ public class Painel_cliente extends JPanel {
             ClienteDAO.delete(username, password, c);
             atualizar_tabela((byte) 0);
         });
-
+        
+        this.nome_cliente_l.setPreferredSize(new Dimension(119, 25));
+        this.data_nascimento_l.setPreferredSize(new Dimension(148, 25));
+        this.log_l.setPreferredSize(new Dimension(88, 25));
+        this.bairro_l.setPreferredSize(new Dimension(60, 25));
+        this.complemento_l.setPreferredSize(new Dimension(102, 25));
+        
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
         painel_de_dados.setPreferredSize(new Dimension(600, 1000));
 
@@ -296,6 +301,10 @@ public class Painel_cliente extends JPanel {
 
         busca_cliente_b.addActionListener((ActionEvent) -> {
             atualizar_tabela((byte) 1);
+        });
+        editar_dados.addActionListener((ActionEvent)->{
+            System.out.println(id.getText());
+            new Editar_clientes(this.username, this.password, Integer.parseInt(id.getText()));
         });
     }
 
@@ -359,10 +368,12 @@ public class Painel_cliente extends JPanel {
         id.setText("" + c.getId());
         data_nascimento.setText("" + c.getData_nascimento());
         try {
-            Telefone t = MiscDAO.search_telefone_por_id(username, password, c.getId());
-            ddd.setText(t.getDdd());
-            antesh.setText(t.getAntesh());
-            depoish.setText(t.getDepoish());
+            modelo_telefone.setNumRows(0);
+            for (Telefone t : MiscDAO.search_telefone_por_id(username, password, c.getId())) {
+                modelo_telefone.addRow(new Object[]{t.getDdd(), t.getAntesh(),
+                    t.getDepoish()});
+
+            }
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -393,7 +404,8 @@ public class Painel_cliente extends JPanel {
             Cliente c = dados_cliente.get(i);
             Telefone t = new Telefone();
             try {
-                t = MiscDAO.search_telefone_por_id(username, password, i);
+                t = MiscDAO.search_telefone_individual_por_id(username, password, c.getId());
+
             } catch (Exception ex) {
                 System.out.println(ex);
             }

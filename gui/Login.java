@@ -2,12 +2,15 @@ package gui;
 
 //CLASSE RESPONSÁVEL POR EFETUAR O LOGIN.
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.sql.Connection;
 import javax.swing.JPasswordField;
 import sql.Sql;
@@ -45,7 +48,10 @@ public class Login extends JFrame {
         setLayout(null);
         setLocationRelativeTo(null);
         setResizable(false);
-        setVisible(true);
+        URL url = this.getClass().getResource("abas/ico_login.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
+        
         getContentPane().add(signin);
         signin.setBounds(126, 335, 80, 25);
 
@@ -84,6 +90,7 @@ public class Login extends JFrame {
         signin.addActionListener((ActionEvent) -> {
             efetuar_login();
         });
+        setVisible(true);
     }
     
     private void efetuar_login(){

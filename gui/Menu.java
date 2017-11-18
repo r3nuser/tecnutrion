@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.BorderLayout;
 import gui.abas.*;
+import java.awt.Image;
+import java.awt.Toolkit;
 
 
 import javax.swing.JPanel;
@@ -11,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import java.awt.event.KeyEvent;
+import java.net.URL;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
@@ -24,7 +27,6 @@ public class Menu extends JFrame {
     JMenuBar barra_do_menu;
     JMenu cadastros;
     JMenu gerencia;
-    JMenu ajuda;
     JMenu financeiro;
     JMenu relatorios;
     JMenu estoque;
@@ -39,7 +41,6 @@ public class Menu extends JFrame {
 
     JMenuItem relatorio_de_vendas;
 
-    JMenuItem financeiro_estatisticas;
     JMenuItem financeiro_lucro;
 
     JTabbedPane abas;
@@ -64,39 +65,45 @@ public class Menu extends JFrame {
         //DEFINIÇÃO E INICIALIZAÇÃO DA BARRA DO MENU E SEUS RESPECTIVOS ITENS.
         barra_do_menu = new JMenuBar();
         cadastros = new JMenu("Cadastros");
+        cadastros.setIcon(new ImageIcon(getClass().getResource("abas/ico_cadastro.png")));
 
-        ajuda = new JMenu("Ajuda");
         financeiro = new JMenu("Financeiro");
+        financeiro.setIcon(new ImageIcon(getClass().getResource("abas/ico_financeiro.png")));
+        
         relatorios = new JMenu("Relatórios");
+        relatorios.setIcon(new ImageIcon(getClass().getResource("abas/ico_relatorios.png")));
+        
         configuracoes = new JMenu("Configurações");
+        configuracoes.setIcon(new ImageIcon(getClass().getResource("abas/ico_config.png")));
 
         funcoes_administrativas = new JMenuItem("Funções Administrativas");
-
+        funcoes_administrativas.setIcon(new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
         configuracoes.add(funcoes_administrativas);
 
         cadastrar_cliente = new JMenuItem("Cadastrar Cliente");
+        cadastrar_cliente.setIcon(new ImageIcon(getClass().getResource("abas/ico_clientes_peq.png")));
         cadastrar_produto = new JMenuItem("Cadastrar Produto");
+        cadastrar_produto.setIcon(new ImageIcon(getClass().getResource("abas/ico_produtos_peq.png")));
         cadastrar_fornecedor = new JMenuItem("Cadastrar Fornecedor");
-
+        cadastrar_fornecedor.setIcon(new ImageIcon(getClass().getResource("abas/ico_fornecedor_peq.png")));
+        
         cadastros.add(cadastrar_cliente);
         cadastros.add(cadastrar_produto);
         cadastros.add(cadastrar_fornecedor);
 
-        financeiro_estatisticas = new JMenuItem("Estatísticas");
         financeiro_lucro = new JMenuItem("Lucro e Vendas");
-
-        financeiro.add(financeiro_estatisticas);
+        financeiro_lucro.setIcon(new ImageIcon(getClass().getResource("abas/ico_money.png")));
         financeiro.add(financeiro_lucro);
         financeiro.add(relatorios);
 
-        relatorio_de_vendas = new JMenuItem("Relatório de Vendas");
+        relatorio_de_vendas = new JMenuItem("Gerar Relatório de Vendas");
 
         relatorios.add(relatorio_de_vendas);
 
         barra_do_menu.add(cadastros);
         barra_do_menu.add(financeiro);
         barra_do_menu.add(configuracoes);
-        barra_do_menu.add(ajuda);
+        
 
         //  AREA DE EVENTOS DE CADA BOTÃO DO MENU
         cadastrar_fornecedor.addActionListener((ActionEvent) -> {
@@ -113,9 +120,6 @@ public class Menu extends JFrame {
         });
         funcoes_administrativas.addActionListener((ActionEvent) -> {
             new Funcoes_administrativas(this.currentusername, this.currentpassword);
-        });
-        financeiro_estatisticas.addActionListener((ActionEvent) -> {
-            new Estatisticas(this.currentusername, this.currentpassword);
         });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();
@@ -152,7 +156,9 @@ public class Menu extends JFrame {
         setTitle("Tecnutrion");
 
         //getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
-        
+        URL url = this.getClass().getResource("abas/ico_blacksheep.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
 
         setVisible(true);
 

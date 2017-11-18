@@ -1,5 +1,10 @@
 package gui.abas;
 
+/*CLASSE RESPONSÁVEL POR:
+*APRESENTAR TODOS OS PRODUTOS
+*POSSIBILITAR A EDIÇÃO, CRIAÇÃO, LEITURA E REMOÇÃO DE PRODUTOS.
+*EXIBIR DADOS RELEVANTES.
+*/
 import bean.Estoque;
 import bean.Fornecedor;
 import bean.Produto;
@@ -29,7 +34,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class Painel_produto extends JPanel {
-
+    //TODOS OBJETOS UTILIZADOS
     private final String username;
     private final String password;
 
@@ -74,14 +79,15 @@ public class Painel_produto extends JPanel {
     private JLabel quantidade_estoque_l;
     private JLabel nome_fornecedor_l;
     private JLabel validade_l;
-
+    //METODO CONSTRUTOR QUE RECEBE USUARIO, SENHA E CHAMA O METODO
+    // QUE INICIALIZA TODOS OS COMPONENTES
     public Painel_produto(String currentusername, String currentpassword) {
         this.username = currentusername;
         this.password = currentpassword;
 
         initAll();
     }
-
+    //METODO QUE INICIALIZA TABELA, BOTOES E DADOS.
     private void initAll() {
         setLayout(new BorderLayout());
         inicializa_painel_da_tabela();
@@ -89,7 +95,8 @@ public class Painel_produto extends JPanel {
         inicializa_painel_de_dados();
         setVisible(true);
     }
-
+    //METODO RESPONSAVEL POR INICIALIZAR
+    //TODOS COMPONENTES LOCALIZADOS NA PARTE ESQUERDA DO PAINEL
     private void inicializa_painel_de_dados() {
         painel_de_dados = new JPanel(new FlowLayout());
 
@@ -175,7 +182,7 @@ public class Painel_produto extends JPanel {
         painel_de_dados.add(descricao_produto_l);
         painel_de_dados.add(descricao_produto);
         painel_de_dados.add(deletar_produto);
-
+        //EVENTO NO BOTÃO DE DELETAR PRODUTO.
         deletar_produto.addActionListener((ActionEvent) -> {
             Produto p = MiscDAO.search_produto_por_id(username, password, Integer.parseInt(produto_cod.getText()));
             Estoque e = new Estoque();
@@ -191,7 +198,8 @@ public class Painel_produto extends JPanel {
         painel_de_dados.setPreferredSize(new Dimension(600, 1000));
         add(painel_de_dados, BorderLayout.LINE_START);
     }
-
+    //METODO RESPONSAVEL POR INICIALIZAR
+    //TODOS COMPONENTES LOCALIZADOS NA PARTE SUPERIOR DO PAINEL
     private void inicializa_painel_de_botoes() {
         painel_de_botoes = new JPanel(new FlowLayout());
         cadastrar_produtos = new JButton("Cadastrar Novo Produto", new ImageIcon(getClass().getResource("ico_mais.png")));
@@ -219,7 +227,8 @@ public class Painel_produto extends JPanel {
             atualizar_tabela((byte)1);
         });
     }
-
+    //METODO RESPONSAVEL POR INICIALIZAR
+    //TODOS COMPONENTES LOCALIZADOS NA PARTE SUPERIOR DO PAINEL
     private void inicializa_painel_da_tabela() {
         painel_da_tabela = new JPanel(new GridLayout());
         modelo_tabela = new DefaultTableModel() {
@@ -283,7 +292,7 @@ public class Painel_produto extends JPanel {
 
         add(painel_da_tabela, BorderLayout.CENTER);
     }
-
+    //METODO QUE MOSTRA OS ATRIBUTOS DO PRODUTO NO PAINEL DA ESQUERDA
     private void atualizar_caixas_de_texto() {
         Produto p = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 1));
         produto_foto.setIcon(p.getProduto_foto_para_tabela());

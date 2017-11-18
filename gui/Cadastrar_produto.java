@@ -1,5 +1,9 @@
 package gui;
+/*CLASSE RESPONSÁVEL POR:
+*REALIZAR CADASTRO DE PRODUTOS
 
+AUTOR: RENAN
+*/
 import bean.Estoque;
 import bean.Fornecedor;
 import bean.Produto;
@@ -8,8 +12,11 @@ import dao.MiscDAO;
 import dao.ProdutoDAO;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import javax.imageio.ImageIO;
@@ -25,7 +32,7 @@ import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
 public class Cadastrar_produto extends JFrame {
-
+    //TODOS OBJETOS UTILIZADOS NA TELA
     private final String currentusername;
     private final String currentpassword;
 
@@ -65,13 +72,14 @@ public class Cadastrar_produto extends JFrame {
 
     private BufferedImage imagem;
     private Produto p;
-
+    //METODO CONSTRUTOR QUE RECEBE USUARIO E SENHA
+    //E CHAMADA DO METODO QUE INICIALIZA TODOS OS COMPONENTES
     public Cadastrar_produto(String u, String p) {
         this.currentusername = u;
         this.currentpassword = p;
         initComponents();
     }
-
+    //METODO QUE INICIALIZA TODOS OS COMPONENTES
     private void initComponents() {
         try {
             this.validade = new JFormattedTextField(new MaskFormatter("##/##/####"));
@@ -221,7 +229,8 @@ public class Cadastrar_produto extends JFrame {
 
         cadastrar.setBounds(210, 450 + 40, 110, 30);
         cadastrar.setFont(new java.awt.Font("Arial", 1, 11));
-
+        //EVENTO DE CADASTRO QUE PEGA TODOS OS DADOS PASSADOS
+        //PELO USUÁRIO E CHAMA OS METODOS DE INSERÇÃO
         cadastrar.addActionListener((ActionEvent) -> {
             p.setProduto_nome(produto_nome.getText());
             p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
@@ -241,8 +250,9 @@ public class Cadastrar_produto extends JFrame {
                 System.out.println(ex);
             }
             e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
-
+            //INSERÇÃO : ESTOQUE
             EstoqueDAO.create(this.currentusername, this.currentpassword, e);
+            //INSERÇÃO : PRODUTO            
             p.setFk_estoque_cod(MiscDAO.get_ultimo_estoque_id(currentusername, currentpassword));
             ProdutoDAO.create(this.currentusername, this.currentpassword, p);
             dispose();
@@ -256,6 +266,9 @@ public class Cadastrar_produto extends JFrame {
         foto.setBorder(BorderFactory.createLineBorder(Color.black));
         foto.setBounds(360, 135, 100, 100);
 
+        //METODO RESPONSÁVEL POR BUSCAR E CONVERTER A FOTO
+        //A FOTO É REDIMENSIONADA PARA 100x100 PARA EVITAR FOTOS MUITO GRANDES
+        //APÓS ISSO ELA É CONVERTIDA PARA UM ARRAY DE BYTES
         inserir_foto.addActionListener((ActionEvent) -> {
             int a;
             JFileChooser jf = new JFileChooser();
@@ -266,10 +279,12 @@ public class Cadastrar_produto extends JFrame {
             if (a == 0) {
                 String caminho = jf.getSelectedFile().getAbsolutePath();
                 ImageIcon img = new ImageIcon(caminho);
+                //REDIMENSIONANDO                
                 img = new ImageIcon(img.getImage().getScaledInstance(100, 100, 100));
                 BufferedImage bf = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
                 Graphics g = bf.createGraphics();
                 img.paintIcon(null, g, 0, 0);
+                //REALIZANDO CONVERSÃO PARA ARRAY DE BYTES.                
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 try {
                     ImageIO.write(bf, "png", stream);
@@ -280,7 +295,7 @@ public class Cadastrar_produto extends JFrame {
                 foto.setIcon(new ImageIcon(img.getImage().getScaledInstance(100, 100, 100)));
             }
         });
-
+        //CHAMA A CLASSE QUE BUSCA O FORNECEDOR DO PRODUTO EM QUESTÃO
         buscar_fornecedor.addActionListener((ActionEvent) -> {
             new Buscar_fornecedor(this.currentusername, this.currentpassword, f,fornecedor);
         });
@@ -288,6 +303,9 @@ public class Cadastrar_produto extends JFrame {
         setLayout(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        URL url = this.getClass().getResource("abas/ico_cadastro.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setVisible(true);
 
     }

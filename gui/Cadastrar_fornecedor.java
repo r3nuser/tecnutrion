@@ -2,6 +2,9 @@ package gui;
 
 import bean.Fornecedor;
 import dao.FornecedorDAO;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,6 +56,9 @@ public class Cadastrar_fornecedor extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de fornecedor !");
         setSize(395, 150);
+        URL url = this.getClass().getResource("abas/ico_cadastro.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setVisible(true);
     }
 

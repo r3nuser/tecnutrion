@@ -42,7 +42,7 @@ public class MiscDAO extends Sql {
         return total;
     }
 
-    public  static int produtos_cadastrados(String username, String password) {
+    public static int produtos_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -65,7 +65,7 @@ public class MiscDAO extends Sql {
         return total;
     }
 
-    public  static int fornecedores_cadastrados(String username, String password) {
+    public static int fornecedores_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -694,7 +694,32 @@ public class MiscDAO extends Sql {
         return c;
     }
 
-    public static Telefone search_telefone_por_id(String username, String password, int id) {
+    public static ArrayList<Telefone> search_telefone_por_id(String username, String password, int id) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Telefone> telefones = new ArrayList<>();
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * from telefone where fk_cliente_cod=?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Telefone t = new Telefone();
+                t.setDdd(rs.getString("ddd"));
+                t.setAntesh(rs.getString("antesh"));
+                t.setDepoish(rs.getString("depoish"));
+                telefones.add(t);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return telefones;
+    }
+
+    public static Telefone search_telefone_individual_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection con = null;
@@ -704,10 +729,12 @@ public class MiscDAO extends Sql {
             stmt = con.prepareStatement("SELECT * from telefone where fk_cliente_cod=?");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
+
                 t.setDdd(rs.getString("ddd"));
                 t.setAntesh(rs.getString("antesh"));
                 t.setDepoish(rs.getString("depoish"));
+
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -761,7 +788,7 @@ public class MiscDAO extends Sql {
             stmt = con.prepareStatement("SELECT * from endereco where fk_cliente_cod=?");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
-            while (rs.next()) {
+            if (rs.next()) {
                 e.setTipolog(rs.getString("tipolog"));
                 e.setLog(rs.getString("logradouro"));
                 e.setBairro(rs.getString("bairro"));
@@ -769,14 +796,15 @@ public class MiscDAO extends Sql {
                 e.setEstado(rs.getString("estado"));
                 e.setMunicipio(rs.getString("cidade"));
                 e.setCep(rs.getString("cep"));
-
+                return e;
             }
+
         } catch (Exception en) {
             System.out.println(en);
         } finally {
             closeConnection(con, stmt, rs);
         }
-        return e;
+        return null;
     }
 
     public static int get_ultimo_pedido_id(String username, String password) {

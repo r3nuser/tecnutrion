@@ -2,6 +2,8 @@
 package gui;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 public class Editar_produto extends JFrame{
 
@@ -10,7 +12,7 @@ public class Editar_produto extends JFrame{
 
 	private JLabel produto_foto_l;
 	private JLabel produto_cod_l;
-	private JLabel produto_nome;
+	private JLabel produto_nome_l;
 	private JLabel nome_fornecedor_l;
 	private JLabel preco_uni_compra_l;
 	private JLabel preco_uni_venda_l;
@@ -21,7 +23,7 @@ public class Editar_produto extends JFrame{
 	private JLabel qnt_estoque_l;
 	private JLabel validade_l;
 
-	private Jlabel produto_foto;
+	private JLabel produto_foto;
 	private JTextField produto_cod;
 	private JTextField produto_nome;
 	private JTextField nome_fornecedor;
@@ -31,7 +33,7 @@ public class Editar_produto extends JFrame{
 	private JTextField descricao_produto;
 	private JTextField unidade_medida_peso;
 	private JTextField peso_produto;
-	private JTextfield qnt_estoque;
+	private JTextField qnt_estoque;
 	private JTextField validade;
 
 	public Editar_produto(String currentusername, String currentpassword){
@@ -41,9 +43,6 @@ public class Editar_produto extends JFrame{
 		initAll();
 	}
 
-	private void initAll(){
-
-	}
         private void initAll(){
                 setLayout(null);
                 setLocationRelativeTo(null);

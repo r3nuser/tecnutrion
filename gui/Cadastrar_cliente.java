@@ -9,17 +9,31 @@ import dao.EnderecoDAO;
 import dao.MiscDAO;
 import dao.TelefoneDAO;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.MaskFormatter;
+import javax.swing.text.PlainDocument;
 
 public class Cadastrar_cliente extends JFrame {
 
@@ -44,9 +58,14 @@ public class Cadastrar_cliente extends JFrame {
     private JTextField cep = null;
     private JTextField complemento = null;
     private JTextField estado = null;
+    private JButton add;
+    private JButton rm;
+    private JLabel telefone_l;
+    private JTable tabela_telefone;
+    private DefaultTableModel dtm_telefone;
+    private JScrollPane scroll_telefone;
     //TODOS LABELS INFORMATIVOS
     private JLabel nome_l = null;
-    private JLabel telefone_l = null;
     private JLabel data_nascimento_l = null;
     private JLabel tipolog_l = null;
     private JLabel log_l = null;
@@ -59,17 +78,30 @@ public class Cadastrar_cliente extends JFrame {
 
     //CHAMADA DA CLASSE.
     public Cadastrar_cliente(String username, String password) {
-        initComponents();
         this.currentusername = username;
         this.currentpassword = password;
+        initComponents();
     }
     //METODO INICIALIZADOR DE COMPONENTES.
 
     private void initComponents() {
+        dtm_telefone = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int a, int b) {
+                return false;
+            }
+        };
+        dtm_telefone.addColumn("DDD");
+        dtm_telefone.addColumn("Prefixo");
+        dtm_telefone.addColumn("Sufixo");
+        tabela_telefone = new JTable(dtm_telefone);
+        scroll_telefone = new JScrollPane(tabela_telefone);
 
         formatarTextboxes();
         this.option = new JCheckBox("Cadastrar Endereço");
         this.cadastro = new JButton("Cadastrar !");
+        this.add = new JButton("", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
+        this.rm = new JButton("", new ImageIcon(getClass().getResource("abas/ico_deletar.png")));
 
         this.nome = new JTextField();
         this.tipolog = new JTextField();
@@ -80,7 +112,7 @@ public class Cadastrar_cliente extends JFrame {
         this.complemento = new JTextField();
 
         this.nome_l = new JLabel("Nome Completo:*");
-        this.telefone_l = new JLabel("Telefone:*");
+        this.telefone_l = new JLabel("Nº de Contato:*");
         this.data_nascimento_l = new JLabel("Data de Nascimento:");
         this.tipolog_l = new JLabel("Tipo de Logradouro:*");
         this.log_l = new JLabel("Logradouro:*");
@@ -92,7 +124,7 @@ public class Cadastrar_cliente extends JFrame {
         this.cadastrar_cliente = new JLabel("Cadastrar Novo Cliente:");
 
         this.nome_l.setFont(new java.awt.Font("Dialog", 1, 14));
-        this.telefone_l.setFont(new java.awt.Font("Dialog", 1, 14));
+        this.telefone_l.setFont(new java.awt.Font("Dialog", 1, 12));
         this.data_nascimento_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.tipolog_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.log_l.setFont(new java.awt.Font("Dialog", 1, 14));
@@ -131,12 +163,16 @@ public class Cadastrar_cliente extends JFrame {
         add(this.estado_l);
         add(this.complemento_l);
         add(this.cadastrar_cliente);
+        add(this.rm);
+        add(this.add);
+
+        add(this.scroll_telefone);
 
         this.nome.setBounds(12, 146, 585, 19);
-        this.ddd.setBounds(12, 192, 34, 19);
-        this.antesh.setBounds(52, 192, 54, 19);
-        this.depoish.setBounds(112, 192, 44, 19);
-        this.data_nascimento.setBounds(230, 192, 80, 19);
+        this.ddd.setBounds(230, 192, 34, 19);
+        this.antesh.setBounds(235 + 34, 192, 54, 19);
+        this.depoish.setBounds(235 + 34 + 54 + 5, 192, 44, 19);
+        this.data_nascimento.setBounds(12, 192, 80, 19);
         this.tipolog.setBounds(12, 285, 250, 19);
         this.log.setBounds(12, 331, 585, 19);
         this.bairro.setBounds(12, 377, 149, 19);
@@ -146,8 +182,8 @@ public class Cadastrar_cliente extends JFrame {
         this.estado.setBounds(310, 285, 20, 19);
 
         this.nome_l.setBounds(12, 125, 150, 17);
-        this.telefone_l.setBounds(12, 171, 83, 17);
-        this.data_nascimento_l.setBounds(230, 171, 200, 17);
+        this.telefone_l.setBounds(230, 171, 140, 17);
+        this.data_nascimento_l.setBounds(12, 171, 200, 17);
         this.tipolog_l.setBounds(12, 264, 200, 17);
         this.log_l.setBounds(12, 310, 130, 17);
         this.estado_l.setBounds(300, 264, 90, 17);
@@ -157,6 +193,11 @@ public class Cadastrar_cliente extends JFrame {
         this.complemento_l.setBounds(125, 402, 115, 17);
         this.cadastrar_cliente.setBounds(12, 50, 500, 40);
 
+        this.add.setBounds(235 + 34 + 54 + 5, 192 + 25, 20, 20);
+        this.rm.setBounds(235 + 34 + 54 + 5 + 25, 192 + 25, 20, 20);
+
+        this.scroll_telefone.setBounds(230 + 140 + 10, 171, 200, 100);
+
         this.option.setBounds(12, 223, 166, 23);
         this.cadastro.setBounds(230, 455, 114, 25);
 
@@ -164,17 +205,16 @@ public class Cadastrar_cliente extends JFrame {
 
         //EVENTOS DO BOTÃO DE CADASTRAR E DA CHECKBOX.
         this.cadastro.addActionListener((ActionEvent evento) -> {
-            Cliente c = null;
-            Telefone t = null;
+            Cliente c;
+            Telefone t;
             try {
                 c = new Cliente();
                 c.setNome(this.nome.getText());
                 //CONVERSÃO DE STRING PARA DATA DE NASCIMENTO NO FORMATO DO MYSQL
                 //ANO-MES-DIA
-                String dataNascimento = this.data_nascimento.getText();
                 DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
                 try {
-                    java.sql.Date data = new java.sql.Date(fmt.parse(dataNascimento).getTime());
+                    java.sql.Date data = new java.sql.Date(fmt.parse(this.data_nascimento.getText()).getTime());
                     c.setData_nascimento(data);
                 } catch (Exception e) {
                     System.out.println(e);
@@ -183,15 +223,18 @@ public class Cadastrar_cliente extends JFrame {
                 //DDD= DDD
                 //NUMEROS ANTES DO HIFEN = ANTESH
                 //NUMEROS DEPOIS DO HIFEN = DEPOISH
-                t = new Telefone();
-                t.setDdd(this.ddd.getText());
-                t.setAntesh(this.antesh.getText());
-                t.setDepoish(this.depoish.getText());
-                
+
                 ClienteDAO.create(this.currentusername, this.currentpassword, c);
                 c.setId(MiscDAO.get_ultimo_cliente_id(this.currentusername, this.currentpassword));
-                t.setFk_cliente_cod(c.getId());
-                TelefoneDAO.create(this.currentusername, this.currentpassword, t);
+
+                for (int i = 0; i < tabela_telefone.getRowCount(); i++) {
+                    t = new Telefone();
+                    t.setFk_cliente_cod(c.getId());
+                    t.setDdd("" + tabela_telefone.getValueAt(i, 0));
+                    t.setAntesh("" + tabela_telefone.getValueAt(i, 1));
+                    t.setDepoish("" + tabela_telefone.getValueAt(i, 2));
+                    TelefoneDAO.create(this.currentusername, this.currentpassword, t);
+                }
                 //CONDIÇÃO QUE CONTROLA SE O USUÁRIO CLICOU EM CADASTRAR O ENDEREÇO
                 //CASO SIM, CHAMA O METODO DE CADASTRO DE ENDEREÇO
                 if (option.isSelected()) {
@@ -220,11 +263,25 @@ public class Cadastrar_cliente extends JFrame {
             }
         });
 
+        add.addActionListener((ActionEvent) -> {
+            dtm_telefone.addRow(new Object[]{ddd.getText(), antesh.getText(), depoish.getText()});
+        });
+        rm.addActionListener((ActionEvent) -> {
+            try {
+                dtm_telefone.removeRow(tabela_telefone.getSelectedRow());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Impossivel remover, selecione uma coluna na tabela e tente novamente !");
+            }
+        });
+
         setLayout(null);
         setSize(610, 510);
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        URL url = this.getClass().getResource("abas/ico_cadastro.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setTitle("Cadastro de novo cliente !");
         setVisible(true);
 
@@ -233,9 +290,38 @@ public class Cadastrar_cliente extends JFrame {
     //METODO DE FORMATAÇÃO DE TODAS AS CAIXAS QUE NECESSITAM DE MASCARAS
     private void formatarTextboxes() {
         try {
-            this.ddd = new JFormattedTextField(new MaskFormatter("###"));
-            this.antesh = new JFormattedTextField(new MaskFormatter("#####"));
-            this.depoish = new JFormattedTextField(new MaskFormatter("####"));
+            this.ddd = new NumberField();
+            this.antesh = new NumberField();
+            this.depoish = new NumberField();
+
+            ddd.addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyReleased(KeyEvent ke) {
+                    if (ddd.getText().length() >= 4) {
+                        ddd.setText(ddd.getText().substring(0, 3));
+                    }
+                }
+            });
+
+            antesh.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyReleased(KeyEvent ke) {
+                    if (antesh.getText().length() >= 6) {
+                        antesh.setText(antesh.getText().substring(0, 5));
+                    }
+                }
+            });
+            depoish.addKeyListener(new KeyAdapter() {
+
+                @Override
+                public void keyReleased(KeyEvent ke) {
+                    if (depoish.getText().length() >= 5) {
+                        depoish.setText(depoish.getText().substring(0, 4));
+                    }
+                }
+            });
+
             this.cep = new JFormattedTextField(new MaskFormatter("#####-###"));
             this.data_nascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
         } catch (Exception e) {
@@ -289,5 +375,30 @@ public class Cadastrar_cliente extends JFrame {
         this.estado_l.setForeground(new Color(200, 200, 200));
         this.complemento_l.setForeground(new Color(200, 200, 200));
 
+    }
+
+    public class NumberField extends JTextField {
+
+        public NumberField() {
+            this(null);
+        }
+
+        public NumberField(String text) {
+            super(text);
+            setDocument(new PlainDocument() {
+                @Override
+                public void insertString(int offs, String str, AttributeSet a) throws BadLocationException {
+                    //normalmente apenas uma letra é inserida por vez,
+                    //mas fazendo assim também previne caaso o usuário
+                    //cole algum texto
+                    for (int i = 0; i < str.length(); i++) {
+                        if (Character.isDigit(str.charAt(i)) == false) {
+                            return;
+                        }
+                    }
+                    super.insertString(offs, str, a);
+                }
+            });
+        }
     }
 }

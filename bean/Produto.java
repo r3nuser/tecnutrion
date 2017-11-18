@@ -1,8 +1,11 @@
 package bean;
-
+//CLASSE RESPONSÁVEL POR ATUAR COMO 'MOLDE' DO PRODUTO
 import javax.swing.ImageIcon;
 
 public class Produto{
+
+    //TODAS AS CARACTERISTICAS DO OBJETO
+    //AS MESMAS DO BANCO DE DADOS
     private byte[] produto_foto;
     private ImageIcon produto_foto_para_tabela;
     private int produto_cod;
@@ -15,8 +18,11 @@ public class Produto{
     private float peso_produto;
     private int fk_estoque_cod;
     private int fk_fornecedor_cod;
+    
+    //METODOS RESPONSÁVEIS POR ACESSAR OS ATRIBUTOS OU EDITA-LOS
 
     public ImageIcon getProduto_foto_para_tabela() {
+        //CONVERSÃO DE ARRAY DE BYTES PARA IMAGEICON        
         return new ImageIcon(this.produto_foto);
     }
 

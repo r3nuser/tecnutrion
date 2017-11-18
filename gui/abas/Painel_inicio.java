@@ -126,9 +126,9 @@ public class Painel_inicio extends JPanel {
         painel_principal = new JPanel(new BorderLayout());
         painel_principal.setPreferredSize(new Dimension(1024, 1000));
         painel_principal.setBorder(b);
-
-        inicializa_itens_painel_logistica();
         inicializa_painel_da_tabela();
+        inicializa_itens_painel_logistica();
+
         scroll = new JScrollPane(painel_principal);
 
         add(scroll);
@@ -178,7 +178,7 @@ public class Painel_inicio extends JPanel {
 
         scroll_estoque = new JScrollPane(tabela_estoque);
 
-        scroll_estoque.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS QUASE FORA DE ESTOQUE", 1, 1, f));
+        scroll_estoque.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS EM BAIXA NO ESTOQUE", 1, 1, f));
 
         painel_tabela.add(scroll_estoque);
 
@@ -244,12 +244,13 @@ public class Painel_inicio extends JPanel {
         dtm_estoque.setNumRows(0);
 
         Date dia = converterData(
-                (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 7)
+                (calendar.get(GregorianCalendar.DAY_OF_MONTH) + 7)
                 + "/"
                 + (calendar.get(GregorianCalendar.MONTH) - (-1))
                 + "/"
                 + (calendar.get(GregorianCalendar.YEAR))
         );
+        System.out.println("validade <= "+dia);
         MiscDAO.search_produtos_perto_de_vencer(username, password, dia).stream().forEach((e) -> {
             Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
             dtm_validade.addRow(new Object[]{p.getProduto_foto_para_tabela(), p.getProduto_cod(), p.getProduto_nome(), e.getValidade()});
@@ -490,6 +491,25 @@ public class Painel_inicio extends JPanel {
                     lucro_b -= p.getPedido_vl_tot();
                     lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
                 }
+                int temp_qnt_venda = 0;
+                float temp_lucro_b = 0;
+                float temp_lucro_l = 0;
+
+                try {
+                    temp_qnt_venda = qnt_venda;
+                    temp_lucro_b = lucro_b;
+                    temp_lucro_l = lucro_l;
+                    for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                        qnt_venda--;
+                        lucro_b -= p.getPedido_vl_tot();
+                        lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                    }
+
+                } catch (Exception e) {
+                    qnt_venda = temp_qnt_venda;
+                    lucro_b = temp_lucro_b;
+                    lucro_l = temp_lucro_l;
+                }
             } else if (mode == 1) {
                 Date inicio = converterData(
                         (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 30)
@@ -529,6 +549,25 @@ public class Painel_inicio extends JPanel {
                     lucro_b -= p.getPedido_vl_tot();
                     lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
                 }
+                int temp_qnt_venda = 0;
+                float temp_lucro_b = 0;
+                float temp_lucro_l = 0;
+
+                try {
+                    temp_qnt_venda = qnt_venda;
+                    temp_lucro_b = lucro_b;
+                    temp_lucro_l = lucro_l;
+                    for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                        qnt_venda--;
+                        lucro_b -= p.getPedido_vl_tot();
+                        lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                    }
+
+                } catch (Exception e) {
+                    qnt_venda = temp_qnt_venda;
+                    lucro_b = temp_lucro_b;
+                    lucro_l = temp_lucro_l;
+                }
             } else {
                 Date inicio = converterData(
                         (calendar.get(GregorianCalendar.DAY_OF_MONTH) - 365)
@@ -563,25 +602,25 @@ public class Painel_inicio extends JPanel {
                         + "/"
                         + (calendar.get(GregorianCalendar.YEAR))
                 );
-		int temp_qnt_venda=0;
-                float temp_lucro_b=0;
-		float temp_lucro_l=0;
+                int temp_qnt_venda = 0;
+                float temp_lucro_b = 0;
+                float temp_lucro_l = 0;
 
-		try{
-			temp_qnt_venda =qnt_venda;
-			temp_lucro_b = lucro_b;
-			temp_lucro_l = lucro_l;
-                	for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
-                    		qnt_venda--;
-                    		lucro_b -= p.getPedido_vl_tot();
-                    		lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
-                	}
+                try {
+                    temp_qnt_venda = qnt_venda;
+                    temp_lucro_b = lucro_b;
+                    temp_lucro_l = lucro_l;
+                    for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                        qnt_venda--;
+                        lucro_b -= p.getPedido_vl_tot();
+                        lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                    }
 
-		}catch(Exception e){
-			qnt_venda = temp_qnt_venda;
-			lucro_b = temp_lucro_b;
-			lucro_l = temp_lucro_l;
-		}
+                } catch (Exception e) {
+                    qnt_venda = temp_qnt_venda;
+                    lucro_b = temp_lucro_b;
+                    lucro_l = temp_lucro_l;
+                }
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -624,7 +663,7 @@ public class Painel_inicio extends JPanel {
         periodo.addItem("mês atual x mês passado");
         periodo.addItem("ano atual x ano passado");
         periodo.setBounds(10, 35, 300, 22);
-        
+
         indice_de_vendas = new JPanel(null);
         indice_de_lucro_b = new JPanel(null);
         indice_de_lucro_l = new JPanel(null);

@@ -1,5 +1,12 @@
-package dao;
+/*
+*CLASSE RESPONSÁVEL PELA LEITURA,
+*REMOÇÃO, ATUALIZAÇÃO E CRIAÇÃO DE
+*DADOS DO PRODUTO NO BANCO DE DADOS
+* AUTOR @RENAN
+*/
 
+package dao;
+//IMPORTS DE TODOS OS OBJETOS QUE UTILIZEI NA CLASSE
 import bean.Produto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,12 +15,17 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import sql.Sql;
 
+//NOME DA CLASSE + HERANÇA DE TODOS OS METODOS DA CLASSE Sql
 public class ProdutoDAO extends Sql {
-
+    //METODO RESPONSÁVEL PELA INSERÇÃO DOS DADOS NOS BANCOS
     public static void create(String username, String password, Produto p) {
         Connection con = null;
         PreparedStatement stmt = null;
 
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE INSERÇÃO A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("INSERT INTO produtos VALUES (?,NULL,?,?,?,?,?,?,?,?,?)");
@@ -36,19 +48,23 @@ public class ProdutoDAO extends Sql {
             closeConnection(con, stmt);
         }
     }
-
+    //METODO RESPONSÁVEL PELA INSERÇÃO DOS DADOS NOS BANCOS
     public static ArrayList<Produto> read(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection con = null;
         ArrayList<Produto> produtos = new ArrayList<>();
-
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE LEITURA A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT * FROM produtos");
 
             rs = stmt.executeQuery();
-
+            //CLAUSULA WHILE QUE PASSA POR TODOS DADOS RESULTANTES DO SELECT
+            //E APÓS A LEITURA, ADICIONA EM UM ARRAY DE PRODUTO.
             while (rs.next()) {
                 Produto p = new Produto();
                 p.setProduto_foto(rs.getBytes("produto_foto"));
@@ -72,10 +88,14 @@ public class ProdutoDAO extends Sql {
 
         return produtos;
     }
-
+    //METODO RESPONSÁVEL PELA ATUALIZAÇÃO DOS DADOS NOS BANCOS
     public static void update(String username, String password, Produto p) {
         PreparedStatement stmt = null;
         Connection con = null;
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE ATUALIZAÇÃO A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("UPDATE produtos SET produto_foto=?,"
@@ -104,11 +124,14 @@ public class ProdutoDAO extends Sql {
             closeConnection(con, stmt);
         }
     }
-
+    //METODO RESPONSÁVEL PELA REMOÇÃO DOS DADOS NOS BANCOS 
     public static void delete(String username, String password, Produto p) {
         PreparedStatement stmt = null;
         Connection con = null;
-
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE REMOÇÃO A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("DELETE FROM produtos WHERE produto_cod=?");
