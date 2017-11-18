@@ -1,25 +1,15 @@
 package gui;
 
 //CLASSE RESPONSÁVEL POR EFETUAR O LOGIN.
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.theme.BrownSugar;
-import com.jgoodies.looks.plastic.theme.DarkStar;
-import com.jgoodies.looks.plastic.theme.ExperienceRoyale;
-import java.awt.Color;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import java.sql.Connection;
 import javax.swing.JPasswordField;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import sql.Sql;
 import static sql.Sql.closeConnection;
 
@@ -36,23 +26,6 @@ public class Login extends JFrame {
     //CHAMADA DA CLASSE.
 
     public Login() {
-         try {
-            PlasticLookAndFeel.setPlasticTheme(new DarkStar());
-                  try {
-                      UIManager.setLookAndFeel("com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
-                  } catch (InstantiationException ex) {
-             
-                  } catch (IllegalAccessException ex) {
-                
-                  } catch (UnsupportedLookAndFeelException ex) {
-                     
-                  }
-           
-
-        } catch (ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        SwingUtilities.updateComponentTreeUI(this);
         initComponents();
     }
     //METODO INICIALIZADOR DE COMPONENTES.

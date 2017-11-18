@@ -1,18 +1,8 @@
 package gui;
 
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import static com.jgoodies.looks.plastic.md.a;
-import com.jgoodies.looks.plastic.theme.BrownSugar;
-import com.jgoodies.looks.plastic.theme.DarkStar;
-import com.jgoodies.looks.plastic.theme.DesertGreen;
-import com.jgoodies.looks.plastic.theme.ExperienceBlue;
-import com.jgoodies.looks.plastic.theme.ExperienceRoyale;
-import com.jgoodies.looks.plastic.theme.InvertedColorTheme;
-import com.jgoodies.looks.plastic.theme.LightGray;
-import com.jgoodies.looks.plastic.theme.SkyRed;
 import java.awt.BorderLayout;
 import gui.abas.*;
-import java.awt.Color;
+
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -24,10 +14,7 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
-import javax.swing.UnsupportedLookAndFeelException;
 
 public class Menu extends JFrame {
 

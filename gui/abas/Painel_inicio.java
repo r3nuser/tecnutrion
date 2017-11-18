@@ -563,11 +563,25 @@ public class Painel_inicio extends JPanel {
                         + "/"
                         + (calendar.get(GregorianCalendar.YEAR))
                 );
-                for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
-                    qnt_venda--;
-                    lucro_b -= p.getPedido_vl_tot();
-                    lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
-                }
+		int temp_qnt_venda=0;
+                float temp_lucro_b=0;
+		float temp_lucro_l=0;
+
+		try{
+			temp_qnt_venda =qnt_venda;
+			temp_lucro_b = lucro_b;
+			temp_lucro_l = lucro_l;
+                	for (Pedido p : MiscDAO.relatorio_por_data(username, password, inicio, fim)) {
+                    		qnt_venda--;
+                    		lucro_b -= p.getPedido_vl_tot();
+                    		lucro_l -= MiscDAO.get_lucro_liquido_pedido(username, password, p.getCod_pedido());
+                	}
+
+		}catch(Exception e){
+			qnt_venda = temp_qnt_venda;
+			lucro_b = temp_lucro_b;
+			lucro_l = temp_lucro_l;
+		}
             }
         } catch (Exception e) {
             System.out.println(e);
