@@ -10,7 +10,7 @@ public class Visual {
 
     public static void main(String[] args) {
 
-        new Menu("root","root");
+        new Menu("admin","senhaadmin");
 
     }
 

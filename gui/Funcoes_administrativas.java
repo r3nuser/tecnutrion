@@ -3,13 +3,17 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import sql.Sql;
 
 public class Funcoes_administrativas extends JFrame {
 
@@ -73,10 +77,18 @@ public class Funcoes_administrativas extends JFrame {
     private JCheckBox deletar_produtos_v;
     private JCheckBox deletar_fornecedor_v;
 
-    public Funcoes_administrativas(String currentusername, String currentpassword) {
-        this.username = currentusername;
+    public Funcoes_administrativas(String currentpassword) {
+        this.username = "admin";
         this.password = currentpassword;
-        initAll();
+
+        Connection con = Sql.getConnection(username, password);
+        if (con != null) {
+            initAll();
+            Sql.closeConnection(con);
+        } else {
+            JOptionPane.showMessageDialog(null, "Conexão negada.");
+        }
+
     }
 
     private void initAll() {
@@ -84,12 +96,15 @@ public class Funcoes_administrativas extends JFrame {
         inicializa_painel_admin();
         inicializa_painel_gerente();
         inicializa_painel_vendedor();
+
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(906, 500);
         setLocationRelativeTo(null);
         setResizable(false);
         setTitle("Funções Administrativas");
+        requestFocus();
         setVisible(true);
+
     }
 
     private void inicializa_painel_admin() {
@@ -114,13 +129,13 @@ public class Funcoes_administrativas extends JFrame {
         financeiro_a = new JLabel("FINANCEIRO:");
         realizar_venda_a = new JCheckBox("Realizar Venda");
         gerar_relatorio_a = new JCheckBox("Gerar Relatório");
-        
+
         exclusao_a = new JLabel("EXCLUSÃO:");
         deletar_clientes_a = new JCheckBox("Excluir Dados do Cliente");
         deletar_produtos_a = new JCheckBox("Excluir Dados do Produto");
         deletar_fornecedor_a = new JCheckBox("Excluir Dados do Fornecedor");
 
-        alterar_permissoes_a = new JButton("Alterar Permissões",new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
+        alterar_permissoes_a = new JButton("Alterar Permissões", new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
 
         cadastrar_produtos_a.setEnabled(false);
         cadastrar_clientes_a.setEnabled(false);
@@ -161,14 +176,12 @@ public class Funcoes_administrativas extends JFrame {
         realizar_venda_a.setBounds(10, 280, 200, 18);
         gerar_relatorio_a.setBounds(10, 300, 200, 18);
 
-        exclusao_a.setBounds(10,340,200,18);
-        deletar_clientes_a.setBounds(10,360,250,18);
-        deletar_produtos_a.setBounds(10,380,250,18);
-        deletar_fornecedor_a.setBounds(10,400,250,18);
-        
+        exclusao_a.setBounds(10, 340, 200, 18);
+        deletar_clientes_a.setBounds(10, 360, 250, 18);
+        deletar_produtos_a.setBounds(10, 380, 250, 18);
+        deletar_fornecedor_a.setBounds(10, 400, 250, 18);
+
         alterar_permissoes_a.setBounds(50, 440, 200, 18);
-        
-        
 
         painel_admin.add(cadastros_a);
         painel_admin.add(cadastrar_produtos_a);
@@ -183,7 +196,7 @@ public class Funcoes_administrativas extends JFrame {
         painel_admin.add(financeiro_a);
         painel_admin.add(realizar_venda_a);
         painel_admin.add(gerar_relatorio_a);
-        
+
         painel_admin.add(exclusao_a);
         painel_admin.add(deletar_clientes_a);
         painel_admin.add(deletar_produtos_a);
@@ -218,13 +231,13 @@ public class Funcoes_administrativas extends JFrame {
         financeiro_g = new JLabel("FINANCEIRO:");
         realizar_venda_g = new JCheckBox("Realizar Venda");
         gerar_relatorio_g = new JCheckBox("Gerar Relatório");
-        
+
         exclusao_g = new JLabel("EXCLUSÃO:");
         deletar_clientes_g = new JCheckBox("Excluir Dados do Cliente");
         deletar_produtos_g = new JCheckBox("Excluir Dados do Produto");
         deletar_fornecedor_g = new JCheckBox("Excluir Dados do Fornecedor");
 
-        alterar_permissoes_g = new JButton("Alterar Permissões",new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
+        alterar_permissoes_g = new JButton("Alterar Permissões", new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
 
         cadastros_g.setBounds(10, 60, 200, 18);
         cadastrar_clientes_g.setBounds(10, 80, 200, 18);
@@ -239,11 +252,11 @@ public class Funcoes_administrativas extends JFrame {
         financeiro_g.setBounds(10, 260, 200, 18);
         realizar_venda_g.setBounds(10, 280, 200, 18);
         gerar_relatorio_g.setBounds(10, 300, 200, 18);
-        
-        exclusao_g.setBounds(10,340,200,18);
-        deletar_clientes_g.setBounds(10,360,250,18);
-        deletar_produtos_g.setBounds(10,380,250,18);
-        deletar_fornecedor_g.setBounds(10,400,250,18);
+
+        exclusao_g.setBounds(10, 340, 200, 18);
+        deletar_clientes_g.setBounds(10, 360, 250, 18);
+        deletar_produtos_g.setBounds(10, 380, 250, 18);
+        deletar_fornecedor_g.setBounds(10, 400, 250, 18);
 
         alterar_permissoes_g.setBounds(50, 440, 200, 18);
 
@@ -265,8 +278,40 @@ public class Funcoes_administrativas extends JFrame {
         painel_gerente.add(deletar_clientes_g);
         painel_gerente.add(deletar_produtos_g);
         painel_gerente.add(deletar_fornecedor_g);
-        
+
         painel_gerente.add(alterar_permissoes_g);
+
+        alterar_permissoes_g.addActionListener((ActionEvent) -> {
+            Connection con = null;
+            PreparedStatement stmt = null;
+            try {
+                con = Sql.getConnection(username, password);
+                String s = "";
+                stmt = con.prepareStatement("revoke all privileges on *.* from 'gerente'@'%';");
+                stmt.executeUpdate();
+                if (cadastrar_produtos_g.isSelected()) {
+                    s = " grant create on visualnutrion.produtos to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+                if (cadastrar_clientes_g.isSelected()) {
+                    s = " grant create on visualnutrion.clientes to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+                if (cadastrar_fornecedor_g.isSelected()) {
+                    s = " grant create on visualnutrion.fornecedor to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+
+                JOptionPane.showMessageDialog(null, "Privilegios de gerente alterados com sucesso !");
+            } catch (Exception e) {
+                System.out.println(e);
+            } finally {
+                Sql.closeConnection(con, stmt);
+            }
+        });
 
         painel_gerente.setPreferredSize(new Dimension(300, 480));
         painel_gerente.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -295,13 +340,13 @@ public class Funcoes_administrativas extends JFrame {
         financeiro_v = new JLabel("FINANCEIRO:");
         realizar_venda_v = new JCheckBox("Realizar Venda");
         gerar_relatorio_v = new JCheckBox("Gerar Relatório");
-        
+
         exclusao_v = new JLabel("EXCLUSÃO:");
         deletar_clientes_v = new JCheckBox("Excluir Dados do Cliente");
         deletar_produtos_v = new JCheckBox("Excluir Dados do Produto");
         deletar_fornecedor_v = new JCheckBox("Excluir Dados do Fornecedor");
 
-        alterar_permissoes_v = new JButton("Alterar Permissões",new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
+        alterar_permissoes_v = new JButton("Alterar Permissões", new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
 
         cadastros_v.setBounds(10, 60, 200, 18);
         cadastrar_clientes_v.setBounds(10, 80, 200, 18);
@@ -317,11 +362,11 @@ public class Funcoes_administrativas extends JFrame {
         realizar_venda_v.setBounds(10, 280, 200, 18);
         gerar_relatorio_v.setBounds(10, 300, 200, 18);
 
-        exclusao_v.setBounds(10,340,200,18);
-        deletar_clientes_v.setBounds(10,360,250,18);
-        deletar_produtos_v.setBounds(10,380,250,18);
-        deletar_fornecedor_v.setBounds(10,400,250,18);
-        
+        exclusao_v.setBounds(10, 340, 200, 18);
+        deletar_clientes_v.setBounds(10, 360, 250, 18);
+        deletar_produtos_v.setBounds(10, 380, 250, 18);
+        deletar_fornecedor_v.setBounds(10, 400, 250, 18);
+
         alterar_permissoes_v.setBounds(50, 440, 200, 18);
 
         painel_vendedor.add(cadastros_v);
@@ -337,7 +382,7 @@ public class Funcoes_administrativas extends JFrame {
         painel_vendedor.add(financeiro_v);
         painel_vendedor.add(realizar_venda_v);
         painel_vendedor.add(gerar_relatorio_v);
-        
+
         painel_vendedor.add(exclusao_v);
         painel_vendedor.add(deletar_clientes_v);
         painel_vendedor.add(deletar_produtos_v);

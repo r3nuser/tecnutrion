@@ -5,7 +5,6 @@ import gui.abas.*;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -16,8 +15,10 @@ import java.awt.event.KeyEvent;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
-
 
 public class Menu extends JFrame {
 
@@ -55,8 +56,6 @@ public class Menu extends JFrame {
         this.currentusername = username;
         this.currentpassword = password;
 
-        
-        
         initComponents();
 
     }
@@ -69,10 +68,10 @@ public class Menu extends JFrame {
 
         financeiro = new JMenu("Financeiro");
         financeiro.setIcon(new ImageIcon(getClass().getResource("abas/ico_financeiro.png")));
-        
+
         relatorios = new JMenu("Relatórios");
         relatorios.setIcon(new ImageIcon(getClass().getResource("abas/ico_relatorios.png")));
-        
+
         configuracoes = new JMenu("Configurações");
         configuracoes.setIcon(new ImageIcon(getClass().getResource("abas/ico_config.png")));
 
@@ -86,7 +85,7 @@ public class Menu extends JFrame {
         cadastrar_produto.setIcon(new ImageIcon(getClass().getResource("abas/ico_produtos_peq.png")));
         cadastrar_fornecedor = new JMenuItem("Cadastrar Fornecedor");
         cadastrar_fornecedor.setIcon(new ImageIcon(getClass().getResource("abas/ico_fornecedor_peq.png")));
-        
+
         cadastros.add(cadastrar_cliente);
         cadastros.add(cadastrar_produto);
         cadastros.add(cadastrar_fornecedor);
@@ -103,7 +102,6 @@ public class Menu extends JFrame {
         barra_do_menu.add(cadastros);
         barra_do_menu.add(financeiro);
         barra_do_menu.add(configuracoes);
-        
 
         //  AREA DE EVENTOS DE CADA BOTÃO DO MENU
         cadastrar_fornecedor.addActionListener((ActionEvent) -> {
@@ -119,7 +117,26 @@ public class Menu extends JFrame {
             new Relatorio_de_vendas(this.currentusername, this.currentpassword);
         });
         funcoes_administrativas.addActionListener((ActionEvent) -> {
-            new Funcoes_administrativas(this.currentusername, this.currentpassword);
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel("Entre com a senha de ADMIN:");
+            JPasswordField pass = new JPasswordField(10);
+            panel.add(label);
+            panel.add(pass);
+            String[] options = new String[]{"OK", "Cancelar"};
+            int option = JOptionPane.showOptionDialog(null, panel, "Confirmação de Senha",
+                    JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                    null, options, options[1]);
+            if (option == 0) // pressing OK button
+            {
+                char[] password = pass.getPassword();
+                String senha = "";
+                for(int i = 0; i<password.length ; i++){
+                    senha+=password[i];
+                }
+                new Funcoes_administrativas(senha);
+                setExtendedState(ICONIFIED);
+            }
+
         });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
         abas = new JTabbedPane();

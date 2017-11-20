@@ -56,7 +56,7 @@ public class FornecedorDAO extends Sql {
         Connection con = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("UPDATE fornecedor SET fornecedor_nome=? WHERE fornecedor_id=?");
+            stmt = con.prepareStatement("UPDATE fornecedor SET fornecedor_nome=? WHERE fornecedor_cod=?");
             stmt.setString(1, f.getNome());
             stmt.setInt(2, f.getId());
             stmt.executeUpdate();

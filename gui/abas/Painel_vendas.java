@@ -22,6 +22,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -42,6 +43,7 @@ public class Painel_vendas extends JPanel {
     private JLabel cliente_id_l;
     private JLabel tipo_pagamento_l;
     private JLabel quantidade_de_itens_l;
+    private JLabel desconto_l;
     private DefaultTableModel modelo_tabela_itens;
     private JTable tabela_itens;
     private JScrollPane scroll_itens;
@@ -54,7 +56,7 @@ public class Painel_vendas extends JPanel {
     private JTextField cliente_id;
     private JTextField tipo_pagamento;
     private JTextField quantidade_de_itens;
-
+    private JTextField desconto;
     private JButton deletar_pedido;
 
     private JPanel painel_da_tabela;
@@ -94,6 +96,7 @@ public class Painel_vendas extends JPanel {
         cliente_id_l = new JLabel("ID Cliente:");
         tipo_pagamento_l = new JLabel("Tipo de Pagamento:");
         quantidade_de_itens_l = new JLabel("Quantidade Itens:");
+        desconto_l = new JLabel("Desconto:");
 
         modelo_tabela_itens = new DefaultTableModel() {
             public boolean isCellEditable(int rowIndex, int mColIndex) {
@@ -102,12 +105,12 @@ public class Painel_vendas extends JPanel {
         };
 
         tabela_itens = new JTable(modelo_tabela_itens);
-        
+
         modelo_tabela_itens.addColumn("ID");
         modelo_tabela_itens.addColumn("Nome do Produto");
         modelo_tabela_itens.addColumn("Preço Uni. Venda");
         modelo_tabela_itens.addColumn("Quantidade");
-        
+
         tabela_itens.getColumnModel().getColumn(0).setMaxWidth(70);
         tabela_itens.getColumnModel().getColumn(0).setMinWidth(70);
         tabela_itens.getColumnModel().getColumn(2).setMaxWidth(120);
@@ -115,8 +118,8 @@ public class Painel_vendas extends JPanel {
         tabela_itens.getColumnModel().getColumn(3).setMaxWidth(70);
         tabela_itens.getColumnModel().getColumn(3).setMinWidth(70);
         scroll_itens = new JScrollPane(tabela_itens);
-        
-        scroll_itens.setPreferredSize(new Dimension(550,200));
+
+        scroll_itens.setPreferredSize(new Dimension(550, 200));
 
         id_pedido = new JTextField();
         dt_pedido = new JTextField();
@@ -126,6 +129,7 @@ public class Painel_vendas extends JPanel {
         cliente_id = new JTextField();
         tipo_pagamento = new JTextField();
         quantidade_de_itens = new JTextField();
+        desconto = new JTextField();
 
         deletar_pedido = new JButton("Deletar Pedido:", new ImageIcon(getClass().getResource("ico_deletar.png")));
 
@@ -137,6 +141,7 @@ public class Painel_vendas extends JPanel {
         cliente_id.setEditable(false);
         tipo_pagamento.setEditable(false);
         quantidade_de_itens.setEditable(false);
+        desconto.setEditable(false);
 
         id_pedido.setPreferredSize(new Dimension(70, 18));
         dt_pedido.setPreferredSize(new Dimension(120, 18));
@@ -146,6 +151,7 @@ public class Painel_vendas extends JPanel {
         cliente_id.setPreferredSize(new Dimension(70, 18));
         tipo_pagamento.setPreferredSize(new Dimension(170, 18));
         quantidade_de_itens.setPreferredSize(new Dimension(70, 18));
+        desconto.setPreferredSize(new Dimension(30, 18));
 
         painel_de_dados.add(id_pedido_l);
         painel_de_dados.add(id_pedido);
@@ -163,9 +169,10 @@ public class Painel_vendas extends JPanel {
         painel_de_dados.add(tipo_pagamento);
         painel_de_dados.add(quantidade_de_itens_l);
         painel_de_dados.add(quantidade_de_itens);
+        painel_de_dados.add(desconto_l);
+        painel_de_dados.add(desconto);
         painel_de_dados.add(scroll_itens);
         painel_de_dados.add(deletar_pedido);
-        
 
         add(painel_de_dados, BorderLayout.LINE_START);
     }
@@ -227,7 +234,11 @@ public class Painel_vendas extends JPanel {
             new Realizar_venda(this.username, this.password);
         });
         realizar_troca.addActionListener((ActionEvent) -> {
-            new Realizar_troca(this.username, this.password);
+            try {
+                new Realizar_troca(this.username, this.password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao realizar troca: Por favor, escolha um pedido na tabela e tente novamente !");
+            }
         });
         realizar_consulta.addActionListener((ActionEvent) -> {
             atualizar_tabela();
@@ -248,19 +259,25 @@ public class Painel_vendas extends JPanel {
         cliente_id.setText("" + c.getId());
         quantidade_de_itens.setText("" + MiscDAO.get_quantidade_de_itens_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0)));
         pedido_lucro_liquido.setText("" + MiscDAO.get_lucro_liquido_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0)));
-        atualizar_tabela_lucro();
+        desconto.setText(p.getDesconto() + "");
+        atualizar_tabela_lucro(p.getDesconto());
     }
 
-    private void atualizar_tabela_lucro() {
+    private void atualizar_tabela_lucro(int desconto) {
         modelo_tabela_itens.setNumRows(0);
         ArrayList<Produto> dados_produto;
         dados_produto = MiscDAO.get_produtos_contidos_pedido(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         for (int i = 0; i < dados_produto.size(); i++) {
             Produto p = dados_produto.get(i);
             modelo_tabela_itens.addRow(new Object[]{
-                p.getProduto_cod(),p.getProduto_nome(),p.getPreco_uni_venda(),
+                p.getProduto_cod(), p.getProduto_nome(),
+                "R$ "+(p.getPreco_uni_venda()
+                - (p.getPreco_uni_venda()
+                * (desconto)
+                / 100)),
                 p.getFk_fornecedor_cod()
             });
+            System.out.println(p.getFk_fornecedor_cod());
         }
     }
 

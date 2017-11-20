@@ -4,6 +4,7 @@ import bean.Fornecedor;
 import dao.FornecedorDAO;
 import dao.MiscDAO;
 import gui.Cadastrar_fornecedor;
+import gui.Editar_fornecedor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +19,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -85,7 +87,7 @@ public class Painel_fornecedor extends JPanel {
             Fornecedor f = new Fornecedor();
             f.setId(Integer.parseInt(id.getText()));
             FornecedorDAO.delete(username, password, f);
-            atualizar_tabela((byte)0);
+            atualizar_tabela((byte) 0);
         });
 
         painel_de_dados.add(id_l);
@@ -165,11 +167,11 @@ public class Painel_fornecedor extends JPanel {
         cadastrar_fornecedores = new JButton("Cadastrar Novo Fornecedor", new ImageIcon(getClass().getResource("ico_mais.png")));
         realizar_consulta = new JButton("Consultar Fornecedor", new ImageIcon(getClass().getResource("ico_lupa.png")));
         editar_dados = new JButton("Editar Dados do Fornecedor", new ImageIcon(getClass().getResource("ico_editar.png")));
-        
+
         busca_fornecedor_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));
         busca_fornecedor = new JTextField();
-        busca_fornecedor.setPreferredSize(new Dimension(220,24));
-        
+        busca_fornecedor.setPreferredSize(new Dimension(220, 24));
+
         painel_de_botoes.add(cadastrar_fornecedores);
         painel_de_botoes.add(realizar_consulta);
         painel_de_botoes.add(editar_dados);
@@ -177,7 +179,7 @@ public class Painel_fornecedor extends JPanel {
         painel_de_botoes.add(busca_fornecedor_b);
 
         realizar_consulta.addActionListener((ActionEvent) -> {
-            atualizar_tabela((byte)0);
+            atualizar_tabela((byte) 0);
         });
 
         add(painel_de_botoes, BorderLayout.PAGE_START);
@@ -185,9 +187,18 @@ public class Painel_fornecedor extends JPanel {
         cadastrar_fornecedores.addActionListener((ActionEvent) -> {
             new Cadastrar_fornecedor(this.username, this.password);
         });
-        
-        busca_fornecedor_b.addActionListener((ActionEvent)->{
-           atualizar_tabela((byte)1); 
+
+        busca_fornecedor_b.addActionListener((ActionEvent) -> {
+            atualizar_tabela((byte) 1);
+        });
+
+        editar_dados.addActionListener((ActionEvent) -> {
+            try {
+                new Editar_fornecedor(this.username, this.password, (int)tabela.getValueAt(tabela.getSelectedRow(), 0));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao editar: Por favor, escolha um fornecedor na tabela e tente novamente !");
+                atualizar_tabela((byte) 0);
+            }
         });
     }
 

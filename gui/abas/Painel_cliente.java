@@ -14,7 +14,6 @@ import java.awt.Color;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -102,7 +102,7 @@ public class Painel_cliente extends JPanel {
 
         inicializa_painel_de_botoes();
         inicializa_painel_da_tabela();
-       
+
         inicializa_painel_de_dados();
 
         setVisible(true);
@@ -241,13 +241,13 @@ public class Painel_cliente extends JPanel {
             ClienteDAO.delete(username, password, c);
             atualizar_tabela((byte) 0);
         });
-        
+
         this.nome_cliente_l.setPreferredSize(new Dimension(119, 25));
         this.data_nascimento_l.setPreferredSize(new Dimension(148, 25));
         this.log_l.setPreferredSize(new Dimension(88, 25));
         this.bairro_l.setPreferredSize(new Dimension(60, 25));
         this.complemento_l.setPreferredSize(new Dimension(102, 25));
-        
+
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
         painel_de_dados.setPreferredSize(new Dimension(600, 1000));
 
@@ -302,9 +302,13 @@ public class Painel_cliente extends JPanel {
         busca_cliente_b.addActionListener((ActionEvent) -> {
             atualizar_tabela((byte) 1);
         });
-        editar_dados.addActionListener((ActionEvent)->{
-            System.out.println(id.getText());
-            new Editar_clientes(this.username, this.password, Integer.parseInt(id.getText()));
+        editar_dados.addActionListener((ActionEvent) -> {
+            try {
+                new Editar_clientes(this.username, this.password, Integer.parseInt(id.getText()));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Erro ao editar : Escolha um cliente na tabela e tente novamente !");
+                atualizar_tabela((byte)0);
+            }
         });
     }
 

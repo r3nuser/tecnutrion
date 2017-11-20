@@ -205,9 +205,7 @@ public class Editar_clientes extends JFrame {
         preenche_dados();
 
         //EVENTOS DO BOTÃO DE CADASTRAR E DA CHECKBOX.
-        this.cadastro.addActionListener((ActionEvent evento) -> {
-
-        });
+        
         //OPÇÃO QUE ABRE E FECHA OS CAMPOS DO ENDEREÇO PARA CADASTRO.
         option.addActionListener((ActionEvent evento) -> {
             if (option.isSelected()) {

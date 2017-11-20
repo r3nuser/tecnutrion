@@ -1,7 +1,10 @@
 package gui;
 
+import bean.Estoque;
 import bean.Pedido;
 import bean.Pedido_item;
+import bean.Produto;
+import dao.EstoqueDAO;
 import dao.MiscDAO;
 import dao.PedidoDAO;
 import dao.Pedido_itemDAO;
@@ -10,10 +13,13 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.sql.Date;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +42,9 @@ public class Realizar_venda extends JFrame {
     private JTextField cliente_id;
     private JButton buscar_cliente;
     private JComboBox tipo_pagamento;
+    private JCheckBox dar_desconto;
+    private JTextField desconto;
+    private JLabel porcentagem;
 
     private JPanel dados_financeiros;
     private JLabel pedido_vl_tot_l;
@@ -44,6 +53,10 @@ public class Realizar_venda extends JFrame {
     private JTextField lucro_liquido;
     private JLabel qnt_itens_l;
     private JTextField qnt_itens;
+    private JLabel preco_c_desconto_l;
+    private JTextField preco_c_desconto;
+    private JLabel lucro_c_desconto_l;
+    private JTextField lucro_c_desconto;
 
     private JPanel itens_pedido;
 
@@ -57,7 +70,7 @@ public class Realizar_venda extends JFrame {
     private JScrollPane scroll;
 
     private JButton realizar_venda;
-    
+
     public Realizar_venda(String currentusername, String currentpassword) {
         this.username = currentusername;
         this.password = currentpassword;
@@ -69,38 +82,61 @@ public class Realizar_venda extends JFrame {
         inicializa_dados_cliente();
         inicializa_dados_financeiros();
         inicializa_itens_pedido();
-        
-        realizar_venda= new JButton("Finalizar Venda", new ImageIcon(getClass().getResource("abas/ico_money.png")));
-        realizar_venda.setLocation(402,750);
-        realizar_venda.setSize(220,30);
+
+        realizar_venda = new JButton("Finalizar Venda", new ImageIcon(getClass().getResource("abas/ico_money.png")));
+        realizar_venda.setLocation(402, 750);
+        realizar_venda.setSize(220, 30);
         add(realizar_venda);
-        
-        realizar_venda.addActionListener((ActionEvent)->{
+
+        realizar_venda.addActionListener((ActionEvent) -> {
             Pedido p = new Pedido();
+            atualizar_valor_desconto();
             p.setDt_pedido(new Date(System.currentTimeMillis()));
-            p.setPedido_vl_tot(Float.parseFloat(pedido_vl_tot.getText()));
-            p.setPagamento(""+tipo_pagamento.getSelectedItem());
-            
+            if (dar_desconto.isSelected()) {
+                p.setPedido_vl_tot(Float.parseFloat(preco_c_desconto.getText()));
+                p.setDesconto(Integer.parseInt(desconto.getText()));
+            } else {
+                p.setPedido_vl_tot(Float.parseFloat(pedido_vl_tot.getText()));
+                p.setDesconto(0);
+            }
+            p.setPagamento("" + tipo_pagamento.getSelectedItem());
+
             PedidoDAO.create(username, password, p);
             p.setCod_pedido(MiscDAO.get_ultimo_pedido_id(username, password));
-            
+
             Pedido_item pi = new Pedido_item();
-            
+
             pi.setFk_cod_cliente(Integer.parseInt(cliente_id.getText()));
             pi.setFk_cod_pedido(p.getCod_pedido());
-            
-            
-            for(int i = 0; i< modelo_tabela.getRowCount() ; i++){
-                pi.setFk_cod_produto(Integer.parseInt(""+tabela.getValueAt(i, 1)));
-                pi.setQuantidade(Integer.parseInt(""+tabela.getValueAt(i,5)));
-                pi.setPedido_item_vl_tot(pi.getQuantidade()*Float.parseFloat(""+tabela.getValueAt(i, 4)));
+
+            for (int i = 0; i < modelo_tabela.getRowCount(); i++) {
+                pi.setFk_cod_produto(Integer.parseInt("" + tabela.getValueAt(i, 1)));
+                pi.setQuantidade(Integer.parseInt("" + tabela.getValueAt(i, 5)));
+                if (dar_desconto.isSelected()) {
+                    pi.setPedido_item_vl_tot(
+                            (pi.getQuantidade()
+                            * Float.parseFloat(""
+                                    + tabela.getValueAt(i, 4)))
+                            - ((pi.getQuantidade() * Float.parseFloat(""
+                                    + tabela.getValueAt(i, 4))
+                            * (Float.parseFloat(desconto.getText())
+                            / 100))));
+                    pi.setPedido_item_vl_liq(pi.getPedido_item_vl_tot() - pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
+                } else {
+                    pi.setPedido_item_vl_tot(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 4)));
+                    pi.setPedido_item_vl_liq(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
+                }
+                Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(i, 1));
+                Estoque e = MiscDAO.search_estoque_por_id(username, password, pro.getFk_estoque_cod());
+                e.setQnt_estoque(e.getQnt_estoque() - pi.getQuantidade());
+                EstoqueDAO.update(username, password, e);
                 Pedido_itemDAO.create(username, password, pi);
             }
-            
+
             dispose();
-            
+
         });
-        
+
         setSize(1024, 820);
         setResizable(false);
         setLocationRelativeTo(null);
@@ -116,8 +152,8 @@ public class Realizar_venda extends JFrame {
         inicializa_tabela_pedido();
 
         itens_pedido.setBorder(BorderFactory.createLineBorder(Color.black));
-        itens_pedido.setSize(1004, 628);
-        itens_pedido.setLocation(5, 110);
+        itens_pedido.setSize(1004, 590);
+        itens_pedido.setLocation(5, 140);
         add(itens_pedido);
 
     }
@@ -135,6 +171,7 @@ public class Realizar_venda extends JFrame {
         adicionar_produto.addActionListener((ActionEvent) -> {
             new Buscar_produto(this.username, this.password, this.modelo_tabela,
                     pedido_vl_tot, lucro_liquido, qnt_itens);
+
         });
 
         remover_produto.addActionListener((ActionEvent) -> {
@@ -143,11 +180,13 @@ public class Realizar_venda extends JFrame {
             subt *= -1 * Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 5));
             subt += Float.parseFloat(pedido_vl_tot.getText());
             pedido_vl_tot.setText(subt + "");
+
             subt = Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 4))
                     - Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 3));
             subt *= -1 * Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 5));
             subt += Float.parseFloat(lucro_liquido.getText());
             lucro_liquido.setText(subt + "");
+
             subt = Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 5));
             subt *= -1;
             subt += Float.parseFloat(qnt_itens.getText());
@@ -232,7 +271,19 @@ public class Realizar_venda extends JFrame {
         qnt_itens = new JTextField("0");
 
         qnt_itens.setEditable(false);
-        qnt_itens.setPreferredSize(new Dimension(130, 18));
+        qnt_itens.setPreferredSize(new Dimension(240, 18));
+
+        preco_c_desconto_l = new JLabel("Preco c/ Desconto:   R$");
+        preco_c_desconto = new JTextField("0");
+
+        preco_c_desconto.setEditable(false);
+        preco_c_desconto.setPreferredSize(new Dimension(240, 18));
+
+        lucro_c_desconto_l = new JLabel("Lucro c/ Desconto:   R$");
+        lucro_c_desconto = new JTextField("0");
+
+        lucro_c_desconto.setEditable(false);
+        lucro_c_desconto.setPreferredSize(new Dimension(240, 18));
 
         dados_financeiros.add(pedido_vl_tot_l);
         dados_financeiros.add(pedido_vl_tot);
@@ -240,15 +291,15 @@ public class Realizar_venda extends JFrame {
         dados_financeiros.add(lucro_liquido);
         dados_financeiros.add(qnt_itens_l);
         dados_financeiros.add(qnt_itens);
+        dados_financeiros.add(preco_c_desconto_l);
+        dados_financeiros.add(preco_c_desconto);
+        dados_financeiros.add(lucro_c_desconto_l);
+        dados_financeiros.add(lucro_c_desconto);
 
         dados_financeiros.setBorder(BorderFactory.createLineBorder(Color.black));
-        dados_financeiros.setSize(new Dimension(1024 - 580, 90));
+        dados_financeiros.setSize(new Dimension(1024 - 580, 120));
         dados_financeiros.setLocation(570, 10);
         add(dados_financeiros);
-    }
-
-    private void inicializa_dados_pedido() {
-
     }
 
     private void inicializa_dados_cliente() {
@@ -273,6 +324,29 @@ public class Realizar_venda extends JFrame {
             new Buscar_cliente(this.username, this.password, cliente_id, cliente_nome);
         });
 
+        dar_desconto = new JCheckBox("Dar Desconto ?  ");
+        dar_desconto.addActionListener((ActionEvent) -> {
+            if (dar_desconto.isSelected()) {
+                desconto.setEditable(true);
+                desconto.setText("0");
+                atualizar_valor_desconto();
+            } else {
+                desconto.setEditable(false);
+                desconto.setText("");
+                preco_c_desconto.setText("");
+            }
+        });
+        desconto = new JTextField();
+        desconto.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                atualizar_valor_desconto();
+            }
+        });
+        desconto.setEditable(false);
+        desconto.setPreferredSize(new Dimension(25, 18));
+        porcentagem = new JLabel("%");
+
         dados_cliente.add(cliente_id_l);
         dados_cliente.add(cliente_id);
         dados_cliente.add(cliente_nome_l);
@@ -281,10 +355,36 @@ public class Realizar_venda extends JFrame {
         dados_cliente.add(tipo_pagamento);
         dados_cliente.add(buscar_cliente);
 
+        dados_cliente.add(dar_desconto);
+        dados_cliente.add(desconto);
+        dados_cliente.add(porcentagem);
+
         dados_cliente.setBorder(BorderFactory.createLineBorder(Color.black));
-        dados_cliente.setSize(new Dimension(550, 60));
+        dados_cliente.setSize(new Dimension(550, 120));
         dados_cliente.setLocation(5, 10);
 
         add(dados_cliente);
+    }
+
+    private void atualizar_valor_desconto() {
+        try {
+            preco_c_desconto.setText(
+                    ""
+                    + (Float.parseFloat(pedido_vl_tot.getText())
+                    - (Float.parseFloat(pedido_vl_tot.getText())
+                    * (Float.parseFloat(desconto.getText()) / 100)))
+            );
+        } catch (Exception e) {
+            preco_c_desconto.setText(pedido_vl_tot.getText());
+        }
+        try {
+            lucro_c_desconto.setText(
+                    ""
+                    + (Float.parseFloat(preco_c_desconto.getText())
+                    - Float.parseFloat(lucro_liquido.getText()))
+            );
+        } catch (Exception e) {
+            lucro_c_desconto.setText(lucro_liquido.getText());
+        }
     }
 }

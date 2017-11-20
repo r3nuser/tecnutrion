@@ -67,7 +67,7 @@ public class EstoqueDAO extends Sql {
         Connection con = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("UPDATE FROM estoque SET qnt_estoque=?,validade=? where estoque_cod=?");
+            stmt = con.prepareStatement("UPDATE estoque SET qnt_estoque=?,validade=? WHERE estoque_cod=?");
             stmt.setInt(1, e.getQnt_estoque());
             stmt.setDate(2, e.getValidade());
             stmt.setInt(3, e.getEstoque_cod());

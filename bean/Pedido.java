@@ -8,7 +8,15 @@ public class Pedido {
     private Date dt_pedido;
     private float pedido_vl_tot;
     private String pagamento;
+    private int desconto;
 
+    public int getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(int desconto) {
+        this.desconto = desconto;
+    }
     public String getPagamento() {
         return pagamento;
     }

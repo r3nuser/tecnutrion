@@ -62,7 +62,8 @@ create table if not exists pedido(
 	dt_pedido date not null,
 	pedido_vl_tot decimal(8,2) not null,
 	pagamento enum('Cartao de Debito','Cartao de Credito','Boleto','A Vista') not null,
-	primary key(cod_pedido)
+	primary key(cod_pedido),
+        desconto int not null
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;
 
 create table if not exists pedido_item(
@@ -70,7 +71,8 @@ create table if not exists pedido_item(
 	fk_cod_pedido int not null,
 	fk_cod_produto int not null,
 	quantidade int not null,
-	pedido_item_vl_tot decimal(8,2) not null
+	pedido_item_vl_tot decimal(8,2) not null,
+        pedido_item_vl_liq decimal(8,2) not null
 )ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 alter table pedido_item add constraint fk_cod_cli2

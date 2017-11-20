@@ -15,12 +15,13 @@ public class Pedido_itemDAO extends Sql{
 		PreparedStatement stmt = null;
 		try{
 			con = getConnection(username,password);
-			stmt = con.prepareStatement("INSERT INTO pedido_item VALUES (?,?,?,?,?);");
+			stmt = con.prepareStatement("INSERT INTO pedido_item VALUES (?,?,?,?,?,?);");
 			stmt.setInt(1,pi.getFk_cod_cliente());
 			stmt.setInt(2,pi.getFk_cod_pedido());
 			stmt.setInt(3,pi.getFk_cod_produto());
 			stmt.setInt(4,pi.getQuantidade());
 			stmt.setFloat(5,pi.getPedido_item_vl_tot());
+                        stmt.setFloat(6,pi.getPedido_item_vl_liq());
 			stmt.executeUpdate();
 		}catch(Exception e){
 			System.out.println(e);
@@ -47,6 +48,7 @@ public class Pedido_itemDAO extends Sql{
 				pi.setFk_cod_produto(rs.getInt("fk_cod_produto"));
 				pi.setQuantidade(rs.getInt("quantidade"));
 				pi.setPedido_item_vl_tot(rs.getFloat("pedido_item_vl_tot"));
+                                pi.setPedido_item_vl_liq(rs.getFloat("pedido_item_vl_liq"));
 				pedidos.add(pi);
 			}
 		}catch(Exception e){
@@ -62,15 +64,16 @@ public class Pedido_itemDAO extends Sql{
 		PreparedStatement stmt = null;
 		try{
 			con = getConnection(username,password);
-			stmt = con.prepareStatement("UPDATE pedido_item SET fk_cod_cliente=?,fk_cod_pedido=?,fk_cod_produto=?,quantidade=?,pedido_item_vl_tot=? WHERE fk_cod_cliente=?,fk_cod_pedido=?,fk_cod_produto=?");
+			stmt = con.prepareStatement("UPDATE pedido_item SET fk_cod_cliente=?,fk_cod_pedido=?,fk_cod_produto=?,quantidade=?,pedido_item_vl_tot=?,pedido_item_vl_liq=? WHERE fk_cod_cliente=?,fk_cod_pedido=?,fk_cod_produto=?");
 			stmt.setInt(1,pi.getFk_cod_cliente());
 			stmt.setInt(2,pi.getFk_cod_pedido());
 			stmt.setInt(3,pi.getFk_cod_produto());
 			stmt.setInt(4,pi.getQuantidade());
 			stmt.setFloat(5,pi.getPedido_item_vl_tot());
-			stmt.setInt(6,pi.getFk_cod_cliente());
-			stmt.setInt(7,pi.getFk_cod_pedido());
-			stmt.setInt(8,pi.getFk_cod_produto());
+                        stmt.setFloat(6,pi.getPedido_item_vl_liq());
+			stmt.setInt(7,pi.getFk_cod_cliente());
+			stmt.setInt(8,pi.getFk_cod_pedido());
+			stmt.setInt(9,pi.getFk_cod_produto());
 			stmt.executeUpdate();
 		}catch(Exception e){
 			System.out.println(e);
@@ -96,7 +99,7 @@ public class Pedido_itemDAO extends Sql{
 		}else{
 			try{
 				con = getConnection(username,password);
-				stmt = con.prepareStatement("DELETE FROM pedido_item WHERE fk_cod_cliente=?,fk_cod_pedido=?,fk_cod_produto");
+				stmt = con.prepareStatement("DELETE FROM pedido_item WHERE fk_cod_cliente=?,fk_cod_pedido=?,fk_cod_produto=?");
 				stmt.setInt(1,pi.getFk_cod_cliente());
 				stmt.setInt(2,pi.getFk_cod_pedido());
 				stmt.setInt(3,pi.getFk_cod_produto());

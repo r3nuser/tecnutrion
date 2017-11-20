@@ -4,6 +4,7 @@ import bean.Estoque;
 import bean.Produto;
 import dao.EstoqueDAO;
 import dao.MiscDAO;
+import gui.Repor_estoque;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +19,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -74,6 +76,15 @@ public class Painel_estoque extends JPanel {
 
         consultar_estoque = new JButton("Consultar Estoque", new ImageIcon(getClass().getResource("ico_lupa.png")));
         repor_estoque = new JButton("Repor Estoque", new ImageIcon(getClass().getResource("ico_mais.png")));
+
+        repor_estoque.addActionListener((ActionEvent) -> {
+            try {
+                new Repor_estoque(this.username, this.password, (int)tabela.getValueAt(tabela.getSelectedRow(), 0));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar repor estoque: Escolha um dado na tabela e tente novamente");
+            }
+        });
+
         painel_de_botoes.add(repor_estoque);
         painel_de_botoes.add(consultar_estoque);
 
@@ -144,16 +155,16 @@ public class Painel_estoque extends JPanel {
         produto_cod = new JTextField();
         validade = new JTextField();
         quantidade = new JTextField();
-                
+
         produto_foto.setPreferredSize(new Dimension(100, 100));
         produto_foto.setBorder(BorderFactory.createLineBorder(Color.black));
 
-        estoque_cod.setPreferredSize(new Dimension(70,18));
-        produto_cod.setPreferredSize(new Dimension(70,18));
-        produto_nome.setPreferredSize(new Dimension(300,18));
-        validade.setPreferredSize(new Dimension(120,18));
-        quantidade.setPreferredSize(new Dimension(120,18));
-        
+        estoque_cod.setPreferredSize(new Dimension(70, 18));
+        produto_cod.setPreferredSize(new Dimension(70, 18));
+        produto_nome.setPreferredSize(new Dimension(300, 18));
+        validade.setPreferredSize(new Dimension(120, 18));
+        quantidade.setPreferredSize(new Dimension(120, 18));
+
         painel_de_dados.add(produto_cod_l);
         painel_de_dados.add(produto_cod);
         painel_de_dados.add(produto_foto_l);
@@ -166,10 +177,9 @@ public class Painel_estoque extends JPanel {
         painel_de_dados.add(validade);
         painel_de_dados.add(quantidade_l);
         painel_de_dados.add(quantidade);
-        
 
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
-        add(painel_de_dados,BorderLayout.LINE_START);
+        add(painel_de_dados, BorderLayout.LINE_START);
     }
 
     private void atualizar_tabela() {
@@ -192,10 +202,10 @@ public class Painel_estoque extends JPanel {
         Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         Estoque e = MiscDAO.search_estoque_por_id(username, password, p.getFk_estoque_cod());
         produto_foto.setIcon(p.getProduto_foto_para_tabela());
-        estoque_cod.setText(""+e.getEstoque_cod());
+        estoque_cod.setText("" + e.getEstoque_cod());
         produto_nome.setText(p.getProduto_nome());
-        produto_cod.setText(""+p.getProduto_cod());
-        validade.setText(""+e.getValidade());
-        quantidade.setText(""+e.getQnt_estoque());
+        produto_cod.setText("" + p.getProduto_cod());
+        validade.setText("" + e.getValidade());
+        quantidade.setText("" + e.getQnt_estoque());
     }
 }

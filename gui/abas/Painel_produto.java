@@ -4,7 +4,7 @@ package gui.abas;
 *APRESENTAR TODOS OS PRODUTOS
 *POSSIBILITAR A EDIÇÃO, CRIAÇÃO, LEITURA E REMOÇÃO DE PRODUTOS.
 *EXIBIR DADOS RELEVANTES.
-*/
+ */
 import bean.Estoque;
 import bean.Fornecedor;
 import bean.Produto;
@@ -12,6 +12,7 @@ import dao.EstoqueDAO;
 import dao.MiscDAO;
 import dao.ProdutoDAO;
 import gui.Cadastrar_produto;
+import gui.Editar_produto;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -26,6 +27,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -34,6 +36,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class Painel_produto extends JPanel {
+
     //TODOS OBJETOS UTILIZADOS
     private final String username;
     private final String password;
@@ -79,6 +82,7 @@ public class Painel_produto extends JPanel {
     private JLabel quantidade_estoque_l;
     private JLabel nome_fornecedor_l;
     private JLabel validade_l;
+
     //METODO CONSTRUTOR QUE RECEBE USUARIO, SENHA E CHAMA O METODO
     // QUE INICIALIZA TODOS OS COMPONENTES
     public Painel_produto(String currentusername, String currentpassword) {
@@ -87,6 +91,7 @@ public class Painel_produto extends JPanel {
 
         initAll();
     }
+
     //METODO QUE INICIALIZA TABELA, BOTOES E DADOS.
     private void initAll() {
         setLayout(new BorderLayout());
@@ -95,6 +100,7 @@ public class Painel_produto extends JPanel {
         inicializa_painel_de_dados();
         setVisible(true);
     }
+
     //METODO RESPONSAVEL POR INICIALIZAR
     //TODOS COMPONENTES LOCALIZADOS NA PARTE ESQUERDA DO PAINEL
     private void inicializa_painel_de_dados() {
@@ -191,13 +197,14 @@ public class Painel_produto extends JPanel {
             f.setId(p.getFk_fornecedor_cod());
             ProdutoDAO.delete(username, password, p);
             EstoqueDAO.delete(username, password, e);
-            atualizar_tabela((byte)0);
+            atualizar_tabela((byte) 0);
         });
 
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
         painel_de_dados.setPreferredSize(new Dimension(600, 1000));
         add(painel_de_dados, BorderLayout.LINE_START);
     }
+
     //METODO RESPONSAVEL POR INICIALIZAR
     //TODOS COMPONENTES LOCALIZADOS NA PARTE SUPERIOR DO PAINEL
     private void inicializa_painel_de_botoes() {
@@ -218,15 +225,24 @@ public class Painel_produto extends JPanel {
         add(painel_de_botoes, BorderLayout.PAGE_START);
 
         realizar_consulta.addActionListener((ActionEvent) -> {
-            atualizar_tabela((byte)0);
+            atualizar_tabela((byte) 0);
         });
         cadastrar_produtos.addActionListener((ActionEvent) -> {
             new Cadastrar_produto(this.username, this.password);
         });
-        busca_produto_b.addActionListener((ActionEvent)->{
-            atualizar_tabela((byte)1);
+        busca_produto_b.addActionListener((ActionEvent) -> {
+            atualizar_tabela((byte) 1);
+        });
+        editar_dados.addActionListener((ActionEvent) -> {
+            try {
+                new Editar_produto(this.username, this.password, (int) this.tabela.getValueAt(tabela.getSelectedRow(), 1));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao editar: Por favor, escolha um produto na tabela e tente novamente");
+                atualizar_tabela((byte) 0);
+            }
         });
     }
+
     //METODO RESPONSAVEL POR INICIALIZAR
     //TODOS COMPONENTES LOCALIZADOS NA PARTE SUPERIOR DO PAINEL
     private void inicializa_painel_da_tabela() {
@@ -292,6 +308,7 @@ public class Painel_produto extends JPanel {
 
         add(painel_da_tabela, BorderLayout.CENTER);
     }
+
     //METODO QUE MOSTRA OS ATRIBUTOS DO PRODUTO NO PAINEL DA ESQUERDA
     private void atualizar_caixas_de_texto() {
         Produto p = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 1));

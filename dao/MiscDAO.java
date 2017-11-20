@@ -11,7 +11,6 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -151,6 +150,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
                 p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
                 pedidos.add(p);
 
             }
@@ -179,6 +179,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
                 p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
                 pedidos.add(p);
 
             }
@@ -207,6 +208,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
                 p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
                 pedidos.add(p);
 
             }
@@ -235,6 +237,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
                 p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
                 pedidos.add(p);
 
             }
@@ -263,6 +266,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
                 p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
                 pedidos.add(p);
 
             }
@@ -375,6 +379,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
                 p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
                 pedidos.add(p);
 
             }
@@ -489,29 +494,19 @@ public class MiscDAO extends Sql {
 
         float lucro = 0;
 
-        int cod_produto;
-        int quantidade = 0;
-
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        ResultSet rsLucro = null;
+
         Connection con = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("SELECT fk_cod_produto,quantidade FROM pedido_item WHERE"
+            stmt = con.prepareStatement("SELECT fk_cod_produto,quantidade,pedido_item_vl_liq FROM pedido_item WHERE"
                     + " fk_cod_pedido=?");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                cod_produto = rs.getInt("fk_cod_produto");
-                quantidade = rs.getInt("quantidade");
-                stmt = con.prepareStatement("SELECT preco_uni_compra FROM produtos WHERE"
-                        + " produto_cod=?");
-                stmt.setInt(1, cod_produto);
-                rsLucro = stmt.executeQuery();
-                if (rsLucro.next()) {
-                    lucro += quantidade * rsLucro.getFloat("preco_uni_compra");
-                }
+                lucro += rs.getFloat("pedido_item_vl_liq");
+
             }
 
             return lucro;
@@ -519,11 +514,6 @@ public class MiscDAO extends Sql {
             System.out.println(e);
         } finally {
             closeConnection(con, stmt, rs);
-            try {
-                rsLucro.close();
-            } catch (SQLException e) {
-                System.out.println(e);
-            }
         }
 
         return 0f;
@@ -544,6 +534,7 @@ public class MiscDAO extends Sql {
                 p.setDt_pedido(rs.getDate("dt_pedido"));
                 p.setPagamento(rs.getString("pagamento"));
                 p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setDesconto(rs.getInt("desconto"));
             }
         } catch (Exception e) {
             System.out.println(e);

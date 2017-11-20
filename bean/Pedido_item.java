@@ -7,6 +7,15 @@ public class Pedido_item {
     private int fk_cod_produto;
     private int quantidade;
     private float pedido_item_vl_tot;
+    private float pedido_item_vl_liq;
+
+    public float getPedido_item_vl_liq() {
+        return pedido_item_vl_liq;
+    }
+
+    public void setPedido_item_vl_liq(float pedido_item_vl_liq) {
+        this.pedido_item_vl_liq = pedido_item_vl_liq;
+    }
 
     public int getFk_cod_cliente() {
         return fk_cod_cliente;
