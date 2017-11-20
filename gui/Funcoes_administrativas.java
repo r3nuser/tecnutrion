@@ -289,8 +289,17 @@ public class Funcoes_administrativas extends JFrame {
                 String s = "";
                 stmt = con.prepareStatement("revoke all privileges on *.* from 'gerente'@'%';");
                 stmt.executeUpdate();
+
+                stmt = con.prepareStatement("FLUSH PRIVILEGES;");
+                stmt.executeUpdate();
+
                 if (cadastrar_produtos_g.isSelected()) {
                     s = " grant create,select on visualnutrion.produtos to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+
+                } else {
+                    s = " revoke create,select on visualnutrion.produtos to 'gerente'@'%';";
                     stmt = con.prepareStatement(s);
                     stmt.executeUpdate();
                 }
@@ -298,58 +307,117 @@ public class Funcoes_administrativas extends JFrame {
                     s = " grant create,select on visualnutrion.clientes to 'gerente'@'%';";
                     stmt = con.prepareStatement(s);
                     stmt.executeUpdate();
+
+                } else {
+                    s = " revoke create,select on visualnutrion.clientes to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
                 }
                 if (cadastrar_fornecedor_g.isSelected()) {
                     s = " grant create,select on visualnutrion.fornecedor to 'gerente'@'%';";
                     stmt = con.prepareStatement(s);
                     stmt.executeUpdate();
+
+                } else {
+                    s = " revoke create,select on visualnutrion.fornecedor to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+
                 }
-		if (editar_produtos_g.isSelected()){
-			s = "grant update on visualnutrion.produtos to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(editar_clientes_g.isSelected()){
-			s="grant update on visualnutrion.clientes to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(editar_fornecedor_g.isSelected()){
-			s="grant update on visualnutrion.fornecedor to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(realizar_venda_g.isSelected()){
-			s="grant create,update,select,delete on visualnutrion.pedido to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-			s="grant create,update,select,delete on visualnutrion.pedido_item to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(gerar_relatorio_g.isSelected()){
-			s="grant select on visualnutrion.pedido to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-			s="grant select on visualnutrion.pedido_item to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(deletar_clientes_g.isSelected()){
-			s="grant delete on visualnutrion.clientes to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(deletar_produtos_g.isSelected()){
-			s="grant delete on visualnutrion.produtos to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
-		if(deletar_fornecedor_g.isSelected()){
-			s="grant delete on visualnutrion.fornecedor to 'gerente'@'%';";
-			stmt = con.prepareStatement(s);
-			stmt.executeUpdate();
-		}
+                if (editar_produtos_g.isSelected()) {
+                    s = "grant update on visualnutrion.produtos to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+                    s = "grant revoke on visualnutrion.produtos to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+
+                }
+                if (editar_clientes_g.isSelected()) {
+                    s = "grant update on visualnutrion.clientes to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+                    s = "revoke update on visualnutrion.clientes to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+
+                }
+                if (editar_fornecedor_g.isSelected()) {
+                    s = "grant update on visualnutrion.fornecedor to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+
+                    s = "revoke update on visualnutrion.fornecedor to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+                if (realizar_venda_g.isSelected()) {
+                    s = "grant create,update,select,delete on visualnutrion.pedido to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                    s = "grant create,update,select,delete on visualnutrion.pedido_item to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+                    s = "revoke create,update,select,delete on visualnutrion.pedido to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                    s = "revoke create,update,select,delete on visualnutrion.pedido_item to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+
+                }
+                if (gerar_relatorio_g.isSelected()) {
+                    s = "grant select on visualnutrion.pedido to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                    s = "grant select on visualnutrion.pedido_item to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+                    s = "revoke select on visualnutrion.pedido to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                    s = "revoke select on visualnutrion.pedido_item to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+
+                }
+                if (deletar_clientes_g.isSelected()) {
+                    s = "grant delete on visualnutrion.clientes to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+
+                    s = "revoke delete on visualnutrion.clientes to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+                if (deletar_produtos_g.isSelected()) {
+                    s = "grant delete on visualnutrion.produtos to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+
+                    s = "revoke delete on visualnutrion.produtos to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+                if (deletar_fornecedor_g.isSelected()) {
+                    s = "grant delete on visualnutrion.fornecedor to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                } else {
+
+                    s = "revoke delete on visualnutrion.fornecedor to 'gerente'@'%';";
+                    stmt = con.prepareStatement(s);
+                    stmt.executeUpdate();
+                }
+                stmt = con.prepareStatement("FLUSH PRIVILEGES;");
+                stmt.executeUpdate();
 
                 JOptionPane.showMessageDialog(null, "Privilegios de gerente alterados com sucesso !");
             } catch (Exception e) {

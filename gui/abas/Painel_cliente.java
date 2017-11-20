@@ -390,6 +390,7 @@ public class Painel_cliente extends JPanel {
             estado.setText(e.getEstado());
             municipio.setText(e.getMunicipio());
             cep.setText(e.getCep());
+            
         } catch (Exception e) {
             System.out.println(e);
         }
