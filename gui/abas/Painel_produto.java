@@ -98,6 +98,7 @@ public class Painel_produto extends JPanel {
         inicializa_painel_da_tabela();
         inicializa_painel_de_botoes();
         inicializa_painel_de_dados();
+ 
         setVisible(true);
     }
 
@@ -193,8 +194,7 @@ public class Painel_produto extends JPanel {
             Produto p = MiscDAO.search_produto_por_id(username, password, Integer.parseInt(produto_cod.getText()));
             Estoque e = new Estoque();
             e.setEstoque_cod(p.getFk_estoque_cod());
-            Fornecedor f = new Fornecedor();
-            f.setId(p.getFk_fornecedor_cod());
+            
             ProdutoDAO.delete(username, password, p);
             EstoqueDAO.delete(username, password, e);
             atualizar_tabela((byte) 0);

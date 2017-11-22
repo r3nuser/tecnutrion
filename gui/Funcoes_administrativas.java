@@ -3,6 +3,9 @@ package gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import javax.swing.BorderFactory;
@@ -22,6 +25,7 @@ public class Funcoes_administrativas extends JFrame {
 
     private JPanel painel_admin;
     private JLabel admin_l;
+    
     private JLabel cadastros_a;
     private JCheckBox cadastrar_produtos_a;
     private JCheckBox cadastrar_clientes_a;
@@ -103,6 +107,10 @@ public class Funcoes_administrativas extends JFrame {
         setResizable(false);
         setTitle("Funções Administrativas");
         requestFocus();
+        
+        URL url = this.getClass().getResource("abas/ico_permissao.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setVisible(true);
 
     }

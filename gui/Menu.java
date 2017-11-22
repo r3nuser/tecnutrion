@@ -2,6 +2,7 @@ package gui;
 
 import java.awt.BorderLayout;
 import gui.abas.*;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -63,18 +64,20 @@ public class Menu extends JFrame {
     private void initComponents() {
         //DEFINIÇÃO E INICIALIZAÇÃO DA BARRA DO MENU E SEUS RESPECTIVOS ITENS.
         barra_do_menu = new JMenuBar();
+        barra_do_menu.setBackground(new Color(40, 40, 40));
+
         cadastros = new JMenu("Cadastros");
         cadastros.setIcon(new ImageIcon(getClass().getResource("abas/ico_cadastro.png")));
-
+        cadastros.setForeground(new Color(255, 255, 255));
         financeiro = new JMenu("Financeiro");
         financeiro.setIcon(new ImageIcon(getClass().getResource("abas/ico_financeiro.png")));
-
+        financeiro.setForeground(new Color(255, 255, 255));
         relatorios = new JMenu("Relatórios");
         relatorios.setIcon(new ImageIcon(getClass().getResource("abas/ico_relatorios.png")));
 
         configuracoes = new JMenu("Configurações");
         configuracoes.setIcon(new ImageIcon(getClass().getResource("abas/ico_config.png")));
-
+        configuracoes.setForeground(new Color(255, 255, 255));
         funcoes_administrativas = new JMenuItem("Funções Administrativas");
         funcoes_administrativas.setIcon(new ImageIcon(getClass().getResource("abas/ico_permissao.png")));
         configuracoes.add(funcoes_administrativas);
@@ -116,22 +119,25 @@ public class Menu extends JFrame {
         relatorio_de_vendas.addActionListener((ActionEvent) -> {
             new Relatorio_de_vendas(this.currentusername, this.currentpassword);
         });
+        financeiro_lucro.addActionListener((ActionEvent)->{
+           new Estatisticas(this.currentusername,this.currentpassword);
+        });
         funcoes_administrativas.addActionListener((ActionEvent) -> {
             JPanel panel = new JPanel();
             JLabel label = new JLabel("Entre com a senha de ADMIN:");
             JPasswordField pass = new JPasswordField(10);
             panel.add(label);
             panel.add(pass);
-            String[] options = new String[]{"OK", "Cancelar"};
+            String[] options = new String[]{"Cancelar","Confirmar"};
             int option = JOptionPane.showOptionDialog(null, panel, "Confirmação de Senha",
                     JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                     null, options, options[1]);
-            if (option == 0) // pressing OK button
+            if (option == 1) // pressing OK button
             {
                 char[] password = pass.getPassword();
                 String senha = "";
-                for(int i = 0; i<password.length ; i++){
-                    senha+=password[i];
+                for (int i = 0; i < password.length; i++) {
+                    senha += password[i];
                 }
                 new Funcoes_administrativas(senha);
                 setExtendedState(ICONIFIED);

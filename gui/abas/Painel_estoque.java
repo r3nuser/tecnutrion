@@ -68,6 +68,7 @@ public class Painel_estoque extends JPanel {
         inicializa_painel_de_dados();
         inicializa_painel_de_botoes();
         inicializa_painel_da_tabela();
+
         setVisible(true);
     }
 

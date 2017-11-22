@@ -18,6 +18,53 @@ import sql.Sql;
 
 public class MiscDAO extends Sql {
 
+    public static Produto produtos_menos_vendidos(String username, String password) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Produto p = new Produto();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT produto_nome,categoria FROM produtos WHERE produto_cod=(SELECT fk_cod_produto from pedido_item group by fk_cod_produto order by sum(quantidade) asc LIMIT 1)");
+
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                p.setProduto_nome(rs.getString("produto_nome"));
+                p.setCategoria(rs.getString("categoria"));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return p;
+    }
+    
+    public static Produto produtos_mais_vendidos(String username, String password) {
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Produto p = new Produto();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT produto_nome,categoria FROM produtos WHERE produto_cod=(SELECT fk_cod_produto from pedido_item group by fk_cod_produto order by sum(quantidade) desc LIMIT 1)");
+  
+            rs = stmt.executeQuery();
+            while(rs.next()){
+                p.setProduto_nome(rs.getString("produto_nome"));
+                System.out.println(p.getProduto_nome());
+                p.setCategoria(rs.getString("categoria"));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return p;
+    }
+
     public static int clientes_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;

@@ -6,6 +6,7 @@ import bean.Pedido_item;
 import bean.Produto;
 import dao.MiscDAO;
 import dao.PedidoDAO;
+import dao.Pedido_itemDAO;
 import gui.Realizar_troca;
 import gui.Realizar_venda;
 import java.awt.BorderLayout;
@@ -80,6 +81,7 @@ public class Painel_vendas extends JPanel {
         inicializa_painel_de_dados();
         inicializa_painel_da_tabela();
         inicializa_painel_de_botoes();
+       
         setVisible(true);
     }
 
@@ -120,6 +122,14 @@ public class Painel_vendas extends JPanel {
         scroll_itens = new JScrollPane(tabela_itens);
 
         scroll_itens.setPreferredSize(new Dimension(550, 200));
+        
+        scroll_itens.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.black),
+                "Itens da Venda",
+                1,
+                1,
+                new java.awt.Font("Dialog", 1, 14)
+        ));
 
         id_pedido = new JTextField();
         dt_pedido = new JTextField();
@@ -174,6 +184,21 @@ public class Painel_vendas extends JPanel {
         painel_de_dados.add(scroll_itens);
         painel_de_dados.add(deletar_pedido);
 
+        deletar_pedido.addActionListener((ActionEvent) -> {
+            try {
+                Pedido_item pi = new Pedido_item();
+                pi.setFk_cod_pedido((int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+                Pedido_itemDAO.delete(username, password, pi, (byte) 1);
+                Pedido p = MiscDAO.search_pedido_por_id(username, password, pi.getFk_cod_pedido());
+                PedidoDAO.delete(username, password, p);
+                JOptionPane.showMessageDialog(null, "Apagado com Sucesso !");
+                atualizar_tabela();
+                limpar_caixas_de_texto();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Por favor, escolha um dado na tabela á direita e tente novamente !");
+            }
+        });
+
         add(painel_de_dados, BorderLayout.LINE_START);
     }
 
@@ -218,6 +243,8 @@ public class Painel_vendas extends JPanel {
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
         painel_da_tabela.add(scroll);
+        
+        
         add(painel_da_tabela, BorderLayout.CENTER);
     }
 
@@ -248,6 +275,20 @@ public class Painel_vendas extends JPanel {
 
     }
 
+    private void limpar_caixas_de_texto() {
+        id_pedido.setText("");
+        dt_pedido.setText("");
+        pedido_vl_tot.setText("");
+        tipo_pagamento.setText("");
+        cliente_nome.setText("");
+        cliente_id.setText("");
+        quantidade_de_itens.setText("");
+        pedido_lucro_liquido.setText("");
+        desconto.setText("");
+
+        modelo_tabela_itens.setNumRows(0);
+    }
+
     private void atualizar_caixas_de_texto() {
         Pedido p = MiscDAO.search_pedido_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         id_pedido.setText("" + p.getCod_pedido());
@@ -271,7 +312,7 @@ public class Painel_vendas extends JPanel {
             Produto p = dados_produto.get(i);
             modelo_tabela_itens.addRow(new Object[]{
                 p.getProduto_cod(), p.getProduto_nome(),
-                "R$ "+(p.getPreco_uni_venda()
+                "R$ " + (p.getPreco_uni_venda()
                 - (p.getPreco_uni_venda()
                 * (desconto)
                 / 100)),

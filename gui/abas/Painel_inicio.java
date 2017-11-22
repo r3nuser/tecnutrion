@@ -82,6 +82,22 @@ public class Painel_inicio extends JPanel {
     private JLabel total_de_item_estoque;
     private JLabel total_de_vendas;
 
+    private JPanel informativo_top_low_cadastros;
+    private JLabel produtos_mais_vendidos;
+    private JLabel categoria_de_produto_mais_vendidos;
+    private JLabel produtos_menos_vendidos;
+    private JLabel categoria_de_produto_menos_vendidos;
+
+    private JPanel top_low_clientes_a;
+    private JLabel cliente_que_mais_compra_a;
+    private JLabel mais_compra_total_a;
+    private JPanel top_low_clientes_m;
+    private JLabel cliente_que_mais_compra_m;
+    private JLabel mais_compra_total_m;
+    private JPanel top_low_clientes_s;
+    private JLabel cliente_que_mais_compra_s;
+    private JLabel mais_compra_total_s;
+
 //tabela
     private JPanel painel_tabela;
 
@@ -120,11 +136,11 @@ public class Painel_inicio extends JPanel {
 
     private void initAll() {
         b = BorderFactory.createLineBorder(Color.black);
-        f = new java.awt.Font("Dialog", 1, 20);
+        f = new java.awt.Font("Dialog", 1, 16);
 
         setLayout(new BorderLayout());
         painel_principal = new JPanel(new BorderLayout());
-        painel_principal.setPreferredSize(new Dimension(1024, 1000));
+        painel_principal.setPreferredSize(new Dimension(1024, 760));
         painel_principal.setBorder(b);
         inicializa_painel_da_tabela();
         inicializa_itens_painel_logistica();
@@ -213,7 +229,7 @@ public class Painel_inicio extends JPanel {
         tabela_validade.getColumnModel().getColumn(0).setMinWidth(100);
 
         scroll_validade = new JScrollPane(tabela_validade);
-        scroll_validade.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS PERTO DA VALIDADE", 1, 1, f));
+        scroll_validade.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS PERTO DE EXCEDER A VALIDADE", 1, 1, f));
 
         painel_tabela.add(scroll_validade);
 
@@ -233,7 +249,7 @@ public class Painel_inicio extends JPanel {
         dtm_aniversario.addColumn("Aniversario");
 
         scroll_aniversario = new JScrollPane(tabela_aniversario);
-        scroll_aniversario.setBorder(BorderFactory.createTitledBorder(b, "ANIVERSARIANTES DO MÊS", 1, 1, f));
+        scroll_aniversario.setBorder(BorderFactory.createTitledBorder(b, "CLIENTES ANIVERSARIANTES DO MÊS", 1, 1, f));
 
         painel_tabela.add(scroll_aniversario);
     }
@@ -289,12 +305,7 @@ public class Painel_inicio extends JPanel {
             atualizar_dados_tabelas(calendar);
             atualizar_dados_do_rendimento((byte) periodo.getSelectedIndex(), calendar);
 
-            produtos_cadastrados.setText("Total de Produtos Cadastrados : " + MiscDAO.produtos_cadastrados(username, password));
-            clientes_cadastrados.setText("Total de Clientes Cadastrados : " + MiscDAO.clientes_cadastrados(username, password));
-            fornecedores_cadastrados.setText("Total de Fornecedores Cadastrados : " + MiscDAO.fornecedores_cadastrados(username, password));
-            total_de_item_estoque.setText("Total de Itens no Estoque : " + MiscDAO.total_item_estoque_cadastrados(username, password));
-            total_de_vendas.setText("Total de Vendas Realizadas : " + MiscDAO.total_de_vendas_cadastrados(username, password));
-
+            atualiza_painel_informativo();
         });
         painel_logistica.setPreferredSize(new Dimension(900, 2000));
         painel_logistica.setBorder(b);
@@ -306,15 +317,32 @@ public class Painel_inicio extends JPanel {
         inicializa_painel_informativo();
     }
 
+    private void atualiza_painel_informativo() {
+        produtos_cadastrados.setText("Total de Produtos Cadastrados : " + MiscDAO.produtos_cadastrados(username, password));
+        clientes_cadastrados.setText("Total de Clientes Cadastrados : " + MiscDAO.clientes_cadastrados(username, password));
+        fornecedores_cadastrados.setText("Total de Fornecedores Cadastrados : " + MiscDAO.fornecedores_cadastrados(username, password));
+        total_de_item_estoque.setText("Total de Itens no Estoque : " + MiscDAO.total_item_estoque_cadastrados(username, password));
+        total_de_vendas.setText("Total de Vendas Realizadas : " + MiscDAO.total_de_vendas_cadastrados(username, password));
+        Produto p = MiscDAO.produtos_mais_vendidos(username, password);
+        produtos_mais_vendidos.setText("Produto Mais Vendido:" + p.getProduto_nome());
+        categoria_de_produto_mais_vendidos.setText("Categoria de Produtos Mais Vendidos:" + p.getCategoria());
+        p = MiscDAO.produtos_menos_vendidos(username, password);
+        produtos_menos_vendidos.setText("Produto Menos Vendido:" + p.getProduto_nome());
+        categoria_de_produto_menos_vendidos.setText("Categoria de Produto Menos Vendido:" + p.getCategoria());
+    }
+
     private void inicializa_painel_informativo() {
         painel_informativo = new JPanel(null);
         painel_informativo.setBorder(BorderFactory.createTitledBorder(b, "INFORMATIVO", 1, 1, f));
-        painel_informativo.setBounds(10, 500, 880, 470);
+        painel_informativo.setBounds(10, 500, 880, 200);
 
         informativo_total_cadastros = new JPanel(null);
         informativo_total_cadastros.setBorder(BorderFactory.createTitledBorder(b, "TOTAL DE CADASTROS"));
+        informativo_top_low_cadastros = new JPanel(null);
+        informativo_top_low_cadastros.setBorder(BorderFactory.createTitledBorder(b, "INFORMAÇÕES DE PRODUTO"));
 
-        informativo_total_cadastros.setBounds(10, 40, 860, 150);
+        informativo_total_cadastros.setBounds(10, 40, 430, 150);
+        informativo_top_low_cadastros.setBounds(440, 40, 430, 150);
 
         produtos_cadastrados = new JLabel("Total de Produtos Cadastrados:");
         clientes_cadastrados = new JLabel("Total de Clientes Cadastrados:");
@@ -322,11 +350,21 @@ public class Painel_inicio extends JPanel {
         total_de_item_estoque = new JLabel("Total de Itens no Estoque:");
         total_de_vendas = new JLabel("Total de Vendas Realizadas: ");
 
+        produtos_mais_vendidos = new JLabel("Produtos Mais Vendidos:");
+        categoria_de_produto_mais_vendidos = new JLabel("Categoria de Produtos Mais Vendidos:");
+        produtos_menos_vendidos = new JLabel("Produtos Menos Vendidos:");
+        categoria_de_produto_menos_vendidos = new JLabel("Categoria de Produtos Menos Vendidos:");
+
         informativo_total_cadastros.add(produtos_cadastrados);
         informativo_total_cadastros.add(clientes_cadastrados);
         informativo_total_cadastros.add(fornecedores_cadastrados);
         informativo_total_cadastros.add(total_de_item_estoque);
         informativo_total_cadastros.add(total_de_vendas);
+
+        informativo_top_low_cadastros.add(produtos_mais_vendidos);
+        informativo_top_low_cadastros.add(categoria_de_produto_mais_vendidos);
+        informativo_top_low_cadastros.add(produtos_menos_vendidos);
+        informativo_top_low_cadastros.add(categoria_de_produto_menos_vendidos);
 
         produtos_cadastrados.setBounds(10, 30, 400, 20);
         clientes_cadastrados.setBounds(10, 50, 400, 20);
@@ -334,8 +372,20 @@ public class Painel_inicio extends JPanel {
         total_de_item_estoque.setBounds(10, 90, 400, 20);
         total_de_vendas.setBounds(10, 110, 400, 20);
 
-        painel_informativo.add(informativo_total_cadastros);
+        produtos_mais_vendidos.setBounds(10, 30, 400, 20);
+        categoria_de_produto_mais_vendidos.setBounds(10, 55, 400, 20);
+        produtos_menos_vendidos.setBounds(10, 80, 400, 20);
+        categoria_de_produto_menos_vendidos.setBounds(10, 105, 400, 20);
 
+        painel_informativo.add(informativo_total_cadastros);
+        painel_informativo.add(informativo_top_low_cadastros);
+
+        /*top_low_clientes_a = new JPanel(null);
+        top_low_clientes_m = new JPanel(null);
+        top_low_clientes_s = new JPanel(null);
+        
+        cliente_que_mais_compra_a = new JLabel("Cliente que mais ");
+         */
         painel_logistica.add(painel_informativo);
 
     }

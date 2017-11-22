@@ -58,11 +58,11 @@ public class Relatorio_de_vendas extends JFrame {
 
         gerar = new JButton("Gerar Relatório",new ImageIcon(getClass().getResource("abas/ico_relatorios.png")));
 
-        informativo.setBounds(10, 10, 200, 18);
-        data_relatorio_inicio_l.setBounds(40, 28, 200, 18);
-        data_relatorio_inicio.setBounds(40, 46, 120, 18);
-        data_relatorio_fim_l.setBounds(40, 64, 200, 18);
-        data_relatorio_fim.setBounds(40, 82, 120, 18);
+        informativo.setBounds(10, 10, 300, 18);
+        data_relatorio_inicio_l.setBounds(50, 24+10, 200, 23);
+        data_relatorio_inicio.setBounds(50, 44+10, 120, 23);
+        data_relatorio_fim_l.setBounds(50, 64+10, 200, 23);
+        data_relatorio_fim.setBounds(50, 84+10, 120, 23);
         gerar.setBounds(40, 170, 180, 24);
 
         add(informativo);
@@ -262,7 +262,7 @@ public class Relatorio_de_vendas extends JFrame {
             }
         });
 
-        setSize(300, 250);
+        setSize(280, 250);
         setResizable(false);
         setLayout(null);
         setTitle("Gerar Relatório de Vendas !");
