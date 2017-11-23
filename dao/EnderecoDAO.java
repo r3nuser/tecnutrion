@@ -67,10 +67,41 @@ public class EnderecoDAO extends Sql {
     }
 
     public static void update(String username, String password, Endereco e) {
-
+        PreparedStatement stmt = null;
+        Connection con = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("UPDATE FROM endereco SET tipolog=?,logradouro=?,bairro=?,cidade=?,cidade=?,complemento=?,estado=? WHERE fk_cliente_cod=?");
+            stmt.setString(1, e.getTipolog());
+            stmt.setString(2, e.getLog());
+            stmt.setString(3, e.getBairro());
+            stmt.setString(4, e.getComplemento());
+            stmt.setString(5, e.getMunicipio());
+            stmt.setString(6, e.getEstado());
+            stmt.setString(7, e.getCep());
+            stmt.setInt(8, e.getClientecod());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Endereço salvo com sucesso !");
+        }catch(Exception e){
+            System.out.println(e);
+        }finally{
+            closeConnection(con,stmt);
+        }
     }
 
     public static void delete(String username, String password, Endereco e) {
-
+        PreparedStatement stmt = null;
+        Connection con = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("DELETE FROM endereco WHERE fk_cliente_cod=?");
+            stmt.setInt(1, e.getClientecod());
+            stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Endereço salvo com sucesso !");
+        }catch(Exception e){
+            System.out.println(e);
+        }finally{
+            closeConnection(con,stmt);
+        }
     }
 }
