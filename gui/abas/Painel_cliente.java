@@ -367,6 +367,7 @@ public class Painel_cliente extends JPanel {
     }
 
     private void atualizar_caixas_de_texto() {
+        
         Cliente c = MiscDAO.search_cliente_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         nome_cliente.setText(c.getNome());
         id.setText("" + c.getId());
@@ -392,6 +393,13 @@ public class Painel_cliente extends JPanel {
             cep.setText(e.getCep());
             
         } catch (Exception e) {
+            tipolog.setText("");
+            log.setText("");
+            bairro.setText("");
+            complemento.setText("");
+            estado.setText("");
+            municipio.setText("");
+            cep.setText("");
             System.out.println(e);
         }
     }

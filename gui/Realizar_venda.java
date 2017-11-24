@@ -376,15 +376,22 @@ public class Realizar_venda extends JFrame {
             );
         } catch (Exception e) {
             preco_c_desconto.setText(pedido_vl_tot.getText());
-        }
-        try {
-            lucro_c_desconto.setText(
-                    ""
-                    + (Float.parseFloat(preco_c_desconto.getText())
-                    - Float.parseFloat(lucro_liquido.getText()))
-            );
-        } catch (Exception e) {
-            lucro_c_desconto.setText(lucro_liquido.getText());
+        } finally {
+            try {
+                if (dar_desconto.isSelected()) {
+                    lucro_c_desconto.setText(
+                            ""
+                            + (Float.parseFloat(preco_c_desconto.getText())
+                            - Float.parseFloat(pedido_vl_tot.getText())
+                            + Float.parseFloat(lucro_liquido.getText()))
+                    );
+
+                } else {
+                    lucro_c_desconto.setText("");
+                }
+            } catch (Exception e) {
+                lucro_c_desconto.setText(lucro_liquido.getText());
+            }
         }
     }
 }

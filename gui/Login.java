@@ -13,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.sql.Connection;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import sql.Sql;
 import static sql.Sql.closeConnection;
@@ -47,7 +48,7 @@ public class Login extends JFrame {
         signin = new JButton("Logar");
         clicked_login = false;
         clicked_password = false;
-        already_digit=false;
+        already_digit = false;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(350, 390);
 
@@ -90,7 +91,7 @@ public class Login extends JFrame {
                 }
             }
         });
-      
+
         password.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent m) {
@@ -130,10 +131,12 @@ public class Login extends JFrame {
                 dispose();
                 new Menu(Username, Password);
 
+            } else {
+                JOptionPane.showMessageDialog(null, "Senha ou Usuário inválidos");
             }
             closeConnection(con);
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(null,"Falha interna:"+e);
         }
     }
 }

@@ -58,8 +58,8 @@ public class EnderecoDAO extends Sql {
                 e.setEstado(rs.getString("estado"));
                 enderecos.add(e);
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro ao consultar !");
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao consultar !"+ex);
         } finally {
             closeConnection(con, stmt, rs);
         }
@@ -71,7 +71,7 @@ public class EnderecoDAO extends Sql {
         Connection con = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("UPDATE FROM endereco SET tipolog=?,logradouro=?,bairro=?,cidade=?,cidade=?,complemento=?,estado=? WHERE fk_cliente_cod=?");
+            stmt = con.prepareStatement("UPDATE FROM endereco SET tipolog=?,logradouro=?,bairro=?,complemento=?,cidade=?,estado=?,cep=? WHERE fk_cliente_cod=?");
             stmt.setString(1, e.getTipolog());
             stmt.setString(2, e.getLog());
             stmt.setString(3, e.getBairro());
@@ -81,9 +81,9 @@ public class EnderecoDAO extends Sql {
             stmt.setString(7, e.getCep());
             stmt.setInt(8, e.getClientecod());
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Endereço salvo com sucesso !");
-        }catch(Exception e){
-            System.out.println(e);
+            
+        }catch(Exception ex){
+            System.out.println(ex);
         }finally{
             closeConnection(con,stmt);
         }
@@ -97,9 +97,9 @@ public class EnderecoDAO extends Sql {
             stmt = con.prepareStatement("DELETE FROM endereco WHERE fk_cliente_cod=?");
             stmt.setInt(1, e.getClientecod());
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Endereço salvo com sucesso !");
-        }catch(Exception e){
-            System.out.println(e);
+            
+        }catch(Exception ex){
+            System.out.println(ex);
         }finally{
             closeConnection(con,stmt);
         }
