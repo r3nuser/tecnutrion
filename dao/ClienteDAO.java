@@ -16,10 +16,10 @@ public class ClienteDAO extends Sql {
 
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("INSERT INTO clientes VALUES (NULL,?,?);");
+            stmt = con.prepareStatement("INSERT INTO clientes VALUES (NULL,?,?,?);");
             stmt.setString(1, c.getNome());
             stmt.setDate(2, c.getData_nascimento());
-
+            stmt.setString(3, c.getEmail());
             stmt.executeUpdate();
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
@@ -49,6 +49,7 @@ public class ClienteDAO extends Sql {
                 c.setId(rs.getInt("cliente_cod"));
                 c.setNome(rs.getString("cliente_nome"));
                 c.setData_nascimento(rs.getDate("dt_nasc"));
+                c.setEmail(rs.getString("email"));
                 clientes.add(c);
             }
 
@@ -65,9 +66,11 @@ public class ClienteDAO extends Sql {
         PreparedStatement stmt = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("UPDATE clientes SET cliente_nome=? WHERE cliente_cod = ?");
+            stmt = con.prepareStatement("UPDATE clientes SET cliente_nome=?,dt_nasc=?,email=? WHERE cliente_cod = ?");
             stmt.setString(1, c.getNome());
-            stmt.setInt(2, c.getId());
+            stmt.setDate(2, c.getData_nascimento());
+            stmt.setString(3, c.getEmail());
+            stmt.setInt(4, c.getId());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Atualizado com sucesso!");
         } catch (Exception e) {

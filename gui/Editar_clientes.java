@@ -48,6 +48,7 @@ public class Editar_clientes extends JFrame {
     private JButton cadastro = null;
     //TODOS CAMPOS DE TEXTO
     private JTextField nome = null;
+    private JTextField email = null;
     private JTextField ddd = null;
     private JTextField antesh = null;
     private JTextField depoish = null;
@@ -67,6 +68,7 @@ public class Editar_clientes extends JFrame {
     private JScrollPane scroll_telefone;
     //TODOS LABELS INFORMATIVOS
     private JLabel nome_l = null;
+    private JLabel email_l = null;
     private JLabel data_nascimento_l = null;
     private JLabel tipolog_l = null;
     private JLabel log_l = null;
@@ -76,7 +78,7 @@ public class Editar_clientes extends JFrame {
     private JLabel estado_l = null;
     private JLabel complemento_l = null;
     private JLabel cadastrar_cliente = null;
-
+    
     public Editar_clientes(String currentusername, String currentpassword, int id) {
         this.username = currentusername;
         this.password = currentpassword;
@@ -97,22 +99,24 @@ public class Editar_clientes extends JFrame {
         dtm_telefone.addColumn("Sufixo");
         tabela_telefone = new JTable(dtm_telefone);
         scroll_telefone = new JScrollPane(tabela_telefone);
-
+        
         formatarTextboxes();
         this.option = new JCheckBox("Atualizar Endereço");
         this.cadastro = new JButton("Atualizar !");
         this.add = new JButton("", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
         this.rm = new JButton("", new ImageIcon(getClass().getResource("abas/ico_deletar.png")));
-
+        
         this.nome = new JTextField();
+        this.email = new JTextField();
         this.tipolog = new JTextField();
         this.log = new JTextField();
         this.bairro = new JTextField();
         this.municipio = new JTextField();
         this.estado = new JTextField();
         this.complemento = new JTextField();
-
+        
         this.nome_l = new JLabel("Nome Completo:*");
+        this.email_l = new JLabel("Email:*");
         this.telefone_l = new JLabel("Nº de Contato:*");
         this.data_nascimento_l = new JLabel("Data de Nascimento:");
         this.tipolog_l = new JLabel("Tipo de Logradouro:*");
@@ -123,8 +127,9 @@ public class Editar_clientes extends JFrame {
         this.estado_l = new JLabel("Estado:*");
         this.complemento_l = new JLabel("Complemento:");
         this.cadastrar_cliente = new JLabel("Editar cliente ID = " + c.getId());
-
+        
         this.nome_l.setFont(new java.awt.Font("Dialog", 1, 14));
+        this.email.setFont(new java.awt.Font("Dialog", 1, 14));
         this.telefone_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.data_nascimento_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.tipolog_l.setFont(new java.awt.Font("Dialog", 1, 14));
@@ -136,11 +141,12 @@ public class Editar_clientes extends JFrame {
         this.estado_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.complemento_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.cadastrar_cliente.setFont(new java.awt.Font("Dialog", 1, 16));
-
+        
         add(this.cadastro);
         add(this.option);
-
+        
         add(this.nome);
+        add(this.email);
         add(this.ddd);
         add(this.antesh);
         add(this.depoish);
@@ -152,8 +158,9 @@ public class Editar_clientes extends JFrame {
         add(this.cep);
         add(this.estado);
         add(this.complemento);
-
+        
         add(this.nome_l);
+        add(this.email_l);
         add(this.telefone_l);
         add(this.data_nascimento_l);
         add(this.log_l);
@@ -166,10 +173,11 @@ public class Editar_clientes extends JFrame {
         add(this.cadastrar_cliente);
         add(this.rm);
         add(this.add);
-
+        
         add(this.scroll_telefone);
-
-        this.nome.setBounds(12, 146, 585, 19);
+        
+        this.nome.setBounds(12, 102, 585, 19);
+        this.email.setBounds(12,146,585,19);
         this.ddd.setBounds(230, 192, 34, 19);
         this.antesh.setBounds(235 + 34, 192, 54, 19);
         this.depoish.setBounds(235 + 34 + 54 + 5, 192, 44, 19);
@@ -181,8 +189,9 @@ public class Editar_clientes extends JFrame {
         this.cep.setBounds(12, 423, 100, 19);
         this.complemento.setBounds(125, 423, 200, 19);
         this.estado.setBounds(310, 285, 20, 19);
-
-        this.nome_l.setBounds(12, 125, 150, 17);
+        
+        this.nome_l.setBounds(12, 125-(171-125), 150, 17);
+        this.email_l.setBounds(12,125, 150, 17);
         this.telefone_l.setBounds(230, 171, 140, 17);
         this.data_nascimento_l.setBounds(12, 171, 200, 17);
         this.tipolog_l.setBounds(12, 264, 200, 17);
@@ -193,19 +202,18 @@ public class Editar_clientes extends JFrame {
         this.cep_l.setBounds(12, 402, 43, 17);
         this.complemento_l.setBounds(125, 402, 115, 17);
         this.cadastrar_cliente.setBounds(12, 50, 500, 40);
-
+        
         this.add.setBounds(235 + 34 + 54 + 5, 192 + 25, 20, 20);
         this.rm.setBounds(235 + 34 + 54 + 5 + 25, 192 + 25, 20, 20);
-
+        
         this.scroll_telefone.setBounds(230 + 140 + 10, 171, 200, 100);
-
+        
         this.option.setBounds(12, 223, 166, 23);
         this.cadastro.setBounds(230, 455, 114, 25);
-
+        
         preenche_dados();
 
         //EVENTOS DO BOTÃO DE CADASTRAR E DA CHECKBOX.
-        
         //OPÇÃO QUE ABRE E FECHA OS CAMPOS DO ENDEREÇO PARA CADASTRO.
         option.addActionListener((ActionEvent evento) -> {
             if (option.isSelected()) {
@@ -224,6 +232,7 @@ public class Editar_clientes extends JFrame {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
+                c.setEmail(this.email.getText());
                 ClienteDAO.update(username, password, c);
                 
                 Telefone t = new Telefone();
@@ -255,7 +264,7 @@ public class Editar_clientes extends JFrame {
                 
             } catch (Exception e) {
                 System.out.println(e);
-            }finally{
+            } finally {
                 dispose();
             }
         });
@@ -269,7 +278,7 @@ public class Editar_clientes extends JFrame {
                 JOptionPane.showMessageDialog(null, "Impossivel remover, selecione uma coluna na tabela e tente novamente !");
             }
         });
-
+        
         setLayout(null);
         setSize(610, 510);
         setLocationRelativeTo(null);
@@ -280,12 +289,13 @@ public class Editar_clientes extends JFrame {
         this.setIconImage(iconeTitulo);
         setTitle("Editar cliente ID:" + c.getId());
         setVisible(true);
-
+        
     }
-
+    
     private void preenche_dados() {
         SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         this.nome.setText(c.getNome());
+        this.email.setText(c.getEmail());
         this.data_nascimento.setText(formatdata.format(c.getData_nascimento()) + "");
         for (Telefone t : MiscDAO.search_telefone_por_id(username, password, c.getId())) {
             this.dtm_telefone.addRow(new Object[]{
@@ -318,7 +328,7 @@ public class Editar_clientes extends JFrame {
             this.ddd = new NumberField();
             this.antesh = new NumberField();
             this.depoish = new NumberField();
-
+            
             ddd.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyReleased(KeyEvent ke) {
@@ -327,9 +337,9 @@ public class Editar_clientes extends JFrame {
                     }
                 }
             });
-
+            
             antesh.addKeyListener(new KeyAdapter() {
-
+                
                 @Override
                 public void keyReleased(KeyEvent ke) {
                     if (antesh.getText().length() >= 6) {
@@ -338,7 +348,7 @@ public class Editar_clientes extends JFrame {
                 }
             });
             depoish.addKeyListener(new KeyAdapter() {
-
+                
                 @Override
                 public void keyReleased(KeyEvent ke) {
                     if (depoish.getText().length() >= 5) {
@@ -346,7 +356,7 @@ public class Editar_clientes extends JFrame {
                     }
                 }
             });
-
+            
             this.cep = new JFormattedTextField(new MaskFormatter("#####-###"));
             this.data_nascimento = new JFormattedTextField(new MaskFormatter("##/##/####"));
         } catch (Exception e) {
@@ -363,7 +373,7 @@ public class Editar_clientes extends JFrame {
         this.estado.setEnabled(true);
         this.cep.setEnabled(true);
         this.complemento.setEnabled(true);
-
+        
         this.tipolog_l.setForeground(new Color(00, 00, 00));
         this.log_l.setForeground(new Color(00, 00, 00));
         this.bairro_l.setForeground(new Color(00, 00, 00));
@@ -372,7 +382,7 @@ public class Editar_clientes extends JFrame {
         this.cep_l.setForeground(new Color(00, 00, 00));
         this.estado_l.setForeground(new Color(00, 00, 00));
         this.complemento_l.setForeground(new Color(00, 00, 00));
-
+        
     }
 
     //FECHANDO ENDEREÇO PARA EDIÇÃO DE DADOS.
@@ -390,7 +400,7 @@ public class Editar_clientes extends JFrame {
         this.municipio.setText("");
         this.cep.setText("");
         this.complemento.setText("");
-
+        
         this.tipolog_l.setForeground(new Color(200, 200, 200));
         this.log_l.setForeground(new Color(200, 200, 200));
         this.bairro_l.setForeground(new Color(200, 200, 200));
@@ -399,15 +409,15 @@ public class Editar_clientes extends JFrame {
         this.cep_l.setForeground(new Color(200, 200, 200));
         this.estado_l.setForeground(new Color(200, 200, 200));
         this.complemento_l.setForeground(new Color(200, 200, 200));
-
+        
     }
-
+    
     public class NumberField extends JTextField {
-
+        
         public NumberField() {
             this(null);
         }
-
+        
         public NumberField(String text) {
             super(text);
             setDocument(new PlainDocument() {
@@ -426,5 +436,5 @@ public class Editar_clientes extends JFrame {
             });
         }
     }
-
+    
 }

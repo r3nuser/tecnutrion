@@ -63,6 +63,7 @@ public class Painel_cliente extends JPanel {
 
     private JPanel painel_de_dados;
     private JLabel nome_cliente_l;
+    private JLabel email_l;
     private JLabel data_nascimento_l;
     private JLabel id_l;
     private JLabel tipolog_l;
@@ -74,6 +75,7 @@ public class Painel_cliente extends JPanel {
     private JLabel cep_l;
 
     private JTextField nome_cliente;
+    private JTextField email;
     private JTextField data_nascimento;
     private JTextField id;
     private JTextField tipolog;
@@ -193,6 +195,14 @@ public class Painel_cliente extends JPanel {
         cep.setEditable(false);
         cep.setPreferredSize(new Dimension(80, 18));
 
+        email_l = new JLabel("Email:");
+        email = new JTextField();
+
+        painel_de_dados.add(email_l);
+        painel_de_dados.add(email);
+        email.setEditable(false);
+        email.setPreferredSize(new Dimension(260, 18));
+
         modelo_telefone = new DefaultTableModel() {
             public boolean isCellEditable(int a, int b) {
                 return false;
@@ -306,8 +316,8 @@ public class Painel_cliente extends JPanel {
             try {
                 new Editar_clientes(this.username, this.password, Integer.parseInt(id.getText()));
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,"Erro ao editar : Escolha um cliente na tabela e tente novamente !");
-                atualizar_tabela((byte)0);
+                JOptionPane.showMessageDialog(null, "Erro ao editar : Escolha um cliente na tabela e tente novamente !");
+                atualizar_tabela((byte) 0);
             }
         });
     }
@@ -338,9 +348,7 @@ public class Painel_cliente extends JPanel {
         modelo_tabela.addColumn("ID");
         modelo_tabela.addColumn("Nome");
         modelo_tabela.addColumn("Data Nascimento");
-        modelo_tabela.addColumn("DDD");
-        modelo_tabela.addColumn("Prefixo");
-        modelo_tabela.addColumn("Sufixo");
+        modelo_tabela.addColumn("Email");
 
         tabela.getColumnModel().getColumn(0).setPreferredWidth(70);
         tabela.getColumnModel().getColumn(0).setMaxWidth(70);
@@ -350,14 +358,8 @@ public class Painel_cliente extends JPanel {
         tabela.getColumnModel().getColumn(2).setMaxWidth(80);
         tabela.getColumnModel().getColumn(2).setMinWidth(80);
 
-        tabela.getColumnModel().getColumn(3).setMaxWidth(40);
-        tabela.getColumnModel().getColumn(3).setMinWidth(40);
-
-        tabela.getColumnModel().getColumn(4).setMaxWidth(60);
-        tabela.getColumnModel().getColumn(4).setMinWidth(60);
-
-        tabela.getColumnModel().getColumn(5).setMaxWidth(50);
-        tabela.getColumnModel().getColumn(5).setMinWidth(50);
+        tabela.getColumnModel().getColumn(3).setMaxWidth(220);
+        tabela.getColumnModel().getColumn(3).setMinWidth(220);
 
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
@@ -367,10 +369,11 @@ public class Painel_cliente extends JPanel {
     }
 
     private void atualizar_caixas_de_texto() {
-        
+
         Cliente c = MiscDAO.search_cliente_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         nome_cliente.setText(c.getNome());
         id.setText("" + c.getId());
+        email.setText(c.getEmail());
         data_nascimento.setText("" + c.getData_nascimento());
         try {
             modelo_telefone.setNumRows(0);
@@ -391,7 +394,7 @@ public class Painel_cliente extends JPanel {
             estado.setText(e.getEstado());
             municipio.setText(e.getMunicipio());
             cep.setText(e.getCep());
-            
+
         } catch (Exception e) {
             tipolog.setText("");
             log.setText("");
@@ -415,16 +418,13 @@ public class Painel_cliente extends JPanel {
         }
         for (int i = 0; i < dados_cliente.size(); i++) {
             Cliente c = dados_cliente.get(i);
-            Telefone t = new Telefone();
-            try {
-                t = MiscDAO.search_telefone_individual_por_id(username, password, c.getId());
 
-            } catch (Exception ex) {
-                System.out.println(ex);
-            }
-
-            modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento(),
-                t.getDdd(), t.getAntesh(), t.getDepoish()});
+            modelo_tabela.addRow(new Object[]{
+                c.getId(),
+                c.getNome(),
+                c.getData_nascimento(),
+                c.getEmail()
+            });
         }
 
     }

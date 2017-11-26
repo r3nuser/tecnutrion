@@ -5,6 +5,7 @@ import gui.abas.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.event.KeyAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -13,6 +14,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -21,7 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
 
-public class Menu extends JFrame {
+public class Menu extends JFrame implements KeyListener {
 
     private final String currentusername;
     private final String currentpassword;
@@ -119,8 +121,8 @@ public class Menu extends JFrame {
         relatorio_de_vendas.addActionListener((ActionEvent) -> {
             new Relatorio_de_vendas(this.currentusername, this.currentpassword);
         });
-        financeiro_lucro.addActionListener((ActionEvent)->{
-           new Estatisticas(this.currentusername,this.currentpassword);
+        financeiro_lucro.addActionListener((ActionEvent) -> {
+            new Estatisticas(this.currentusername, this.currentpassword);
         });
         funcoes_administrativas.addActionListener((ActionEvent) -> {
             JPanel panel = new JPanel();
@@ -128,7 +130,7 @@ public class Menu extends JFrame {
             JPasswordField pass = new JPasswordField(10);
             panel.add(label);
             panel.add(pass);
-            String[] options = new String[]{"Cancelar","Confirmar"};
+            String[] options = new String[]{"Cancelar", "Confirmar"};
             int option = JOptionPane.showOptionDialog(null, panel, "Confirmação de Senha",
                     JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
                     null, options, options[1]);
@@ -177,7 +179,7 @@ public class Menu extends JFrame {
         setLocationRelativeTo(null);
         //setUndecorated(true);
         setTitle("Tecnutrion");
-
+  
         //getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
         URL url = this.getClass().getResource("abas/ico_blacksheep.png");
         Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
@@ -187,6 +189,36 @@ public class Menu extends JFrame {
 
     }
 
+    public void keyReleased(KeyEvent ke) {
+        switch (ke.getKeyCode()) {
+            case KeyEvent.VK_F1:
+                abas.setSelectedIndex(0);
+                break;
+            case KeyEvent.VK_F2:
+                abas.setSelectedIndex(1);
+                break;
+            case KeyEvent.VK_F3:
+                abas.setSelectedIndex(2);
+                break;
+            case KeyEvent.VK_F4:
+                abas.setSelectedIndex(3);
+                break;
+            case KeyEvent.VK_F5:
+                abas.setSelectedIndex(4);
+                break;
+            case KeyEvent.VK_F6:
+                abas.setSelectedIndex(5);
+                break;
+        }
+    }
+
+    public void keyTyped(KeyEvent ke) {
+
+    }
+
+    public void keyPressed(KeyEvent ke) {
+
+    }
 }
 //CODE OF GRAPHICS
 /*

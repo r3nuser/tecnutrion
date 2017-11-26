@@ -8,6 +8,7 @@ public class Cliente {
     private int id;
     private String nome;
     private Date data_nascimento;
+    private String email;
     
     //GETTERS E SETTERS
     public int getId() {
@@ -33,6 +34,14 @@ public class Cliente {
 
     public void setData_nascimento(Date data) {
         this.data_nascimento = data;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }

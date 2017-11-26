@@ -9,6 +9,7 @@ import dao.EnderecoDAO;
 import dao.MiscDAO;
 import dao.TelefoneDAO;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
@@ -47,6 +49,7 @@ public class Cadastrar_cliente extends JFrame {
     private JButton cadastro = null;
     //TODOS CAMPOS DE TEXTO
     private JTextField nome = null;
+    private JTextField email = null;
     private JTextField ddd = null;
     private JTextField antesh = null;
     private JTextField depoish = null;
@@ -66,6 +69,7 @@ public class Cadastrar_cliente extends JFrame {
     private JScrollPane scroll_telefone;
     //TODOS LABELS INFORMATIVOS
     private JLabel nome_l = null;
+    private JLabel email_l = null;
     private JLabel data_nascimento_l = null;
     private JLabel tipolog_l = null;
     private JLabel log_l = null;
@@ -75,6 +79,8 @@ public class Cadastrar_cliente extends JFrame {
     private JLabel estado_l = null;
     private JLabel complemento_l = null;
     private JLabel cadastrar_cliente = null;
+
+    String campos_invalidos;
 
     //CHAMADA DA CLASSE.
     public Cadastrar_cliente(String username, String password) {
@@ -104,6 +110,7 @@ public class Cadastrar_cliente extends JFrame {
         this.rm = new JButton("", new ImageIcon(getClass().getResource("abas/ico_deletar.png")));
 
         this.nome = new JTextField();
+        this.email = new JTextField();
         this.tipolog = new JTextField();
         this.log = new JTextField();
         this.bairro = new JTextField();
@@ -112,7 +119,8 @@ public class Cadastrar_cliente extends JFrame {
         this.complemento = new JTextField();
 
         this.nome_l = new JLabel("Nome Completo:*");
-        this.telefone_l = new JLabel("Nº de Contato:*");
+        this.email_l = new JLabel("Email:*");
+        this.telefone_l = new JLabel("Nº de Contato:");
         this.data_nascimento_l = new JLabel("Data de Nascimento:");
         this.tipolog_l = new JLabel("Tipo de Logradouro:*");
         this.log_l = new JLabel("Logradouro:*");
@@ -124,6 +132,7 @@ public class Cadastrar_cliente extends JFrame {
         this.cadastrar_cliente = new JLabel("Cadastrar Novo Cliente:");
 
         this.nome_l.setFont(new java.awt.Font("Dialog", 1, 14));
+        this.email_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.telefone_l.setFont(new java.awt.Font("Dialog", 1, 12));
         this.data_nascimento_l.setFont(new java.awt.Font("Dialog", 1, 14));
         this.tipolog_l.setFont(new java.awt.Font("Dialog", 1, 14));
@@ -140,6 +149,7 @@ public class Cadastrar_cliente extends JFrame {
         add(this.option);
 
         add(this.nome);
+        add(this.email);
         add(this.ddd);
         add(this.antesh);
         add(this.depoish);
@@ -153,6 +163,7 @@ public class Cadastrar_cliente extends JFrame {
         add(this.complemento);
 
         add(this.nome_l);
+        add(this.email_l);
         add(this.telefone_l);
         add(this.data_nascimento_l);
         add(this.log_l);
@@ -168,7 +179,8 @@ public class Cadastrar_cliente extends JFrame {
 
         add(this.scroll_telefone);
 
-        this.nome.setBounds(12, 146, 585, 19);
+        this.nome.setBounds(12, 102, 585, 19);
+        this.email.setBounds(12, 146, 585, 19);
         this.ddd.setBounds(230, 192, 34, 19);
         this.antesh.setBounds(235 + 34, 192, 54, 19);
         this.depoish.setBounds(235 + 34 + 54 + 5, 192, 44, 19);
@@ -181,7 +193,8 @@ public class Cadastrar_cliente extends JFrame {
         this.complemento.setBounds(125, 423, 200, 19);
         this.estado.setBounds(310, 285, 20, 19);
 
-        this.nome_l.setBounds(12, 125, 150, 17);
+        this.nome_l.setBounds(12, 125 - (171 - 125), 150, 17);
+        this.email_l.setBounds(12, 125, 150, 17);
         this.telefone_l.setBounds(230, 171, 140, 17);
         this.data_nascimento_l.setBounds(12, 171, 200, 17);
         this.tipolog_l.setBounds(12, 264, 200, 17);
@@ -191,7 +204,7 @@ public class Cadastrar_cliente extends JFrame {
         this.municipio_l.setBounds(173, 356, 87, 17);
         this.cep_l.setBounds(12, 402, 43, 17);
         this.complemento_l.setBounds(125, 402, 115, 17);
-        this.cadastrar_cliente.setBounds(12, 50, 500, 40);
+        this.cadastrar_cliente.setBounds(20, 20, 610, 40);
 
         this.add.setBounds(235 + 34 + 54 + 5, 192 + 25, 20, 20);
         this.rm.setBounds(235 + 34 + 54 + 5 + 25, 192 + 25, 20, 20);
@@ -205,53 +218,59 @@ public class Cadastrar_cliente extends JFrame {
 
         //EVENTOS DO BOTÃO DE CADASTRAR E DA CHECKBOX.
         this.cadastro.addActionListener((ActionEvent evento) -> {
-            Cliente c;
-            Telefone t;
-            try {
-                c = new Cliente();
-                c.setNome(this.nome.getText());
-                //CONVERSÃO DE STRING PARA DATA DE NASCIMENTO NO FORMATO DO MYSQL
-                //ANO-MES-DIA
-                DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            if (validacao()) {
+                Cliente c;
+                Telefone t;
                 try {
-                    java.sql.Date data = new java.sql.Date(fmt.parse(this.data_nascimento.getText()).getTime());
-                    c.setData_nascimento(data);
+
+                    c = new Cliente();
+                    c.setNome(this.nome.getText());
+                    c.setEmail(this.email.getText());
+                    //CONVERSÃO DE STRING PARA DATA DE NASCIMENTO NO FORMATO DO MYSQL
+                    //ANO-MES-DIA
+                    DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        java.sql.Date data = new java.sql.Date(fmt.parse(this.data_nascimento.getText()).getTime());
+                        c.setData_nascimento(data);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                    //PEGANDO TODOS DADOS DO TELEFONE
+                    //DDD= DDD
+                    //NUMEROS ANTES DO HIFEN = ANTESH
+                    //NUMEROS DEPOIS DO HIFEN = DEPOISH
+
+                    ClienteDAO.create(this.currentusername, this.currentpassword, c);
+                    c.setId(MiscDAO.get_ultimo_cliente_id(this.currentusername, this.currentpassword));
+
+                    for (int i = 0; i < tabela_telefone.getRowCount(); i++) {
+                        t = new Telefone();
+                        t.setFk_cliente_cod(c.getId());
+                        t.setDdd("" + tabela_telefone.getValueAt(i, 0));
+                        t.setAntesh("" + tabela_telefone.getValueAt(i, 1));
+                        t.setDepoish("" + tabela_telefone.getValueAt(i, 2));
+                        TelefoneDAO.create(this.currentusername, this.currentpassword, t);
+                    }
+                    //CONDIÇÃO QUE CONTROLA SE O USUÁRIO CLICOU EM CADASTRAR O ENDEREÇO
+                    //CASO SIM, CHAMA O METODO DE CADASTRO DE ENDEREÇO
+                    if (option.isSelected()) {
+                        Endereco e = new Endereco();
+                        e.setBairro(this.bairro.getText());
+                        e.setCep(this.cep.getText());
+                        e.setComplemento(this.complemento.getText());
+                        e.setEstado(this.estado.getText());
+                        e.setLog(this.log.getText());
+                        e.setMunicipio(this.municipio.getText());
+                        e.setTipolog(this.tipolog.getText());
+                        e.setClientecod(c.getId());
+                        EnderecoDAO.create(currentusername, currentpassword, e);
+                    }
+                    dispose();
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-                //PEGANDO TODOS DADOS DO TELEFONE
-                //DDD= DDD
-                //NUMEROS ANTES DO HIFEN = ANTESH
-                //NUMEROS DEPOIS DO HIFEN = DEPOISH
-
-                ClienteDAO.create(this.currentusername, this.currentpassword, c);
-                c.setId(MiscDAO.get_ultimo_cliente_id(this.currentusername, this.currentpassword));
-
-                for (int i = 0; i < tabela_telefone.getRowCount(); i++) {
-                    t = new Telefone();
-                    t.setFk_cliente_cod(c.getId());
-                    t.setDdd("" + tabela_telefone.getValueAt(i, 0));
-                    t.setAntesh("" + tabela_telefone.getValueAt(i, 1));
-                    t.setDepoish("" + tabela_telefone.getValueAt(i, 2));
-                    TelefoneDAO.create(this.currentusername, this.currentpassword, t);
-                }
-                //CONDIÇÃO QUE CONTROLA SE O USUÁRIO CLICOU EM CADASTRAR O ENDEREÇO
-                //CASO SIM, CHAMA O METODO DE CADASTRO DE ENDEREÇO
-                if (option.isSelected()) {
-                    Endereco e = new Endereco();
-                    e.setBairro(this.bairro.getText());
-                    e.setCep(this.cep.getText());
-                    e.setComplemento(this.complemento.getText());
-                    e.setEstado(this.estado.getText());
-                    e.setLog(this.log.getText());
-                    e.setMunicipio(this.municipio.getText());
-                    e.setTipolog(this.tipolog.getText());
-                    e.setClientecod(c.getId());
-                    EnderecoDAO.create(currentusername, currentpassword, e);
-                }
-                dispose();
-            } catch (Exception e) {
-                System.out.println(e);
+            } else {
+                JOptionPane.showMessageDialog(null,campos_invalidos);
             }
         });
         //OPÇÃO QUE ABRE E FECHA OS CAMPOS DO ENDEREÇO PARA CADASTRO.
@@ -285,6 +304,83 @@ public class Cadastrar_cliente extends JFrame {
         setTitle("Cadastro de novo cliente !");
         setVisible(true);
 
+    }
+
+    private boolean validacao() {
+        Boolean completo = true;
+
+        campos_invalidos = "Por Favor, Preencha O(s) Seguinte(s) Campo(s) Obrigatório(s):";
+
+        if ("".equals(nome.getText())) {
+            nome.setBorder(BorderFactory.createLineBorder(Color.red));
+            completo = false;
+            campos_invalidos += "Nome";
+        } else {
+            nome.setBorder(BorderFactory.createLineBorder(Color.green));
+
+        }
+        if ("".equals(email.getText())) {
+            email.setBorder(BorderFactory.createLineBorder(Color.red));
+            completo = false;
+            campos_invalidos += " Email";
+        } else {
+            email.setBorder(BorderFactory.createLineBorder(Color.green));
+        }
+
+        if (option.isSelected()) {
+
+            if (tipolog.getText().equals("")) {
+                tipolog.setBorder(BorderFactory.createLineBorder(Color.red));
+                completo = false;
+                campos_invalidos += " Tipo de Logradouro";
+            } else {
+                tipolog.setBorder(BorderFactory.createLineBorder(Color.green));
+            }
+
+            if (log.getText().equals("")) {
+                log.setBorder(BorderFactory.createLineBorder(Color.red));
+                completo = false;
+                campos_invalidos += " Logradouro";
+            } else {
+                log.setBorder(BorderFactory.createLineBorder(Color.green));
+            }
+
+            if (bairro.getText().equals("")) {
+                bairro.setBorder(BorderFactory.createLineBorder(Color.red));
+                completo = false;
+                campos_invalidos += " Bairro";
+            } else {
+                bairro.setBorder(BorderFactory.createLineBorder(Color.green));
+            }
+
+            if (municipio.getText().equals("")) {
+                municipio.setBorder(BorderFactory.createLineBorder(Color.red));
+                completo = false;
+                campos_invalidos += " Município";
+            } else {
+                municipio.setBorder(BorderFactory.createLineBorder(Color.green));
+            }
+
+            if (cep.getText().equals("     -   ")) {
+                cep.setBorder(BorderFactory.createLineBorder(Color.red));
+                completo = false;
+                campos_invalidos += " CEP";
+            } else {
+                cep.setBorder(BorderFactory.createLineBorder(Color.green));
+            }
+
+            if (estado.getText().equals("")) {
+                estado.setBorder(BorderFactory.createLineBorder(Color.red));
+                completo = false;
+                campos_invalidos += " Estado";
+            } else {
+                estado.setBorder(BorderFactory.createLineBorder(Color.green));
+            }
+
+        }
+        campos_invalidos += ".";
+
+        return completo;
     }
 
     //METODO DE FORMATAÇÃO DE TODAS AS CAIXAS QUE NECESSITAM DE MASCARAS

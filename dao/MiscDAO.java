@@ -659,6 +659,7 @@ public class MiscDAO extends Sql {
                 c.setId(rs.getInt("cliente_cod"));
                 c.setNome(rs.getString("cliente_nome"));
                 c.setData_nascimento(rs.getDate("dt_nasc"));
+                c.setEmail(rs.getString("email"));
                 clientes.add(c);
             }
 
@@ -723,6 +724,7 @@ public class MiscDAO extends Sql {
                 String data = fmt.format(rs.getDate("dt_nasc"));
                 java.sql.Date dt = new java.sql.Date(fmt.parse(data).getTime());
                 c.setData_nascimento(dt);
+                c.setEmail(rs.getString("email"));
             }
         } catch (Exception e) {
             System.out.println(e);

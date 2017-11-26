@@ -71,7 +71,7 @@ public class EnderecoDAO extends Sql {
         Connection con = null;
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("UPDATE FROM endereco SET tipolog=?,logradouro=?,bairro=?,complemento=?,cidade=?,estado=?,cep=? WHERE fk_cliente_cod=?");
+            stmt = con.prepareStatement("UPDATE endereco SET tipolog=?,logradouro=?,bairro=?,complemento=?,cidade=?,estado=?,cep=? WHERE fk_cliente_cod=?");
             stmt.setString(1, e.getTipolog());
             stmt.setString(2, e.getLog());
             stmt.setString(3, e.getBairro());
