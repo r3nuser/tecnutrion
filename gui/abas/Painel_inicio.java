@@ -154,6 +154,7 @@ public class Painel_inicio extends JPanel {
 
     private void inicializa_painel_da_tabela() {
         painel_tabela = new JPanel(new GridLayout(3, 1));
+       
         painel_tabela.setBorder(b);
         inicializa_itens_painel_tabela();
         painel_principal.add(painel_tabela, BorderLayout.CENTER);

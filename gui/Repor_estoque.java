@@ -8,6 +8,7 @@ package gui;
 import bean.Estoque;
 import dao.EstoqueDAO;
 import dao.MiscDAO;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
@@ -33,7 +34,7 @@ public class Repor_estoque extends JFrame {
 
     private JLabel qnt_atual;
     private JLabel validade_atual;
-    
+
     private JButton repor;
     private JLabel informativo;
     private JTextField qnt_reposta;
@@ -51,40 +52,43 @@ public class Repor_estoque extends JFrame {
     private void initAll() {
         SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         qnt_atual = new JLabel("  Quantidade Atual : " + e.getQnt_estoque());
-        validade_atual = new JLabel("Validade do lote atual: "+ formatdata.format(e.getValidade()));
+        validade_atual = new JLabel("Validade do lote atual: " + formatdata.format(e.getValidade()));
         informativo = new JLabel("Insira a quantidade que deseja incrementar ao estoque / validade:");
         qnt_reposta = new JTextField();
-        try{
+        try {
             validade_reposta = new JFormattedTextField(new MaskFormatter("##/##/####"));
-            validade_reposta.setBounds(240+20,90,150,24);
+            validade_reposta.setBounds(240 + 20, 90, 150, 24);
             add(validade_reposta);
-        }catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println(ex);
         }
         repor = new JButton("Repor", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
         informativo.setBounds(10, 10, 600, 40);
         qnt_atual.setBounds(10, 60, 200, 18);
-        validade_atual.setBounds(10,90,300,18);
-        qnt_reposta.setBounds(240+20, 60, 150, 24);
+        validade_atual.setBounds(10, 90, 300, 18);
+        qnt_reposta.setBounds(240 + 20, 60, 150, 24);
         repor.setBounds(200, 180, 100, 24);
-
+        repor.setBackground(new Color(30, 30, 30));
+        repor.setForeground(new Color(255, 255, 255));
         repor.addActionListener((ActionEvent) -> {
-            try {
-                e.setQnt_estoque(e.getQnt_estoque() + Integer.parseInt(qnt_reposta.getText()));
-                DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+            if (validacao()) {
                 try {
-                    java.sql.Date data = new java.sql.Date(fmt.parse(this.validade_reposta.getText()).getTime());
-                    e.setValidade(data);
-                } catch (Exception e) {
-                    System.out.println(e);
+                    e.setQnt_estoque(e.getQnt_estoque() + Integer.parseInt(qnt_reposta.getText()));
+                    DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        java.sql.Date data = new java.sql.Date(fmt.parse(this.validade_reposta.getText()).getTime());
+                        e.setValidade(data);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                    EstoqueDAO.update(username, password, e);
+                    JOptionPane.showMessageDialog(null, "Estoque Reposto com Sucesso !");
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                } finally {
+                    initAll();
+                    dispose();
                 }
-                EstoqueDAO.update(username, password, e);
-                JOptionPane.showMessageDialog(null, "Estoque Reposto com Sucesso !");
-            } catch (Exception ex) {
-                System.out.println(ex);
-            } finally {
-                initAll();
-                dispose();
             }
         });
 
@@ -103,5 +107,27 @@ public class Repor_estoque extends JFrame {
         Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
         setIconImage(iconeTitulo);
         setVisible(true);
+    }
+
+    private boolean validacao() {
+        boolean validado = true;
+
+        if (!("".equals(qnt_reposta.getText()))) {
+            try {
+                Integer.parseInt(qnt_reposta.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Caracteres invalidos na quantidade resposta, por favor insira novamente !");
+                qnt_reposta.setText("");
+                validado = false;
+            }
+        } else {
+            qnt_reposta.setText("0");
+        }
+
+        if ("  /  /    ".equals(validade_reposta.getText())) {
+            validado = false;
+            JOptionPane.showMessageDialog(null, "Data Invalida, por favor insira novamente !");
+        }
+        return validado;
     }
 }

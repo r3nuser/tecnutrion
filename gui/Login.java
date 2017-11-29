@@ -1,6 +1,7 @@
 package gui;
 
 //CLASSE RESPONSÁVEL POR EFETUAR O LOGIN.
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import javax.swing.JButton;
@@ -15,6 +16,8 @@ import java.net.URL;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 import sql.Sql;
 import static sql.Sql.closeConnection;
 
@@ -81,7 +84,8 @@ public class Login extends JFrame {
 
         getContentPane().add(bg_fundo);
         bg_fundo.setBounds(0, 0, 350, 390);
-
+        signin.setBackground(new Color(30, 30, 30));
+        signin.setForeground(new Color(255, 255, 255));
         login.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent m) {
@@ -136,7 +140,7 @@ public class Login extends JFrame {
             }
             closeConnection(con);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,"Falha interna:"+e);
+            JOptionPane.showMessageDialog(null, "Falha interna:" + e);
         }
     }
 }

@@ -82,7 +82,8 @@ public class Painel_fornecedor extends JPanel {
         nome_fornecedor.setEditable(false);
 
         deletar_fornecedor = new JButton("Deletar Fornecedor", new ImageIcon(getClass().getResource("ico_deletar.png")));
-
+        deletar_fornecedor.setBackground(new Color(30,30,30));
+        deletar_fornecedor.setForeground(new Color(255,255,255));
         deletar_fornecedor.addActionListener((ActionEvent) -> {
             Fornecedor f = new Fornecedor();
             f.setId(Integer.parseInt(id.getText()));
@@ -171,7 +172,19 @@ public class Painel_fornecedor extends JPanel {
         busca_fornecedor_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));
         busca_fornecedor = new JTextField();
         busca_fornecedor.setPreferredSize(new Dimension(220, 24));
+        
+        cadastrar_fornecedores.setBackground(new Color(30,30,30));
+        cadastrar_fornecedores.setForeground(new Color(255,255,255));
 
+        realizar_consulta.setBackground(new Color(30,30,30));
+        realizar_consulta.setForeground(new Color(255,255,255));
+        
+        editar_dados.setBackground(new Color(30,30,30));
+        editar_dados.setForeground(new Color(255,255,255));
+        
+        busca_fornecedor_b.setBackground(new Color(30,30,30));
+        busca_fornecedor_b.setForeground(new Color(255,255,255));
+        
         painel_de_botoes.add(cadastrar_fornecedores);
         painel_de_botoes.add(realizar_consulta);
         painel_de_botoes.add(editar_dados);

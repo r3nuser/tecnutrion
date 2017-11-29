@@ -5,7 +5,6 @@ import gui.abas.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.KeyAdapter;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -14,7 +13,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
@@ -22,8 +20,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
+import javax.swing.plaf.ComponentUI;
 
-public class Menu extends JFrame implements KeyListener {
+public class Menu extends JFrame {
 
     private final String currentusername;
     private final String currentpassword;
@@ -95,7 +94,7 @@ public class Menu extends JFrame implements KeyListener {
         cadastros.add(cadastrar_produto);
         cadastros.add(cadastrar_fornecedor);
 
-        financeiro_lucro = new JMenuItem("Lucro e Vendas");
+        financeiro_lucro = new JMenuItem("Histórico de Vendas");
         financeiro_lucro.setIcon(new ImageIcon(getClass().getResource("abas/ico_money.png")));
         financeiro.add(financeiro_lucro);
         financeiro.add(relatorios);
@@ -107,6 +106,8 @@ public class Menu extends JFrame implements KeyListener {
         barra_do_menu.add(cadastros);
         barra_do_menu.add(financeiro);
         barra_do_menu.add(configuracoes);
+        
+  
 
         //  AREA DE EVENTOS DE CADA BOTÃO DO MENU
         cadastrar_fornecedor.addActionListener((ActionEvent) -> {
@@ -158,18 +159,26 @@ public class Menu extends JFrame implements KeyListener {
 
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")), painel_inicio);
 
-        abas.setMnemonicAt(0, KeyEvent.VK_1);
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_vendas.png")), painel_vendas);
-        abas.setMnemonicAt(1, KeyEvent.VK_2);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_clientes.png")), painel_cliente);
-        abas.setMnemonicAt(2, KeyEvent.VK_3);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_produtos.png")), painel_produto);
-        abas.setMnemonicAt(3, KeyEvent.VK_4);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_fornecedor.png")), painel_fornecedor);
-        abas.setMnemonicAt(4, KeyEvent.VK_5);
-        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")), painel_estoque);
-        abas.setMnemonicAt(5, KeyEvent.VK_6);
 
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_clientes.png")), painel_cliente);
+
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_produtos.png")), painel_produto);
+
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_fornecedor.png")), painel_fornecedor);
+
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")), painel_estoque);
+
+        abas.setMnemonicAt(0, KeyEvent.VK_1);
+        abas.setMnemonicAt(1, KeyEvent.VK_2);
+        abas.setMnemonicAt(2, KeyEvent.VK_3);
+        abas.setMnemonicAt(3, KeyEvent.VK_4);
+        abas.setMnemonicAt(4, KeyEvent.VK_5);
+        abas.setMnemonicAt(5, KeyEvent.VK_6);
+        
+              abas.setBackground(new Color(200,200,200));
+              getContentPane().setBackground(new Color(180,180,180));
+              
         //ADICIONANDO TODOS COMPONENTES NA JFRAME
         setJMenuBar(barra_do_menu);
         add(abas, BorderLayout.CENTER);
@@ -179,7 +188,7 @@ public class Menu extends JFrame implements KeyListener {
         setLocationRelativeTo(null);
         //setUndecorated(true);
         setTitle("Tecnutrion");
-  
+
         //getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
         URL url = this.getClass().getResource("abas/ico_blacksheep.png");
         Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
@@ -189,83 +198,4 @@ public class Menu extends JFrame implements KeyListener {
 
     }
 
-    public void keyReleased(KeyEvent ke) {
-        switch (ke.getKeyCode()) {
-            case KeyEvent.VK_F1:
-                abas.setSelectedIndex(0);
-                break;
-            case KeyEvent.VK_F2:
-                abas.setSelectedIndex(1);
-                break;
-            case KeyEvent.VK_F3:
-                abas.setSelectedIndex(2);
-                break;
-            case KeyEvent.VK_F4:
-                abas.setSelectedIndex(3);
-                break;
-            case KeyEvent.VK_F5:
-                abas.setSelectedIndex(4);
-                break;
-            case KeyEvent.VK_F6:
-                abas.setSelectedIndex(5);
-                break;
-        }
-    }
-
-    public void keyTyped(KeyEvent ke) {
-
-    }
-
-    public void keyPressed(KeyEvent ke) {
-
-    }
 }
-//CODE OF GRAPHICS
-/*
-DefaultCategoryDataset dt = new DefaultCategoryDataset();
-        final String series1 = "First";
-        final String series2 = "Second";
-        final String series3 = "Third";
-
-        final String category1 = "Category 1";
-        final String category2 = "Category 2";
-        final String category3 = "Category 3";
-        final String category4 = "Category 4";
-        final String category5 = "Category 5";
-
-        dt.addValue(1.0, series1, category1);
-        dt.addValue(4.0, series1, category2);
-        dt.addValue(3.0, series1, category3);
-        dt.addValue(5.0, series1, category4);
-        dt.addValue(5.0, series1, category5);
-
-        dt.addValue(5.0, series2, category1);
-        dt.addValue(7.0, series2, category2);
-        dt.addValue(6.0, series2, category3);
-        dt.addValue(8.0, series2, category4);
-        dt.addValue(4.0, series2, category5);
-
-        dt.addValue(4.0, series3, category1);
-        dt.addValue(3.0, series3, category2);
-        dt.addValue(2.0, series3, category3);
-        dt.addValue(3.0, series3, category4);
-        dt.addValue(6.0, series3, category5);
-        JFreeChart grafico = ChartFactory.createBarChart("Mais Vendidos", "Valores", "Categoria", dt, PlotOrientation.VERTICAL, true, true, false);
-
-        grafico.setBackgroundPaint(new Color(30, 30, 30));
-        grafico.setBorderPaint(new Color(30, 30, 30));
-        grafico.getTitle().setPaint(Color.WHITE);
-        grafico.getLegend().setBackgroundPaint(new Color(30, 30, 30));
-        grafico.getLegend().setItemPaint(new Color(255, 255, 255));
-        grafico.getPlot().setBackgroundPaint(new Color(0, 0, 0));
-        grafico.getPlot().setOutlinePaint(new Color(0, 0, 0));
-
-        grafico.setBorderVisible(true);
-
-        ChartPanel cp = new ChartPanel(grafico);
-
-        cp.removeAll();
-
-        cp.setPreferredSize(new Dimension(500, 500));
-        inicio_pan.add(cp);
- */

@@ -229,6 +229,9 @@ public class Painel_cliente extends JPanel {
 
         deletar_cliente = new JButton("Deletar Cliente", new ImageIcon(getClass().getResource("ico_deletar.png")));
         painel_de_dados.add(deletar_cliente);
+        
+        deletar_cliente.setBackground(new Color(30,30,30));
+        deletar_cliente.setForeground(new Color(255,255,255));
 
         deletar_cliente.addActionListener((ActionEvent) -> {
             Cliente c = new Cliente();
@@ -292,7 +295,19 @@ public class Painel_cliente extends JPanel {
         busca_cliente_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));;
         busca_cliente = new JTextField();
         busca_cliente.setPreferredSize(new Dimension(270, 24));
+        
+        cadastrar_clientes.setBackground(new Color(30,30,30));
+        cadastrar_clientes.setForeground(new Color(255,255,255));
 
+        realizar_consulta.setBackground(new Color(30,30,30));
+        realizar_consulta.setForeground(new Color(255,255,255));
+        
+        busca_cliente_b.setBackground(new Color(30,30,30));
+        busca_cliente_b.setForeground(new Color(255,255,255));
+        
+        editar_dados.setBackground(new Color(30,30,30));
+        editar_dados.setForeground(new Color(255,255,255));
+        
         painel_de_botoes.add(cadastrar_clientes);
         painel_de_botoes.add(realizar_consulta);
         painel_de_botoes.add(editar_dados);

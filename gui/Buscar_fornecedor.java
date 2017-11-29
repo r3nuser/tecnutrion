@@ -7,6 +7,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -52,6 +55,8 @@ public class Buscar_fornecedor extends JFrame {
         inicializa_painel_da_tabela();
         escolher = new JButton("Confirmar Escolha", new ImageIcon(getClass().getResource("abas/ico_confirmar.png")));
         add(escolher, BorderLayout.PAGE_END);
+        escolher.setBackground(new Color(30,30,30));
+        escolher.setForeground(new Color(255,255,255));
         escolher.addActionListener((ActionEvent) -> {
             tf.setId((int) tabela.getValueAt(tabela.getSelectedRow(), 0));
             tf.setNome("" + tabela.getValueAt(tabela.getSelectedRow(), 1));
@@ -63,6 +68,9 @@ public class Buscar_fornecedor extends JFrame {
         setLocationRelativeTo(null);
         setTitle("Selecionar Fornecedor");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        URL url = this.getClass().getResource("abas/ico_lupa2.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setVisible(true);
 
     }
@@ -85,8 +93,11 @@ public class Buscar_fornecedor extends JFrame {
             new Cadastrar_fornecedor(this.username,this.password);
         });
         
+        cadastrar_fornecedor.setBackground(new Color(30,30,30));
+        cadastrar_fornecedor.setForeground(new Color(255,255,255));
         
-
+        busca_fornecedor_b.setBackground(new Color(30,30,30));
+        busca_fornecedor.setForeground(new Color(255,255,255));
         painel_de_botoes.add(busca_fornecedor);
         painel_de_botoes.add(busca_fornecedor_b);
         painel_de_botoes.add(cadastrar_fornecedor);

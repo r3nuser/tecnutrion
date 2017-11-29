@@ -32,8 +32,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class Painel_vendas extends JPanel {
 
-    private String username;
-    private String password;
+    private final String username;
+    private final String password;
 
     private JPanel painel_de_dados;
     private JLabel id_pedido_l;
@@ -81,7 +81,7 @@ public class Painel_vendas extends JPanel {
         inicializa_painel_de_dados();
         inicializa_painel_da_tabela();
         inicializa_painel_de_botoes();
-       
+
         setVisible(true);
     }
 
@@ -117,12 +117,12 @@ public class Painel_vendas extends JPanel {
         tabela_itens.getColumnModel().getColumn(0).setMinWidth(70);
         tabela_itens.getColumnModel().getColumn(2).setMaxWidth(120);
         tabela_itens.getColumnModel().getColumn(2).setMinWidth(120);
-        tabela_itens.getColumnModel().getColumn(3).setMaxWidth(70);
-        tabela_itens.getColumnModel().getColumn(3).setMinWidth(70);
+        tabela_itens.getColumnModel().getColumn(3).setMaxWidth(85);
+        tabela_itens.getColumnModel().getColumn(3).setMinWidth(85);
         scroll_itens = new JScrollPane(tabela_itens);
 
         scroll_itens.setPreferredSize(new Dimension(550, 200));
-        
+
         scroll_itens.setBorder(BorderFactory.createTitledBorder(
                 BorderFactory.createLineBorder(Color.black),
                 "Itens da Venda",
@@ -184,6 +184,9 @@ public class Painel_vendas extends JPanel {
         painel_de_dados.add(scroll_itens);
         painel_de_dados.add(deletar_pedido);
 
+        deletar_pedido.setBackground(new Color(30, 30, 30));
+        deletar_pedido.setForeground(new Color(255, 255, 255));
+
         deletar_pedido.addActionListener((ActionEvent) -> {
             try {
                 Pedido_item pi = new Pedido_item();
@@ -243,8 +246,7 @@ public class Painel_vendas extends JPanel {
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
         painel_da_tabela.add(scroll);
-        
-        
+
         add(painel_da_tabela, BorderLayout.CENTER);
     }
 
@@ -256,6 +258,13 @@ public class Painel_vendas extends JPanel {
         painel_de_botoes.add(realizar_venda);
         painel_de_botoes.add(realizar_consulta);
         painel_de_botoes.add(realizar_troca);
+
+        realizar_venda.setBackground(new Color(30, 30, 30));
+        realizar_venda.setForeground(new Color(255, 255, 255));
+        realizar_consulta.setBackground(new Color(30, 30, 30));
+        realizar_consulta.setForeground(new Color(255, 255, 255));
+        realizar_troca.setBackground(new Color(30, 30, 30));
+        realizar_troca.setForeground(new Color(255, 255, 255));
 
         realizar_venda.addActionListener((ActionEvent) -> {
             new Realizar_venda(this.username, this.password);

@@ -111,6 +111,14 @@ public class Funcoes_administrativas extends JFrame {
         URL url = this.getClass().getResource("abas/ico_permissao.png");
         Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
         this.setIconImage(iconeTitulo);
+        
+        alterar_permissoes_a.setBackground(new Color(30,30,30));
+        alterar_permissoes_a.setForeground(new Color(255,255,255));
+        alterar_permissoes_g.setBackground(new Color(30,30,30));
+        alterar_permissoes_g.setForeground(new Color(255,255,255));
+        alterar_permissoes_v.setBackground(new Color(30,30,30));
+        alterar_permissoes_v.setForeground(new Color(255,255,255));
+        
         setVisible(true);
 
     }

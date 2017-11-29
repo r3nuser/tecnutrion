@@ -13,8 +13,11 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.sql.Date;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -23,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -87,54 +91,56 @@ public class Realizar_venda extends JFrame {
         realizar_venda.setLocation(402, 750);
         realizar_venda.setSize(220, 30);
         add(realizar_venda);
-
+        realizar_venda.setBackground(new Color(30, 30, 30));
+        realizar_venda.setForeground(new Color(255, 255, 255));
         realizar_venda.addActionListener((ActionEvent) -> {
-            Pedido p = new Pedido();
-            atualizar_valor_desconto();
-            p.setDt_pedido(new Date(System.currentTimeMillis()));
-            if (dar_desconto.isSelected()) {
-                p.setPedido_vl_tot(Float.parseFloat(preco_c_desconto.getText()));
-                p.setDesconto(Integer.parseInt(desconto.getText()));
-            } else {
-                p.setPedido_vl_tot(Float.parseFloat(pedido_vl_tot.getText()));
-                p.setDesconto(0);
-            }
-            p.setPagamento("" + tipo_pagamento.getSelectedItem());
-
-            PedidoDAO.create(username, password, p);
-            p.setCod_pedido(MiscDAO.get_ultimo_pedido_id(username, password));
-
-            Pedido_item pi = new Pedido_item();
-
-            pi.setFk_cod_cliente(Integer.parseInt(cliente_id.getText()));
-            pi.setFk_cod_pedido(p.getCod_pedido());
-
-            for (int i = 0; i < modelo_tabela.getRowCount(); i++) {
-                pi.setFk_cod_produto(Integer.parseInt("" + tabela.getValueAt(i, 1)));
-                pi.setQuantidade(Integer.parseInt("" + tabela.getValueAt(i, 5)));
+            if (validacao()) {
+                Pedido p = new Pedido();
+                atualizar_valor_desconto();
+                p.setDt_pedido(new Date(System.currentTimeMillis()));
                 if (dar_desconto.isSelected()) {
-                    pi.setPedido_item_vl_tot(
-                            (pi.getQuantidade()
-                            * Float.parseFloat(""
-                                    + tabela.getValueAt(i, 4)))
-                            - ((pi.getQuantidade() * Float.parseFloat(""
-                                    + tabela.getValueAt(i, 4))
-                            * (Float.parseFloat(desconto.getText())
-                            / 100))));
-                    pi.setPedido_item_vl_liq(pi.getPedido_item_vl_tot() - pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
+                    p.setPedido_vl_tot(Float.parseFloat(preco_c_desconto.getText()));
+                    p.setDesconto(Integer.parseInt(desconto.getText()));
                 } else {
-                    pi.setPedido_item_vl_tot(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 4)));
-                    pi.setPedido_item_vl_liq(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
+                    p.setPedido_vl_tot(Float.parseFloat(pedido_vl_tot.getText()));
+                    p.setDesconto(0);
                 }
-                Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(i, 1));
-                Estoque e = MiscDAO.search_estoque_por_id(username, password, pro.getFk_estoque_cod());
-                e.setQnt_estoque(e.getQnt_estoque() - pi.getQuantidade());
-                EstoqueDAO.update(username, password, e);
-                Pedido_itemDAO.create(username, password, pi);
+                p.setPagamento("" + tipo_pagamento.getSelectedItem());
+
+                PedidoDAO.create(username, password, p);
+                p.setCod_pedido(MiscDAO.get_ultimo_pedido_id(username, password));
+
+                Pedido_item pi = new Pedido_item();
+
+                pi.setFk_cod_cliente(Integer.parseInt(cliente_id.getText()));
+                pi.setFk_cod_pedido(p.getCod_pedido());
+
+                for (int i = 0; i < modelo_tabela.getRowCount(); i++) {
+                    pi.setFk_cod_produto(Integer.parseInt("" + tabela.getValueAt(i, 1)));
+                    pi.setQuantidade(Integer.parseInt("" + tabela.getValueAt(i, 5)));
+                    if (dar_desconto.isSelected()) {
+                        pi.setPedido_item_vl_tot(
+                                (pi.getQuantidade()
+                                * Float.parseFloat(""
+                                        + tabela.getValueAt(i, 4)))
+                                - ((pi.getQuantidade() * Float.parseFloat(""
+                                        + tabela.getValueAt(i, 4))
+                                * (Float.parseFloat(desconto.getText())
+                                / 100))));
+                        pi.setPedido_item_vl_liq(pi.getPedido_item_vl_tot() - pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
+                    } else {
+                        pi.setPedido_item_vl_tot(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 4)));
+                        pi.setPedido_item_vl_liq(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
+                    }
+                    Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(i, 1));
+                    Estoque e = MiscDAO.search_estoque_por_id(username, password, pro.getFk_estoque_cod());
+                    e.setQnt_estoque(e.getQnt_estoque() - pi.getQuantidade());
+                    EstoqueDAO.update(username, password, e);
+                    Pedido_itemDAO.create(username, password, pi);
+                }
+
+                dispose();
             }
-
-            dispose();
-
         });
 
         setSize(1024, 820);
@@ -143,6 +149,10 @@ public class Realizar_venda extends JFrame {
         setLayout(null);
         setTitle("Realizar Venda");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        URL url = this.getClass().getResource("abas/ico_money.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setVisible(true);
     }
 
@@ -167,6 +177,11 @@ public class Realizar_venda extends JFrame {
 
         botoes_pedido.add(adicionar_produto);
         botoes_pedido.add(remover_produto);
+
+        adicionar_produto.setBackground(new Color(30, 30, 30));
+        adicionar_produto.setForeground(new Color(255, 255, 255));
+        remover_produto.setBackground(new Color(30, 30, 30));
+        remover_produto.setForeground(new Color(255, 255, 255));
 
         adicionar_produto.addActionListener((ActionEvent) -> {
             new Buscar_produto(this.username, this.password, this.modelo_tabela,
@@ -319,7 +334,8 @@ public class Realizar_venda extends JFrame {
         tipo_pagamento = new JComboBox(new String[]{"Cartao de Debito", "Cartao de Credito", "Boleto", "A Vista"});
 
         buscar_cliente = new JButton("Buscar Cliente", new ImageIcon(getClass().getResource("abas/ico_lupa.png")));
-
+        buscar_cliente.setBackground(new Color(30, 30, 30));
+        buscar_cliente.setForeground(new Color(255, 255, 255));
         buscar_cliente.addActionListener((ActionEvent) -> {
             new Buscar_cliente(this.username, this.password, cliente_id, cliente_nome);
         });
@@ -393,5 +409,32 @@ public class Realizar_venda extends JFrame {
                 lucro_c_desconto.setText(lucro_liquido.getText());
             }
         }
+    }
+
+    private boolean validacao() {
+        boolean valido = true;
+
+        if (modelo_tabela.getRowCount() == 0) {
+            valido = false;
+            JOptionPane.showMessageDialog(null, "Impossivel realizar venda sem itens."
+                    + "Por favor insira itens na tabela de pedido.");
+        } else if ("".equals(cliente_nome.getText())) {
+            valido = false;
+            JOptionPane.showMessageDialog(null, "Impossivel realizar venda sem clientes."
+                    + "Por favor insira um cliente para realizar a venda.");
+            buscar_cliente.setBorder(BorderFactory.createLineBorder(Color.red));
+        } else if (dar_desconto.isSelected()) {
+            try {
+                Float.parseFloat(desconto.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null,"Desconto invalido, insira apenas numeros.");
+                valido = false;
+                desconto.setText("0");
+                desconto.setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+        }
+
+        return valido;
+
     }
 }

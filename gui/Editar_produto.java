@@ -24,6 +24,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.text.MaskFormatter;
 
@@ -69,6 +70,8 @@ public class Editar_produto extends JFrame {
     private BufferedImage imagem;
     private Produto p;
 
+    private String textovalidacao;
+
     public Editar_produto(String u, String p, int id) {
         this.p = MiscDAO.search_produto_por_id(u, p, id);
         f = MiscDAO.search_fornecedor_por_id(u, p, this.p.getFk_fornecedor_cod());
@@ -110,6 +113,13 @@ public class Editar_produto extends JFrame {
         cadastrar = new JButton("Atualizar !");
         inserir_foto = new JButton("Procurar...");
         buscar_fornecedor = new JButton(new ImageIcon(getClass().getResource("abas/ico_lupa2.png")));
+
+        cadastrar.setBackground(new Color(30, 30, 30));
+        cadastrar.setForeground(new Color(255, 255, 255));
+        inserir_foto.setBackground(new Color(30, 30, 30));
+        inserir_foto.setForeground(new Color(255, 255, 255));
+        buscar_fornecedor.setBackground(new Color(30, 30, 30));
+        buscar_fornecedor.setForeground(new Color(255, 255, 255));
 
         setSize(555, 600);
         setLocationRelativeTo(null);
@@ -229,29 +239,35 @@ public class Editar_produto extends JFrame {
         //EVENTO DE CADASTRO QUE PEGA TODOS OS DADOS PASSADOS
         //PELO USUÁRIO E CHAMA OS METODOS DE INSERÇÃO
         cadastrar.addActionListener((ActionEvent) -> {
-            p.setProduto_nome(produto_nome.getText());
-            p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
-            p.setPreco_uni_venda(Float.parseFloat(preco_uni_venda.getText()));
-            p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
-            p.setDescricao_produto(descricao.getText());
-            p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
-            p.setPeso_produto(Float.parseFloat(peso.getText()));
-            p.setFk_fornecedor_cod(f.getId());
-
-            String validade = this.validade.getText();
-            DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-            try {
-                java.sql.Date data = new java.sql.Date(fmt.parse(validade).getTime());
-                e.setValidade(data);
-            } catch (Exception ex) {
-                System.out.println(ex);
+            if (validacao()) {
+                p.setProduto_nome(produto_nome.getText());
+                p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
+                p.setPreco_uni_venda(Float.parseFloat(preco_uni_venda.getText()));
+                p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
+                p.setDescricao_produto(descricao.getText());
+                p.setPeso_produto(Float.parseFloat(peso.getText()));
+                if (!("".equals(peso.getText()))) {
+                    p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
+                }
+                p.setFk_fornecedor_cod(f.getId());
+                Estoque e = new Estoque();
+                String validade = this.validade.getText();
+                DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    java.sql.Date data = new java.sql.Date(fmt.parse(validade).getTime());
+                    e.setValidade(data);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+                e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
+                //INSERÇÃO : ESTOQUE
+                EstoqueDAO.update(this.currentusername, this.currentpassword, e);
+                //INSERÇÃO : PRODUTO            
+                ProdutoDAO.update(this.currentusername, this.currentpassword, p);
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, textovalidacao);
             }
-            e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
-            //INSERÇÃO : ESTOQUE
-            EstoqueDAO.update(this.currentusername, this.currentpassword, e);
-            //INSERÇÃO : PRODUTO            
-            ProdutoDAO.update(this.currentusername, this.currentpassword, p);
-            dispose();
         });
 
         produto_foto_l.setBounds(260, 100, 150, 30);
@@ -316,14 +332,103 @@ public class Editar_produto extends JFrame {
         preco_uni_compra.setText(p.getPreco_uni_compra() + "");
         peso.setText(p.getPeso_produto() + "");
         descricao.setText(p.getDescricao_produto());
-        uni_compradas.setText(e.getQnt_estoque()+"");
-        
+        uni_compradas.setText(e.getQnt_estoque() + "");
+
         SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
-        
-        validade.setText(formatdata.format(e.getValidade())+"");
+
+        validade.setText(formatdata.format(e.getValidade()) + "");
         fornecedor.setText(f.getNome());
         categoria.setSelectedItem(p.getCategoria());
         unidade_medida.setSelectedItem(p.getUnidade_medida_peso());
+    }
+
+    private boolean validacao() {
+        boolean validado = true;
+        textovalidacao = "Não foi possível editar o produto, campos obrigatórios não preenchidos:";
+        if (foto.getIcon() == null) {
+            foto.setBorder(BorderFactory.createLineBorder(Color.red));
+            validado = false;
+            textovalidacao += " | Foto do produto";
+        } else {
+            foto.setBorder(BorderFactory.createLineBorder(Color.green));
+        }
+        if ("".equals(produto_nome.getText())) {
+            produto_nome.setBorder(BorderFactory.createLineBorder(Color.red));
+            validado = false;
+            textovalidacao += " | nome";
+        } else {
+            produto_nome.setBorder(BorderFactory.createLineBorder(Color.green));
+        }
+
+        if ("".equals(fornecedor.getText())) {
+            fornecedor.setBorder(BorderFactory.createLineBorder(Color.red));
+            validado = false;
+            textovalidacao += " | fornecedor";
+        } else {
+            fornecedor.setBorder(BorderFactory.createLineBorder(Color.green));
+        }
+
+        if ("".equals(preco_uni_compra.getText())) {
+            preco_uni_compra.setBorder(BorderFactory.createLineBorder(Color.red));
+            validado = false;
+            textovalidacao += " | preço unitario de compra";
+        } else {
+            try {
+                Float.parseFloat(preco_uni_compra.getText());
+                preco_uni_compra.setBorder(BorderFactory.createLineBorder(Color.green));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Caracteres Invalidos no campo "
+                        + "de preço unitário de compra. Insira apenas numeros");
+                validado = false;
+                preco_uni_compra.setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+
+        }
+        if ("".equals(preco_uni_venda.getText())) {
+            preco_uni_venda.setBorder(BorderFactory.createLineBorder(Color.red));
+            validado = false;
+            textovalidacao += " | preço unitário de venda";
+        } else {
+            try {
+                Float.parseFloat(preco_uni_venda.getText());
+                preco_uni_venda.setBorder(BorderFactory.createLineBorder(Color.green));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Caracteres Invalidos no campo "
+                        + "de preço unitário de venda. Insira apenas numeros");
+                validado = false;
+                preco_uni_venda.setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+
+        }
+        if (!("".equals(peso.getText()))) {
+            try {
+                Float.parseFloat(peso.getText());
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Caracteres Invalidos no campo de peso. Insira apenas numeros");
+                validado = false;
+                peso.setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+        }
+        if ("".equals(uni_compradas.getText())) {
+            uni_compradas.setBorder(BorderFactory.createLineBorder(Color.red));
+            validado = false;
+            textovalidacao += " | unidades compradas";
+        } else {
+            try {
+                Integer.parseInt(uni_compradas.getText());
+                uni_compradas.setBorder(BorderFactory.createLineBorder(Color.green));
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Caracteres Invalidos no campo "
+                        + "de unidades compradas. Insira apenas numeros inteiros");
+                validado = false;
+                uni_compradas.setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+
+        }
+
+        textovalidacao += ".";
+
+        return validado;
     }
 
 }

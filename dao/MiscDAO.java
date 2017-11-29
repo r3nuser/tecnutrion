@@ -18,6 +18,34 @@ import sql.Sql;
 
 public class MiscDAO extends Sql {
 
+    public static ArrayList<Pedido> search_pedido_pelo_cliente(String username, String password, int id) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM pedido WHERE cod_pedido="
+                    + "(select fk_cod_pedido from pedido_item limit 1)");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Pedido p = new Pedido();
+                p.setCod_pedido(rs.getInt("cod_pedido"));
+                p.setDt_pedido(rs.getDate("dt_pedido"));
+                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                p.setPagamento(rs.getString("pagamento"));
+                p.setDesconto(rs.getInt("desconto"));
+                pedidos.add(p);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return pedidos;
+    }
+    
     public static Produto produtos_menos_vendidos(String username, String password) {
         Connection con = null;
         PreparedStatement stmt = null;

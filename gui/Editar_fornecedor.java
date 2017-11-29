@@ -3,6 +3,7 @@ package gui;
 import bean.Fornecedor;
 import dao.FornecedorDAO;
 import dao.MiscDAO;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
@@ -32,6 +33,10 @@ public class Editar_fornecedor extends JFrame {
         nome = new JTextField();
         nome_l = new JLabel("Nome do fornecedor:");
         cadastro = new JButton("Editar !");
+        
+        cadastro.setBackground(new Color(30,30,30));
+        cadastro.setForeground(new Color(255,255,255));
+        
         nome.setFont(new java.awt.Font("Dialog", 0, 14));
         nome_l.setFont(new java.awt.Font("Dialog", 1, 16));
         add(nome);

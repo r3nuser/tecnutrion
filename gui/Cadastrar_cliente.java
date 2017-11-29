@@ -106,8 +106,17 @@ public class Cadastrar_cliente extends JFrame {
         formatarTextboxes();
         this.option = new JCheckBox("Cadastrar Endereço");
         this.cadastro = new JButton("Cadastrar !");
+        
+        cadastro.setBackground(new Color(30,30,30));
+        cadastro.setForeground(new Color(255,255,255));
+        
         this.add = new JButton("", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
         this.rm = new JButton("", new ImageIcon(getClass().getResource("abas/ico_deletar.png")));
+        
+        this.add.setBackground(new Color(30,30,30));
+        this.add.setForeground(new Color(255,255,255));
+        rm.setBackground(new Color(30,30,30));
+        rm.setForeground(new Color(255,255,255));
 
         this.nome = new JTextField();
         this.email = new JTextField();

@@ -3,9 +3,13 @@ package gui;
 import bean.Cliente;
 import bean.Pedido;
 import dao.MiscDAO;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -57,7 +61,8 @@ public class Relatorio_de_vendas extends JFrame {
         data_relatorio_fim_l = new JLabel("Data de fim:");
 
         gerar = new JButton("Gerar Relatório",new ImageIcon(getClass().getResource("abas/ico_relatorios.png")));
-
+        gerar.setBackground(new Color(30,30,30));
+        gerar.setForeground(new Color(255,255,255));
         informativo.setBounds(10, 10, 300, 18);
         data_relatorio_inicio_l.setBounds(50, 24+10, 200, 23);
         data_relatorio_inicio.setBounds(50, 44+10, 120, 23);
@@ -267,6 +272,9 @@ public class Relatorio_de_vendas extends JFrame {
         setLayout(null);
         setTitle("Gerar Relatório de Vendas !");
         setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        URL url = this.getClass().getResource("abas/ico_relatorios.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
     }

@@ -52,6 +52,8 @@ public class Realizar_troca extends JFrame {
 
         informativo = new JLabel("OBS:: Ao passar produtos para tabela da direita, o produto em questão terá sua quantidade no estoque decrementada de acordo com a quantidade.");
         adicionar_troca = new JButton(">>>");
+        adicionar_troca.setBackground(new Color(30, 30, 30));
+        adicionar_troca.setForeground(new Color(255, 255, 255));
         adicionar_troca.addActionListener((ActionEvent) -> {
             try {
                 Boolean already = false;
@@ -78,6 +80,8 @@ public class Realizar_troca extends JFrame {
         });
 
         remover_troca = new JButton("<<<");
+        remover_troca.setBackground(new Color(30, 30, 30));
+        remover_troca.setForeground(new Color(255, 255, 255));
         remover_troca.addActionListener((ActionEvent) -> {
             try {
                 if ((int) tabela_troca.getValueAt(tabela_troca.getSelectedRow(), 3) > 1) {
@@ -94,7 +98,8 @@ public class Realizar_troca extends JFrame {
         });
 
         realizar_troca = new JButton("Trocar", new ImageIcon(getClass().getResource("abas/ico_troca.png")));
-
+        realizar_troca.setBackground(new Color(30, 30, 30));
+        realizar_troca.setForeground(new Color(255, 255, 255));
         realizar_troca.addActionListener((ActionEvent) -> {
             for (int i = 0; i < tabela_troca.getRowCount(); i++) {
                 Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela_troca.getValueAt(i, 0));

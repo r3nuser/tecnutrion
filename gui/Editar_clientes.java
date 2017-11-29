@@ -16,11 +16,9 @@ import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -105,6 +103,11 @@ public class Editar_clientes extends JFrame {
         this.cadastro = new JButton("Atualizar !");
         this.add = new JButton("", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
         this.rm = new JButton("", new ImageIcon(getClass().getResource("abas/ico_deletar.png")));
+        
+        this.add.setBackground(new Color(30,30,30));
+        this.add.setForeground(new Color(255,255,255));
+        rm.setBackground(new Color(30,30,30));
+        rm.setForeground(new Color(255,255,255));
         
         this.nome = new JTextField();
         this.email = new JTextField();

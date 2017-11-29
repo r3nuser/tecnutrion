@@ -127,7 +127,7 @@ public class Painel_produto extends JPanel {
 
         descricao_produto.setLineWrap(true);
 
-        produto_cod.setPreferredSize(new Dimension(220, 18));
+        produto_cod.setPreferredSize(new Dimension(250, 18));
         produto_nome.setPreferredSize(new Dimension(340, 18));
         preco_uni_compra.setPreferredSize(new Dimension(120, 18));
         preco_uni_venda.setPreferredSize(new Dimension(120, 18));
@@ -199,7 +199,8 @@ public class Painel_produto extends JPanel {
             EstoqueDAO.delete(username, password, e);
             atualizar_tabela((byte) 0);
         });
-
+        deletar_produto.setBackground(new Color(30,30,30));
+        deletar_produto.setForeground(new Color(255,255,255));
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
         painel_de_dados.setPreferredSize(new Dimension(600, 1000));
         add(painel_de_dados, BorderLayout.LINE_START);
@@ -212,11 +213,21 @@ public class Painel_produto extends JPanel {
         cadastrar_produtos = new JButton("Cadastrar Novo Produto", new ImageIcon(getClass().getResource("ico_mais.png")));
         realizar_consulta = new JButton("Consultar Produtos", new ImageIcon(getClass().getResource("ico_lupa.png")));
         editar_dados = new JButton("Editar Dados do Produto", new ImageIcon(getClass().getResource("ico_editar.png")));
+        
+        cadastrar_produtos.setBackground(new Color(30,30,30));
+        cadastrar_produtos.setForeground(new Color(255,255,255));
+        realizar_consulta.setBackground(new Color(30,30,30));
+        realizar_consulta.setForeground(new Color(255,255,255));
+        editar_dados.setBackground(new Color(30,30,30));
+        editar_dados.setForeground(new Color(255,255,255));
 
         busca_produto_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));
         busca_produto = new JTextField();
         busca_produto.setPreferredSize(new Dimension(270, 24));
 
+        busca_produto_b.setBackground(new Color(30,30,30));
+        busca_produto_b.setForeground(new Color(255,255,255));
+        
         painel_de_botoes.add(cadastrar_produtos);
         painel_de_botoes.add(realizar_consulta);
         painel_de_botoes.add(editar_dados);

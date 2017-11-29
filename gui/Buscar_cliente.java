@@ -4,13 +4,18 @@ import bean.Cliente;
 import bean.Telefone;
 import dao.MiscDAO;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.net.URL;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -49,18 +54,28 @@ public class Buscar_cliente extends JFrame {
         inicializa_painel_de_botoes();
         inicializa_painel_da_tabela();
         escolher = new JButton("Confirmar Escolha", new ImageIcon(getClass().getResource("abas/ico_confirmar.png")));
+        escolher.setBackground(new Color(30, 30, 30));
+        escolher.setForeground(new Color(255, 255, 255));
         escolher.addActionListener((ActionEvent) -> {
-            id.setText("" + (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
-            nome.setText("" + tabela.getValueAt(tabela.getSelectedRow(), 1));
-            dispose();
+            try{
+                id.setText("" + (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+                nome.setText("" + tabela.getValueAt(tabela.getSelectedRow(), 1));
+                dispose();
+            }catch(Exception e){
+                JOptionPane.showMessageDialog(null,"Por favor, escolha um cliente na tabela e tente novamente.");
+                atualizar_tabela();
+            }
         });
         add(escolher, BorderLayout.PAGE_END);
 
         setSize(1000, 600);
         setResizable(false);
         setLocationRelativeTo(null);
-        setTitle("Selecionar Produto");
+        setTitle("Selecionar Cliente");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        URL url = this.getClass().getResource("abas/ico_lupa2.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
         setVisible(true);
     }
 
@@ -70,6 +85,11 @@ public class Buscar_cliente extends JFrame {
         busca_cliente = new JTextField();
         busca_cliente.setPreferredSize(new Dimension(300, 24));
         cadastrar_cliente = new JButton("Cadastrar Novo Cliente", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
+
+        busca_cliente_b.setBackground(new Color(30, 30, 30));
+        busca_cliente_b.setForeground(new Color(255, 255, 255));
+        cadastrar_cliente.setBackground(new Color(30, 30, 30));
+        cadastrar_cliente.setForeground(new Color(255, 255, 255));
 
         painel_de_botoes.add(busca_cliente);
         painel_de_botoes.add(busca_cliente_b);
@@ -133,7 +153,7 @@ public class Buscar_cliente extends JFrame {
             try {
                 try {
                     t = MiscDAO.search_telefone_individual_por_id(username, password, c.getId());
-                    
+
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }

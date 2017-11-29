@@ -77,10 +77,13 @@ public class Painel_estoque extends JPanel {
 
         consultar_estoque = new JButton("Consultar Estoque", new ImageIcon(getClass().getResource("ico_lupa.png")));
         repor_estoque = new JButton("Repor Estoque", new ImageIcon(getClass().getResource("ico_mais.png")));
-
+        consultar_estoque.setBackground(new Color(30, 30, 30));
+        consultar_estoque.setForeground(new Color(255, 255, 255));
+        repor_estoque.setBackground(new Color(30, 30, 30));
+        repor_estoque.setForeground(new Color(255, 255, 255));
         repor_estoque.addActionListener((ActionEvent) -> {
             try {
-                new Repor_estoque(this.username, this.password, (int)tabela.getValueAt(tabela.getSelectedRow(), 0));
+                new Repor_estoque(this.username, this.password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erro ao tentar repor estoque: Escolha um dado na tabela e tente novamente");
             }
@@ -148,7 +151,7 @@ public class Painel_estoque extends JPanel {
         produto_foto_l = new JLabel("Foto do Produto:");
         produto_foto = new JLabel("");
         produto_cod_l = new JLabel("ID Produto:");
-        validade_l = new JLabel("Validade:");
+        validade_l = new JLabel("                     Validade:");
         quantidade_l = new JLabel("Quantidade em estoque:");
 
         estoque_cod = new JTextField();
@@ -160,16 +163,18 @@ public class Painel_estoque extends JPanel {
         produto_foto.setPreferredSize(new Dimension(100, 100));
         produto_foto.setBorder(BorderFactory.createLineBorder(Color.black));
 
-        estoque_cod.setPreferredSize(new Dimension(70, 18));
-        produto_cod.setPreferredSize(new Dimension(70, 18));
-        produto_nome.setPreferredSize(new Dimension(300, 18));
+        estoque_cod.setPreferredSize(new Dimension(150, 18));
+        produto_cod.setPreferredSize(new Dimension(150, 18));
+        produto_nome.setPreferredSize(new Dimension(400, 18));
         validade.setPreferredSize(new Dimension(120, 18));
-        quantidade.setPreferredSize(new Dimension(120, 18));
-
-        painel_de_dados.add(produto_cod_l);
-        painel_de_dados.add(produto_cod);
+        quantidade.setPreferredSize(new Dimension(170, 18));
+        
+        
         painel_de_dados.add(produto_foto_l);
         painel_de_dados.add(produto_foto);
+        painel_de_dados.add(produto_cod_l);
+        painel_de_dados.add(produto_cod);
+
         painel_de_dados.add(produto_nome_l);
         painel_de_dados.add(produto_nome);
         painel_de_dados.add(estoque_cod_l);
