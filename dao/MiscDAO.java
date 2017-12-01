@@ -1,4 +1,11 @@
+/*
+* CLASSE RESPONSÁVEL POR 
+* COMANDOS ESPECIFICOS
+* NO BANCO DE DADOS
+* AUTOR @RENAN
+ */
 package dao;
+//IMPORTS DE TODOS OS OBJETOS QUE UTILIZEI NA CLASSE
 
 import bean.Cliente;
 import bean.Endereco;
@@ -16,8 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import sql.Sql;
 
+//NOME DA CLASSE + HERANÇA DE TODOS OS METODOS DA CLASSE Sql
 public class MiscDAO extends Sql {
 
+    //METODO RESPONSÁVEL POR PROCURAR O PEDIDO PELO ID DO CLIENTE
     public static ArrayList<Pedido> search_pedido_pelo_cliente(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -27,7 +36,8 @@ public class MiscDAO extends Sql {
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT * FROM pedido WHERE cod_pedido="
-                    + "(select fk_cod_pedido from pedido_item limit 1)");
+                    + "(select fk_cod_pedido from pedido_item where fk_cod_cliente=? limit 1)");
+            stmt.setInt(1, id);
             rs = stmt.executeQuery();
             while (rs.next()) {
                 Pedido p = new Pedido();
@@ -45,7 +55,8 @@ public class MiscDAO extends Sql {
         }
         return pedidos;
     }
-    
+
+    //METODO RESPONSÁVEL POR PROCURAR O PRODUTO MENOS VENDIDO
     public static Produto produtos_menos_vendidos(String username, String password) {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -54,10 +65,12 @@ public class MiscDAO extends Sql {
 
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("SELECT produto_nome,categoria FROM produtos WHERE produto_cod=(SELECT fk_cod_produto from pedido_item group by fk_cod_produto order by sum(quantidade) asc LIMIT 1)");
+            stmt = con.prepareStatement("SELECT produto_nome,categoria FROM produtos "
+                    + "WHERE produto_cod=(SELECT fk_cod_produto from pedido_item "
+                    + "group by fk_cod_produto order by sum(quantidade) asc LIMIT 1)");
 
             rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 p.setProduto_nome(rs.getString("produto_nome"));
                 p.setCategoria(rs.getString("categoria"));
             }
@@ -68,7 +81,8 @@ public class MiscDAO extends Sql {
         }
         return p;
     }
-    
+
+    //METODO RESPONSÁVEL POR PROCURAR O PRODUTO MAIS VENDIDO
     public static Produto produtos_mais_vendidos(String username, String password) {
         Connection con = null;
         PreparedStatement stmt = null;
@@ -77,10 +91,12 @@ public class MiscDAO extends Sql {
 
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("SELECT produto_nome,categoria FROM produtos WHERE produto_cod=(SELECT fk_cod_produto from pedido_item group by fk_cod_produto order by sum(quantidade) desc LIMIT 1)");
-  
+            stmt = con.prepareStatement("SELECT produto_nome,categoria FROM produtos "
+                    + "WHERE produto_cod=(SELECT fk_cod_produto from pedido_item "
+                    + "group by fk_cod_produto order by sum(quantidade) desc LIMIT 1)");
+
             rs = stmt.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 p.setProduto_nome(rs.getString("produto_nome"));
                 System.out.println(p.getProduto_nome());
                 p.setCategoria(rs.getString("categoria"));
@@ -93,6 +109,7 @@ public class MiscDAO extends Sql {
         return p;
     }
 
+    //METODO RESPONSÁVEL POR PROCURAR O NUMERO DE CLIENTES CADASTRADOS
     public static int clientes_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
@@ -116,18 +133,16 @@ public class MiscDAO extends Sql {
         return total;
     }
 
+    //METODO RESPONSÁVEL POR BUSCAR O NUMERO DE PRODUTOS CADASTRADOS
     public static int produtos_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection con = null;
-
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT count(produto_cod) FROM produtos");
-
             rs = stmt.executeQuery();
-
             if (rs.next()) {
                 total = rs.getInt("count(produto_cod)");
             }
@@ -139,6 +154,7 @@ public class MiscDAO extends Sql {
         return total;
     }
 
+    //METODO RESPONSÁVEL POR BUSCAR O NUMERO DE FORNECEDORES CADASTRADOS
     public static int fornecedores_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
@@ -162,6 +178,7 @@ public class MiscDAO extends Sql {
         return total;
     }
 
+    //METODO RESPONSÁVEL POR BUSCAR O NUMERO TOTAL DE ITENS NO ESTOQUE
     public static int total_item_estoque_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
@@ -185,6 +202,7 @@ public class MiscDAO extends Sql {
         return total;
     }
 
+    //METODO QUE BUSCA O TOTAL DE VENDAS
     public static int total_de_vendas_cadastrados(String username, String password) {
         int total = 0;
         PreparedStatement stmt = null;
@@ -208,6 +226,7 @@ public class MiscDAO extends Sql {
         return total;
     }
 
+    //METODO QUE BUSCA AS VENDAS DA SEMANA PASSADA
     public static ArrayList<Pedido> vendas_semana_passada(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -237,6 +256,7 @@ public class MiscDAO extends Sql {
         return pedidos;
     }
 
+    //METODO QUE BUSCA A VENDAS NA SEMANA ATUAL
     public static ArrayList<Pedido> vendas_semana(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -266,6 +286,7 @@ public class MiscDAO extends Sql {
         return pedidos;
     }
 
+    //METODO QUE BUSCA VENDAS NO ANO
     public static ArrayList<Pedido> vendas_ano(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -295,6 +316,7 @@ public class MiscDAO extends Sql {
         return pedidos;
     }
 
+    //METODO QUE BUSCA VENDAS NO MES
     public static ArrayList<Pedido> vendas_mes(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -324,6 +346,7 @@ public class MiscDAO extends Sql {
         return pedidos;
     }
 
+    //METODO QUE BUSCA VENDAS NO DIA
     public static ArrayList<Pedido> vendas_dia(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -353,6 +376,7 @@ public class MiscDAO extends Sql {
         return pedidos;
     }
 
+    //METODO QUE SELECIONA OS ANIVERSARIANTES DO MES
     public static ArrayList<Cliente> search_aniversariantes_do_mes(String username, String password) {
         ArrayList<Cliente> dados_cliente = new ArrayList<>();
         Connection con = null;
@@ -378,6 +402,7 @@ public class MiscDAO extends Sql {
         return dados_cliente;
     }
 
+    //METODO QUE PROCURA PRODUTOS FORA DE ESTOQUE
     public static ArrayList<Estoque> search_produtos_fora_de_estoque(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -404,6 +429,7 @@ public class MiscDAO extends Sql {
         return dados_estoque;
     }
 
+    //METODO QUE PROCURA PRODUTOS PERTO DE VENCER
     public static ArrayList<Estoque> search_produtos_perto_de_vencer(String username, String password, Date dia) {
 
         PreparedStatement stmt = null;
@@ -435,6 +461,7 @@ public class MiscDAO extends Sql {
 
     }
 
+    //METODO QUE RETORNA PEDIDO POR DATAS
     public static ArrayList<Pedido> relatorio_por_data(String username, String password, Date inicio, Date fim) {
 
         PreparedStatement stmt = null;
@@ -467,6 +494,7 @@ public class MiscDAO extends Sql {
 
     }
 
+    //METODO QUE PEGA O PRODUTO PELO COD DE ESTOQUE
     public static Produto get_produto_por_fk_cod_estoque(String username, String password, int id) {
         Produto p = new Produto();
         Connection con = null;
@@ -491,6 +519,7 @@ public class MiscDAO extends Sql {
         return p;
     }
 
+    //METODO QUE BUSCA OS PRODUTOS CONTIDOS EM UM PEDIDO
     public static ArrayList<Produto> get_produtos_contidos_pedido(String username, String password, int id) {
         ArrayList<Produto> dados_produtos = new ArrayList<>();
 
@@ -540,6 +569,7 @@ public class MiscDAO extends Sql {
         return dados_produtos;
     }
 
+    //METODO QUE BUSCA QUANTIDADE DE ITENS EM UM PEDIDO
     public static int get_quantidade_de_itens_pedido(String username, String password, int id) {
         int quantidade = 0;
 
@@ -565,6 +595,7 @@ public class MiscDAO extends Sql {
         return quantidade;
     }
 
+    //METODO QUE BUSCA O LUCRO LIQUIDO DO PEDIDO
     public static float get_lucro_liquido_pedido(String username, String password, int id) {
 
         float lucro = 0;
@@ -594,6 +625,7 @@ public class MiscDAO extends Sql {
         return 0f;
     }
 
+    //METODO QUE BUSCA O PEDIDO POR ID
     public static Pedido search_pedido_por_id(String username, String password, int id) {
         Pedido p = new Pedido();
         PreparedStatement stmt = null;
@@ -620,6 +652,7 @@ public class MiscDAO extends Sql {
         return p;
     }
 
+    //METODO QUE BUSCA O ID DO CLIENTE PELO COD DO PEDIDO
     public static int get_id_cliente_pedido_item_por_fk(String username, String password, int fk) {
         int pi = 0;
         PreparedStatement stmt = null;
@@ -644,6 +677,7 @@ public class MiscDAO extends Sql {
         return pi;
     }
 
+    //METODO QUE BUSCA O FORNECEDOR POR NOME
     public static ArrayList<Fornecedor> search_fornecedor_por_nome(String username, String password, String nome) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -670,6 +704,7 @@ public class MiscDAO extends Sql {
         return fornecedores;
     }
 
+    //METODO QUE BUSCA O CLIENTE PELO NOME
     public static ArrayList<Cliente> search_cliente_por_nome(String username, String password, String nome) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -699,6 +734,7 @@ public class MiscDAO extends Sql {
         return clientes;
     }
 
+    //METODO QUE BUSCA O PRODUTO PELO NOME
     public static ArrayList<Produto> search_produto_por_nome(String username, String password, String nome) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -735,6 +771,7 @@ public class MiscDAO extends Sql {
         return produtos;
     }
 
+    //METODO QUE BUSCA O CLIENTE PELO ID
     public static Cliente search_cliente_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -762,6 +799,7 @@ public class MiscDAO extends Sql {
         return c;
     }
 
+    //METODO QUE BUSCA O TELEFONE PELO ID
     public static ArrayList<Telefone> search_telefone_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -787,6 +825,7 @@ public class MiscDAO extends Sql {
         return telefones;
     }
 
+    //METODO QUE BUSCA O TELEFONE POR ID
     public static Telefone search_telefone_individual_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -812,6 +851,7 @@ public class MiscDAO extends Sql {
         return t;
     }
 
+    //METODO QUE BUSCA PRODUTO PELO ID
     public static Produto search_produto_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -846,6 +886,7 @@ public class MiscDAO extends Sql {
         return p;
     }
 
+    //METODO QUE BUSCA O ENDERECO PELO ID DO CLIENTE
     public static Endereco search_endereco_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -875,6 +916,7 @@ public class MiscDAO extends Sql {
         return null;
     }
 
+    //METODO QUE BUSCA O ULTIMO PEDIDO E RETORNA O ID
     public static int get_ultimo_pedido_id(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -897,6 +939,7 @@ public class MiscDAO extends Sql {
         return 0;
     }
 
+    //METODO QUE BUSCA O ULTIMO CLIENTE E RETORNA O ID
     public static int get_ultimo_cliente_id(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -920,6 +963,7 @@ public class MiscDAO extends Sql {
         return 0;
     }
 
+    //METODO QUE BUSCA O ESTOQUE PELO ID
     public static Estoque search_estoque_por_id(String username, String password, int id) {
         Estoque e = new Estoque();
         PreparedStatement stmt = null;
@@ -946,6 +990,7 @@ public class MiscDAO extends Sql {
         return e;
     }
 
+    //METODO QUE BUSCA O ULTIMO ESTOQUE E RETORNA O ID
     public static int get_ultimo_estoque_id(String username, String password) {
         PreparedStatement stmt = null;
         Connection con = null;
@@ -966,6 +1011,7 @@ public class MiscDAO extends Sql {
         return id;
     }
 
+    //METODO QUE BUSCA O FORNECEDOR PELO ID
     public static Fornecedor search_fornecedor_por_id(String username, String password, int id) {
         Fornecedor f = new Fornecedor();
         ResultSet rs = null;

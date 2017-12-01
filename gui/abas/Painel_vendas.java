@@ -188,18 +188,26 @@ public class Painel_vendas extends JPanel {
         deletar_pedido.setForeground(new Color(255, 255, 255));
 
         deletar_pedido.addActionListener((ActionEvent) -> {
-            try {
-                Pedido_item pi = new Pedido_item();
-                pi.setFk_cod_pedido((int) tabela.getValueAt(tabela.getSelectedRow(), 0));
-                Pedido_itemDAO.delete(username, password, pi, (byte) 1);
-                Pedido p = MiscDAO.search_pedido_por_id(username, password, pi.getFk_cod_pedido());
-                PedidoDAO.delete(username, password, p);
-                JOptionPane.showMessageDialog(null, "Apagado com Sucesso !");
-                atualizar_tabela();
-                limpar_caixas_de_texto();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Por favor, escolha um dado na tabela á direita e tente novamente !");
+
+            switch (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja realizar esta operação?")) {
+                case 0:
+                    try {
+                        Pedido_item pi = new Pedido_item();
+                        pi.setFk_cod_pedido((int) tabela.getValueAt(tabela.getSelectedRow(), 0));
+                        Pedido_itemDAO.delete(username, password, pi, (byte) 1);
+                        Pedido p = MiscDAO.search_pedido_por_id(username, password, pi.getFk_cod_pedido());
+                        PedidoDAO.delete(username, password, p);
+                        JOptionPane.showMessageDialog(null, "Apagado com Sucesso !");
+                        atualizar_tabela();
+                        limpar_caixas_de_texto();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Por favor, escolha um dado na tabela á direita e tente novamente !");
+                    }
+                    break;
+                default:
+                    break;
             }
+
         });
 
         add(painel_de_dados, BorderLayout.LINE_START);

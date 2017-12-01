@@ -1,6 +1,12 @@
+/*
+*CLASSE RESPONSÁVEL PELA LEITURA,
+*REMOÇÃO, ATUALIZAÇÃO E CRIAÇÃO DE
+*DADOS DO ENDERECO NO BANCO DE DADOS
+* AUTOR @RENAN
+ */
 package dao;
+//IMPORTS DE TODOS OS OBJETOS QUE UTILIZEI NA CLASSE
 
-import bean.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,13 +14,18 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import sql.Sql;
 import bean.Endereco;
-import java.awt.List;
 
+//NOME DA CLASSE + HERANÇA DE TODOS OS METODOS DA CLASSE Sql
 public class EnderecoDAO extends Sql {
 
+    //METODO RESPONSÁVEL PELA INSERÇÃO DOS DADOS NOS BANCOS
     public static void create(String username, String password, Endereco e) {
         PreparedStatement stmt = null;
         Connection con = null;
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE INSERÇÃO A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("INSERT INTO endereco VALUES(?,?,?,?,?,?,?,?)");
@@ -35,17 +46,22 @@ public class EnderecoDAO extends Sql {
         }
     }
 
+    //METODO RESPONSÁVEL PELA LEITURA DOS DADOS NOS BANCOS
     public ArrayList<Endereco> read(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         Connection con = null;
         ArrayList<Endereco> enderecos = new ArrayList<>();
-
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE LEITURA A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT * FROM endereco");
             rs = stmt.executeQuery();
-
+            //CLAUSULA WHILE QUE PASSA POR TODOS DADOS RESULTANTES DO SELECT
+            //E APÓS A LEITURA, ADICIONA EM UM ARRAY DE ENDEREÇO.
             while (rs.next()) {
                 Endereco e = new Endereco();
                 e.setClientecod(rs.getInt("fk_cliente_cod"));
@@ -59,16 +75,21 @@ public class EnderecoDAO extends Sql {
                 enderecos.add(e);
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao consultar !"+ex);
+            JOptionPane.showMessageDialog(null, "Erro ao consultar !" + ex);
         } finally {
             closeConnection(con, stmt, rs);
         }
         return enderecos;
     }
 
+    //METODO RESPONSÁVEL PELA ATUALIZAÇÃO DOS DADOS NOS BANCOS
     public static void update(String username, String password, Endereco e) {
         PreparedStatement stmt = null;
         Connection con = null;
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE ATUALIZAÇÃO A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("UPDATE endereco SET tipolog=?,logradouro=?,bairro=?,complemento=?,cidade=?,estado=?,cep=? WHERE fk_cliente_cod=?");
@@ -81,27 +102,32 @@ public class EnderecoDAO extends Sql {
             stmt.setString(7, e.getCep());
             stmt.setInt(8, e.getClientecod());
             stmt.executeUpdate();
-            
-        }catch(Exception ex){
+
+        } catch (Exception ex) {
             System.out.println(ex);
-        }finally{
-            closeConnection(con,stmt);
+        } finally {
+            closeConnection(con, stmt);
         }
     }
 
+    //METODO RESPONSÁVEL PELA REMOÇÃO DOS DADOS NOS BANCOS 
     public static void delete(String username, String password, Endereco e) {
         PreparedStatement stmt = null;
         Connection con = null;
+        //ESTA CLÁUSULA É RESPONSÁVEL POR:
+        // * PEGAR A CONEXÃO COM BANCO DE DADOS
+        // * PREPARAR O COMANDO DE REMOÇÃO A SER EXECUTADO NO STATEMENT
+        // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("DELETE FROM endereco WHERE fk_cliente_cod=?");
             stmt.setInt(1, e.getClientecod());
             stmt.executeUpdate();
-            
-        }catch(Exception ex){
+
+        } catch (Exception ex) {
             System.out.println(ex);
-        }finally{
-            closeConnection(con,stmt);
+        } finally {
+            closeConnection(con, stmt);
         }
     }
 }

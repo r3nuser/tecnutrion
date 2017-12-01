@@ -21,7 +21,6 @@ public class ProdutoDAO extends Sql {
     public static void create(String username, String password, Produto p) {
         Connection con = null;
         PreparedStatement stmt = null;
-
         //ESTA CLÁUSULA É RESPONSÁVEL POR:
         // * PEGAR A CONEXÃO COM BANCO DE DADOS
         // * PREPARAR O COMANDO DE INSERÇÃO A SER EXECUTADO NO STATEMENT
@@ -48,7 +47,7 @@ public class ProdutoDAO extends Sql {
             closeConnection(con, stmt);
         }
     }
-    //METODO RESPONSÁVEL PELA INSERÇÃO DOS DADOS NOS BANCOS
+    //METODO RESPONSÁVEL PELA LEITURA DOS DADOS NOS BANCOS
     public static ArrayList<Produto> read(String username, String password) {
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -61,7 +60,6 @@ public class ProdutoDAO extends Sql {
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT * FROM produtos");
-
             rs = stmt.executeQuery();
             //CLAUSULA WHILE QUE PASSA POR TODOS DADOS RESULTANTES DO SELECT
             //E APÓS A LEITURA, ADICIONA EM UM ARRAY DE PRODUTO.
@@ -117,9 +115,9 @@ public class ProdutoDAO extends Sql {
             
             stmt.executeUpdate();
             
-            
+            JOptionPane.showMessageDialog(null, "Atualizado com Sucesso!");
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "Erro ao atualizar e/ou privilégios insuficientes!");
         } finally {
             closeConnection(con, stmt);
         }
@@ -137,8 +135,10 @@ public class ProdutoDAO extends Sql {
             stmt = con.prepareStatement("DELETE FROM produtos WHERE produto_cod=?");
             stmt.setInt(1, p.getProduto_cod());
             stmt.executeUpdate();
+            JOptionPane.showMessageDialog(null, "Apagado com Sucesso!");
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(null, "Erro ao apagar e/ou privilégios insuficientes!");
+            JOptionPane.showMessageDialog(null, "OBS:: Impossível apagar produto que esteja vinculado a alguma venda.");
         } finally {
             closeConnection(con, stmt);
         }

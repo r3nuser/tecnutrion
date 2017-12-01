@@ -22,8 +22,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -31,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 
 public class Estatisticas extends JFrame {
@@ -195,27 +194,36 @@ public class Estatisticas extends JFrame {
         deletar_historico.setForeground(new Color(255, 255, 255));
 
         deletar_historico.addActionListener((ActionEvent) -> {
-            try {
-                for (int i = 0; i < tabela.getRowCount(); i++) {
-                    Pedido_item pi = new Pedido_item();
-                    pi.setFk_cod_pedido((int) tabela.getValueAt(i, 0));
-                    Pedido_itemDAO.delete(username, password, pi, (byte) 1);
-                    Pedido p = MiscDAO.search_pedido_por_id(username, password, pi.getFk_cod_pedido());
-                    PedidoDAO.delete(username, password, p);
-                    JOptionPane.showMessageDialog(null, "Apagado com Sucesso !");
-                    modelo_tabela.setNumRows(0);
-                    modelo_tabela_itens.setNumRows(0);
-                    scroll_itens.setBorder(BorderFactory.createTitledBorder(
-                            BorderFactory.createLineBorder(Color.black),
-                            "Itens do Pedido",
-                            1,
-                            1,
-                            new java.awt.Font("Dialog", 1, 14)
-                    ));
-                }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Erro ao apagar os dados.");
+            
+            switch (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja realizar esta operação?")) {
+                
+                case 0:
+                    try {
+                        for (int i = 0; i < tabela.getRowCount(); i++) {
+                            Pedido_item pi = new Pedido_item();
+                            pi.setFk_cod_pedido((int) tabela.getValueAt(i, 0));
+                            Pedido_itemDAO.delete(username, password, pi, (byte) 1);
+                            Pedido p = MiscDAO.search_pedido_por_id(username, password, pi.getFk_cod_pedido());
+                            PedidoDAO.delete(username, password, p);
+
+                            modelo_tabela.setNumRows(0);
+                            modelo_tabela_itens.setNumRows(0);
+                            scroll_itens.setBorder(BorderFactory.createTitledBorder(
+                                    BorderFactory.createLineBorder(Color.black),
+                                    "Itens do Pedido",
+                                    1,
+                                    1,
+                                    new java.awt.Font("Dialog", 1, 14)
+                            ));
+                        }
+                    } catch (Exception e) {
+                        System.out.println("e");
+                    }
+                default:
+
+                    break;
             }
+
         });
 
         buscar_cliente.addActionListener((ActionEvent) -> {

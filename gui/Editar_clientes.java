@@ -273,6 +273,7 @@ public class Editar_clientes extends JFrame {
         });
         add.addActionListener((ActionEvent) -> {
             dtm_telefone.addRow(new Object[]{ddd.getText(), antesh.getText(), depoish.getText()});
+            ddd.setText(""); antesh.setText(""); depoish.setText("");
         });
         rm.addActionListener((ActionEvent) -> {
             try {

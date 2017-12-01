@@ -98,7 +98,7 @@ public class Painel_produto extends JPanel {
         inicializa_painel_da_tabela();
         inicializa_painel_de_botoes();
         inicializa_painel_de_dados();
- 
+
         setVisible(true);
     }
 
@@ -191,16 +191,23 @@ public class Painel_produto extends JPanel {
         painel_de_dados.add(deletar_produto);
         //EVENTO NO BOTÃO DE DELETAR PRODUTO.
         deletar_produto.addActionListener((ActionEvent) -> {
-            Produto p = MiscDAO.search_produto_por_id(username, password, Integer.parseInt(produto_cod.getText()));
-            Estoque e = new Estoque();
-            e.setEstoque_cod(p.getFk_estoque_cod());
-            
-            ProdutoDAO.delete(username, password, p);
-            EstoqueDAO.delete(username, password, e);
-            atualizar_tabela((byte) 0);
+            switch (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja realizar esta operação?")) {
+                case 0:
+                    Produto p = MiscDAO.search_produto_por_id(username, password, Integer.parseInt(produto_cod.getText()));
+                    Estoque e = new Estoque();
+                    e.setEstoque_cod(p.getFk_estoque_cod());
+
+                    ProdutoDAO.delete(username, password, p);
+                    EstoqueDAO.delete(username, password, e);
+                    atualizar_tabela((byte) 0);
+                    break;
+                default:
+                    break;
+            }
+
         });
-        deletar_produto.setBackground(new Color(30,30,30));
-        deletar_produto.setForeground(new Color(255,255,255));
+        deletar_produto.setBackground(new Color(30, 30, 30));
+        deletar_produto.setForeground(new Color(255, 255, 255));
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
         painel_de_dados.setPreferredSize(new Dimension(600, 1000));
         add(painel_de_dados, BorderLayout.LINE_START);
@@ -213,21 +220,21 @@ public class Painel_produto extends JPanel {
         cadastrar_produtos = new JButton("Cadastrar Novo Produto", new ImageIcon(getClass().getResource("ico_mais.png")));
         realizar_consulta = new JButton("Consultar Produtos", new ImageIcon(getClass().getResource("ico_lupa.png")));
         editar_dados = new JButton("Editar Dados do Produto", new ImageIcon(getClass().getResource("ico_editar.png")));
-        
-        cadastrar_produtos.setBackground(new Color(30,30,30));
-        cadastrar_produtos.setForeground(new Color(255,255,255));
-        realizar_consulta.setBackground(new Color(30,30,30));
-        realizar_consulta.setForeground(new Color(255,255,255));
-        editar_dados.setBackground(new Color(30,30,30));
-        editar_dados.setForeground(new Color(255,255,255));
+
+        cadastrar_produtos.setBackground(new Color(30, 30, 30));
+        cadastrar_produtos.setForeground(new Color(255, 255, 255));
+        realizar_consulta.setBackground(new Color(30, 30, 30));
+        realizar_consulta.setForeground(new Color(255, 255, 255));
+        editar_dados.setBackground(new Color(30, 30, 30));
+        editar_dados.setForeground(new Color(255, 255, 255));
 
         busca_produto_b = new JButton(new ImageIcon(getClass().getResource("ico_lupa2.png")));
         busca_produto = new JTextField();
         busca_produto.setPreferredSize(new Dimension(270, 24));
 
-        busca_produto_b.setBackground(new Color(30,30,30));
-        busca_produto_b.setForeground(new Color(255,255,255));
-        
+        busca_produto_b.setBackground(new Color(30, 30, 30));
+        busca_produto_b.setForeground(new Color(255, 255, 255));
+
         painel_de_botoes.add(cadastrar_produtos);
         painel_de_botoes.add(realizar_consulta);
         painel_de_botoes.add(editar_dados);
