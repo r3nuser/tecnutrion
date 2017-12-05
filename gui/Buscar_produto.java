@@ -74,17 +74,28 @@ public class Buscar_produto extends JFrame {
         escolher.setForeground(new Color(255, 255, 255));
         escolher.addActionListener((ActionEvent) -> {
             try {
-                tabela.getValueAt(tabela.getSelectedRow(),1);
+                tabela.getValueAt(tabela.getSelectedRow(), 1);
                 try {
                     Integer.parseInt(unidades.getText());
                     if (((int) tabela.getValueAt(tabela.getSelectedRow(), 5) >= Integer.parseInt(unidades.getText()))
                             && (Integer.parseInt(unidades.getText()) != 0)) {
                         p = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 1));
 
-                        dmt.addRow(new Object[]{p.getProduto_foto_para_tabela(),
-                            p.getProduto_cod(), p.getProduto_nome(), p.getPreco_uni_compra(),
-                            p.getPreco_uni_venda(), unidades.getText()});
-
+                        boolean already = false;
+                        int j;
+                        for (j = 0; j < dmt.getRowCount(); j++) {
+                            if (p.getProduto_cod() == (int) dmt.getValueAt(j, 1)) {
+                                already = true;
+                                break;
+                            }
+                        }
+                        if (already) {
+                            dmt.setValueAt(Integer.parseInt(dmt.getValueAt(j, 5) + "") + Integer.parseInt(unidades.getText()), j, 5);
+                        } else {
+                            dmt.addRow(new Object[]{p.getProduto_foto_para_tabela(),
+                                p.getProduto_cod(), p.getProduto_nome(), p.getPreco_uni_compra(),
+                                p.getPreco_uni_venda(), unidades.getText()});
+                        }
                         float sum;
                         sum = p.getPreco_uni_venda();
                         sum *= Float.parseFloat(unidades.getText());
@@ -101,6 +112,7 @@ public class Buscar_produto extends JFrame {
                         vl_qnt.setText("" + sum);
 
                         dispose();
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Quantidade invalida: Quantidade maior que a disponível"
                                 + " no estoque ou quantidade igual a 0.");
@@ -140,8 +152,8 @@ public class Buscar_produto extends JFrame {
         painel_de_botoes.add(busca_produto_b);
         cadastrar_produto.setBackground(new Color(30, 30, 30));
         cadastrar_produto.setForeground(new Color(255, 255, 255));
-        busca_produto_b.setBackground(new Color(30,30,30));
-        busca_produto_b.setForeground(new Color(255,255,255));
+        busca_produto_b.setBackground(new Color(30, 30, 30));
+        busca_produto_b.setForeground(new Color(255, 255, 255));
         unidades_l = new JLabel("Unidades que deseja vender:");
         unidades = new JTextField("0");
         unidades.setPreferredSize(new Dimension(70, 24));
@@ -202,8 +214,8 @@ public class Buscar_produto extends JFrame {
         tabela.getColumnModel().getColumn(3).setMinWidth(150);
         tabela.getColumnModel().getColumn(4).setMaxWidth(150);
         tabela.getColumnModel().getColumn(4).setMinWidth(150);
-        tabela.getColumnModel().getColumn(5).setMaxWidth(70);
-        tabela.getColumnModel().getColumn(5).setMinWidth(70);
+        tabela.getColumnModel().getColumn(5).setMaxWidth(150);
+        tabela.getColumnModel().getColumn(5).setMinWidth(150);
 
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
@@ -219,9 +231,29 @@ public class Buscar_produto extends JFrame {
         for (int i = 0; i < dados_produto.size(); i++) {
             p = dados_produto.get(i);
             e = MiscDAO.search_estoque_por_id(username, password, p.getFk_estoque_cod());
-            modelo_tabela.addRow(new Object[]{p.getProduto_foto_para_tabela(),
-                p.getProduto_cod(), p.getProduto_nome(), p.getPreco_uni_compra(),
-                p.getPreco_uni_venda(), e.getQnt_estoque()});
+
+            boolean already = false;
+            int j;
+            for (j = 0; j < dmt.getRowCount(); j++) {
+                if (p.getProduto_cod() == (int) dmt.getValueAt(j, 1)) {
+                    already = true;
+                    break;
+                }
+            }
+            if (already) {
+                modelo_tabela.addRow(new Object[]{
+                    p.getProduto_foto_para_tabela(),
+                    p.getProduto_cod(),
+                    p.getProduto_nome(),
+                    p.getPreco_uni_compra(),
+                    p.getPreco_uni_venda(),
+                    (e.getQnt_estoque() - Integer.parseInt("" + dmt.getValueAt(j, 5)))
+                });
+            } else {
+                modelo_tabela.addRow(new Object[]{p.getProduto_foto_para_tabela(),
+                    p.getProduto_cod(), p.getProduto_nome(), p.getPreco_uni_compra(),
+                    p.getPreco_uni_venda(), e.getQnt_estoque()});
+            }
         }
     }
 }

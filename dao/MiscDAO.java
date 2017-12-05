@@ -26,6 +26,33 @@ import sql.Sql;
 //NOME DA CLASSE + HERANÇA DE TODOS OS METODOS DA CLASSE Sql
 public class MiscDAO extends Sql {
 
+    //MÉTODO RESPONSÁVEL POR PROCURAR O PRODUTO PELO FORNECEDOR
+    public static ArrayList<Produto> search_produto_pelo_fornecedor(String username, String password, int id) {
+        ArrayList<Produto> dados_produto = new ArrayList<>();
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT produto_foto,produto_nome,produto_cod "
+                    + "FROM produtos WHERE fk_cod_fornecedor=?");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Produto p = new Produto();
+                p.setProduto_foto(rs.getBytes("produto_foto"));
+                p.setProduto_nome(rs.getString("produto_nome"));
+                p.setProduto_cod(rs.getInt("produto_cod"));
+                dados_produto.add(p);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return dados_produto;
+    }
+
     //METODO RESPONSÁVEL POR PROCURAR O PEDIDO PELO ID DO CLIENTE
     public static ArrayList<Pedido> search_pedido_pelo_cliente(String username, String password, int id) {
         PreparedStatement stmt = null;

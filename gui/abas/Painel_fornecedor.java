@@ -1,6 +1,7 @@
 package gui.abas;
 
 import bean.Fornecedor;
+import bean.Produto;
 import dao.FornecedorDAO;
 import dao.MiscDAO;
 import gui.Cadastrar_fornecedor;
@@ -46,6 +47,9 @@ public class Painel_fornecedor extends JPanel {
     private JPanel painel_de_dados;
     private JLabel id_l;
     private JLabel nome_fornecedor_l;
+    private DefaultTableModel modelo_tabela_produto;
+    private JTable tabela_produto;
+    private JScrollPane scroll_produto;
 
     private JTextField nome_fornecedor;
     private JTextField id;
@@ -102,6 +106,7 @@ public class Painel_fornecedor extends JPanel {
         painel_de_dados.add(id);
         painel_de_dados.add(nome_fornecedor_l);
         painel_de_dados.add(nome_fornecedor);
+        inicializa_tabela_produto();
         painel_de_dados.add(deletar_fornecedor);
 
         painel_de_dados.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -152,7 +157,63 @@ public class Painel_fornecedor extends JPanel {
         Fornecedor f = MiscDAO.search_fornecedor_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         id.setText("" + f.getId());
         nome_fornecedor.setText(f.getNome());
+        atualizar_tabela_produto(f.getId());
+    }
 
+    public void inicializa_tabela_produto() {
+        modelo_tabela_produto = new DefaultTableModel() {
+            public boolean isCellEditable(int rowIndex, int mColIndex) {
+                return false;
+            }
+
+            @Override
+            public Class<?> getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return ImageIcon.class;
+                    default:
+                        return Object.class;
+                }
+            }
+        };
+        tabela_produto = new JTable(modelo_tabela_produto);
+
+        modelo_tabela_produto.addColumn("Foto");
+        modelo_tabela_produto.addColumn("ID");
+        modelo_tabela_produto.addColumn("Nome");
+
+        scroll_produto = new JScrollPane(tabela_produto);
+        scroll_produto.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.black),
+                "Produtos Fornecidos",
+                1,
+                1,
+                new java.awt.Font("Dialog", 1, 14)
+        ));
+
+        scroll_produto.setPreferredSize(new Dimension(550, 400));
+
+        tabela_produto.setRowHeight(100);
+        tabela_produto.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tabela_produto.getColumnModel().getColumn(0).setMaxWidth(100);
+        tabela_produto.getColumnModel().getColumn(1).setPreferredWidth(70);
+        tabela_produto.getColumnModel().getColumn(1).setMaxWidth(70);
+
+        painel_de_dados.add(scroll_produto);
+    }
+
+    public void atualizar_tabela_produto(int id) {
+        modelo_tabela_produto.setNumRows(0);
+
+        for (Produto p : MiscDAO.search_produto_pelo_fornecedor(username, password, id)) {
+            modelo_tabela_produto.addRow(
+                    new Object[]{
+                        p.getProduto_foto_para_tabela(),
+                        p.getProduto_cod(),
+                        p.getProduto_nome()
+                    }
+            );
+        }
     }
 
     private void atualizar_tabela(byte mode) {

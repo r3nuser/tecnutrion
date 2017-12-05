@@ -77,6 +77,8 @@ public class ClienteDAO extends Sql {
         return clientes;
     }
 
+
+
     //METODO RESPONSÁVEL PELA ATUALIZAÇÃO DOS DADOS NOS BANCOS
     public static void update(String username, String password, Cliente c) {
         Connection con = null;
