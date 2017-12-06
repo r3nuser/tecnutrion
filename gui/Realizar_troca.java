@@ -6,7 +6,6 @@ import bean.Produto;
 import dao.EstoqueDAO;
 import dao.MiscDAO;
 import java.awt.Color;
-import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -64,16 +63,22 @@ public class Realizar_troca extends JFrame {
                         break;
                     }
                 }
+
                 if (already) {
-                    tabela_troca.setValueAt(
-                            (int) tabela_troca.getValueAt(i, 3) + 1,
-                            i,
-                            3
-                    );
+                    if (((int) tabela_troca.getValueAt(i, 3)) >= ((int) tabela_atual.getValueAt(tabela_atual.getSelectedRow(), 3))) {
+                        JOptionPane.showMessageDialog(null, "Impossivel adicionar mais unidades a troca!");
+                    } else {
+                        tabela_troca.setValueAt(
+                                (int) tabela_troca.getValueAt(i, 3) + 1,
+                                i,
+                                3
+                        );
+                    }
                 } else {
                     Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela_atual.getValueAt(tabela_atual.getSelectedRow(), 0));
                     dtm_troca.addRow(new Object[]{pro.getProduto_cod(), pro.getProduto_nome(), pro.getPreco_uni_venda(), 1});
                 }
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Por favor, escolha um produto na tabela à esquerda e tente novamente");
             }
@@ -101,14 +106,26 @@ public class Realizar_troca extends JFrame {
         realizar_troca.setBackground(new Color(30, 30, 30));
         realizar_troca.setForeground(new Color(255, 255, 255));
         realizar_troca.addActionListener((ActionEvent) -> {
+            boolean validado = true;
             for (int i = 0; i < tabela_troca.getRowCount(); i++) {
                 Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela_troca.getValueAt(i, 0));
                 Estoque est = MiscDAO.search_estoque_por_id(username, password, pro.getFk_estoque_cod());
-                est.setQnt_estoque(est.getQnt_estoque() - (int) tabela_troca.getValueAt(i, 3));
-                EstoqueDAO.update(username, password, est);
+                if (est.getQnt_estoque() < (int) tabela_troca.getValueAt(i, 3)) {
+                    validado = false;
+                    JOptionPane.showMessageDialog(null, "Produto: " + tabela_troca.getValueAt(i, 1) + " -> Quantidade em estoque inferior as unidades que deseja inserir na troca.");
+                    JOptionPane.showMessageDialog(null, "Quantidade Maxima Permitida: " + est.getQnt_estoque());
+                }
             }
-            JOptionPane.showMessageDialog(null, "Troca Realizada com Sucesso !");
-            dispose();
+            if (validado) {
+                for (int i = 0; i < tabela_troca.getRowCount(); i++) {
+                    Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela_troca.getValueAt(i, 0));
+                    Estoque est = MiscDAO.search_estoque_por_id(username, password, pro.getFk_estoque_cod());
+                    est.setQnt_estoque(est.getQnt_estoque() - (int) tabela_troca.getValueAt(i, 3));
+                    EstoqueDAO.update(username, password, est);
+                }
+                JOptionPane.showMessageDialog(null, "Troca Realizada com Sucesso !");
+                dispose();
+            }
         });
 
         informativo.setBounds(10, 420, 1100, 50);

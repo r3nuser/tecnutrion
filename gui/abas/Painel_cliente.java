@@ -22,6 +22,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
@@ -34,16 +35,6 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-/*import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.category.DefaultCategoryDataset;
-import java.awt.ComponentOrientation;
-import javax.swing.border.Border;
-import javax.swing.BoxLayout;
-import java.awt.Graphics;
-import java.awt.GridBagLayout;*/
 public class Painel_cliente extends JPanel {
 
     private final String username;
@@ -144,7 +135,7 @@ public class Painel_cliente extends JPanel {
         painel_de_dados.add(tipolog_l);
         painel_de_dados.add(tipolog);
         tipolog.setEditable(false);
-        tipolog.setPreferredSize(new Dimension(135, 18));
+        tipolog.setPreferredSize(new Dimension(155, 18));
 
         log_l = new JLabel("Logradouro:");
         log = new JTextField();
@@ -153,7 +144,7 @@ public class Painel_cliente extends JPanel {
 
         painel_de_dados.add(log);
         log.setEditable(false);
-        log.setPreferredSize(new Dimension(330, 18));
+        log.setPreferredSize(new Dimension(360, 18));
 
         estado_l = new JLabel("Estado:");
         estado = new JTextField();
@@ -185,7 +176,7 @@ public class Painel_cliente extends JPanel {
         painel_de_dados.add(complemento_l);
         painel_de_dados.add(complemento);
         complemento.setEditable(false);
-        complemento.setPreferredSize(new Dimension(330, 18));
+        complemento.setPreferredSize(new Dimension(360, 18));
 
         cep_l = new JLabel("CEP:");
         cep = new JTextField();
@@ -396,7 +387,8 @@ public class Painel_cliente extends JPanel {
         nome_cliente.setText(c.getNome());
         id.setText("" + c.getId());
         email.setText(c.getEmail());
-        data_nascimento.setText("" + c.getData_nascimento());
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
+        data_nascimento.setText("" + formatdata.format(c.getData_nascimento()));
         try {
             modelo_telefone.setNumRows(0);
             for (Telefone t : MiscDAO.search_telefone_por_id(username, password, c.getId())) {
@@ -438,13 +430,14 @@ public class Painel_cliente extends JPanel {
         } else {
             dados_cliente = MiscDAO.search_cliente_por_nome(username, password, busca_cliente.getText());
         }
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         for (int i = 0; i < dados_cliente.size(); i++) {
             Cliente c = dados_cliente.get(i);
 
             modelo_tabela.addRow(new Object[]{
                 c.getId(),
                 c.getNome(),
-                c.getData_nascimento(),
+                formatdata.format(c.getData_nascimento()),
                 c.getEmail()
             });
         }

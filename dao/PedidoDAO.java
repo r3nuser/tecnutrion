@@ -107,7 +107,6 @@ public class PedidoDAO extends Sql {
             stmt = con.prepareStatement("DELETE FROM pedido WHERE cod_pedido=?");
             stmt.setInt(1, p.getCod_pedido());
             stmt.executeUpdate();
-            JOptionPane.showMessageDialog(null, "Apagado com Sucesso !!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao apagar e/ou privilégios insuficientes!");
         } finally {

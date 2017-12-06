@@ -36,7 +36,8 @@ public class ClienteDAO extends Sql {
 
             JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Erro -> Email: "+c.getEmail()+" já pertence a base de dados!");
+            JOptionPane.showMessageDialog(null, "O email deve ser único !");
         } finally {
             closeConnection(con, stmt);
 

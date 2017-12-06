@@ -14,6 +14,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -159,13 +160,19 @@ public class Painel_estoque extends JPanel {
         produto_cod = new JTextField();
         validade = new JTextField();
         quantidade = new JTextField();
+        
+        estoque_cod.setEditable(false);
+        produto_nome.setEditable(false);
+        produto_cod.setEditable(false);
+        validade.setEditable(false);
+        quantidade.setEditable(false);
 
         produto_foto.setPreferredSize(new Dimension(100, 100));
         produto_foto.setBorder(BorderFactory.createLineBorder(Color.black));
 
         estoque_cod.setPreferredSize(new Dimension(150, 18));
-        produto_cod.setPreferredSize(new Dimension(150, 18));
-        produto_nome.setPreferredSize(new Dimension(400, 18));
+        produto_cod.setPreferredSize(new Dimension(220, 18));
+        produto_nome.setPreferredSize(new Dimension(420, 18));
         validade.setPreferredSize(new Dimension(120, 18));
         quantidade.setPreferredSize(new Dimension(170, 18));
         
@@ -192,6 +199,7 @@ public class Painel_estoque extends JPanel {
         modelo_tabela.setNumRows(0);
         ArrayList<Estoque> dados_estoque;
         dados_estoque = EstoqueDAO.read(username, password);
+                SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         for (int i = 0; i < dados_estoque.size(); i++) {
             Estoque e = dados_estoque.get(i);
             Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
@@ -199,19 +207,20 @@ public class Painel_estoque extends JPanel {
                 e.getEstoque_cod(),
                 p.getProduto_nome(),
                 e.getQnt_estoque(),
-                e.getValidade()
+                formatdata.format(e.getValidade())
             });
         }
     }
 
     private void atualizar_caixas_de_texto() {
+                SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         Estoque e = MiscDAO.search_estoque_por_id(username, password, p.getFk_estoque_cod());
         produto_foto.setIcon(p.getProduto_foto_para_tabela());
         estoque_cod.setText("" + e.getEstoque_cod());
         produto_nome.setText(p.getProduto_nome());
         produto_cod.setText("" + p.getProduto_cod());
-        validade.setText("" + e.getValidade());
+        validade.setText("" + formatdata.format(e.getValidade()));
         quantidade.setText("" + e.getQnt_estoque());
     }
 }

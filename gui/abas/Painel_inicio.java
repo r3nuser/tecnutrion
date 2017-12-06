@@ -269,16 +269,17 @@ public class Painel_inicio extends JPanel {
         );
         System.out.println("validade <= " + dia);
         try {
+            SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
             MiscDAO.search_produtos_perto_de_vencer(username, password, dia).stream().forEach((e) -> {
                 Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
-                dtm_validade.addRow(new Object[]{p.getProduto_foto_para_tabela(), p.getProduto_cod(), p.getProduto_nome(), e.getValidade()});
+                dtm_validade.addRow(new Object[]{p.getProduto_foto_para_tabela(), p.getProduto_cod(), p.getProduto_nome(), formatdata.format(e.getValidade())});
             });
             MiscDAO.search_produtos_fora_de_estoque(username, password).stream().forEach((e) -> {
                 Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
                 dtm_estoque.addRow(new Object[]{p.getProduto_foto_para_tabela(), p.getProduto_cod(), p.getProduto_nome(), e.getQnt_estoque()});
             });
             MiscDAO.search_aniversariantes_do_mes(username, password).stream().forEach((c) -> {
-                dtm_aniversario.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento()});
+                dtm_aniversario.addRow(new Object[]{c.getId(), c.getNome(), formatdata.format(c.getData_nascimento())});
             });
         } catch (Exception e) {
             System.out.println(e);

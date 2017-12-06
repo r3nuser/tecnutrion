@@ -301,7 +301,7 @@ public class Funcoes_administrativas extends JFrame {
             Connection con = null;
             PreparedStatement stmt = null;
             try {
-                con = Sql.getConnection(username, password);
+                con = Sql.getConnection("root", "root");
                 String s = "";
                 stmt = con.prepareStatement("revoke all privileges on *.* from 'gerente'@'%';");
                 stmt.executeUpdate();
@@ -556,7 +556,7 @@ public class Funcoes_administrativas extends JFrame {
             Connection con = null;
             PreparedStatement stmt = null;
             try {
-                con = Sql.getConnection(username, password);
+                con = Sql.getConnection("root", "root");
                 String s = "";
                 stmt = con.prepareStatement("revoke all privileges on *.* from 'vendedor'@'%';");
                 stmt.executeUpdate();

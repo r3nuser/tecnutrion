@@ -18,6 +18,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -112,9 +113,9 @@ public class Estatisticas extends JFrame {
                 atualizar_tabela_pedido();
             }
         });
-
+        modelo_tabela.addColumn("Cod. Pedido");
         modelo_tabela.addColumn("Valor Tot. Pedido");
-        modelo_tabela.addColumn("Tipo de Pagamento");
+        modelo_tabela.addColumn("Pagamento");
         modelo_tabela.addColumn("Dt. Pedido");
 
         scroll = new JScrollPane(tabela);
@@ -194,28 +195,27 @@ public class Estatisticas extends JFrame {
         deletar_historico.setForeground(new Color(255, 255, 255));
 
         deletar_historico.addActionListener((ActionEvent) -> {
-            
+
             switch (JOptionPane.showConfirmDialog(null, "Tem certeza que deseja realizar esta operação?")) {
-                
+
                 case 0:
                     try {
                         for (int i = 0; i < tabela.getRowCount(); i++) {
                             Pedido_item pi = new Pedido_item();
                             pi.setFk_cod_pedido((int) tabela.getValueAt(i, 0));
                             Pedido_itemDAO.delete(username, password, pi, (byte) 1);
-                            Pedido p = MiscDAO.search_pedido_por_id(username, password, pi.getFk_cod_pedido());
+                            Pedido p = MiscDAO.search_pedido_por_id(username, password, (int) tabela.getValueAt(i, 0));
                             PedidoDAO.delete(username, password, p);
-
-                            modelo_tabela.setNumRows(0);
-                            modelo_tabela_itens.setNumRows(0);
-                            scroll_itens.setBorder(BorderFactory.createTitledBorder(
-                                    BorderFactory.createLineBorder(Color.black),
-                                    "Itens do Pedido",
-                                    1,
-                                    1,
-                                    new java.awt.Font("Dialog", 1, 14)
-                            ));
                         }
+                        modelo_tabela.setNumRows(0);
+                        modelo_tabela_itens.setNumRows(0);
+                        scroll_itens.setBorder(BorderFactory.createTitledBorder(
+                                BorderFactory.createLineBorder(Color.black),
+                                "Itens do Pedido",
+                                1,
+                                1,
+                                new java.awt.Font("Dialog", 1, 14)
+                        ));
                     } catch (Exception e) {
                         System.out.println("e");
                     }
@@ -260,7 +260,9 @@ public class Estatisticas extends JFrame {
 
     private void atualizar_tabela() {
         try {
+
             Integer.parseInt(cliente_id.getText());
+            SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
             modelo_tabela.setNumRows(0);
             ArrayList<Pedido> dados_pedido = MiscDAO.search_pedido_pelo_cliente(username, password, Integer.parseInt(cliente_id.getText()));
             Cliente c = new Cliente();
@@ -273,10 +275,9 @@ public class Estatisticas extends JFrame {
                 } finally {
                     modelo_tabela.addRow(new Object[]{
                         p.getCod_pedido(),
-                        c.getNome(),
                         p.getPedido_vl_tot(),
                         p.getPagamento(),
-                        p.getDt_pedido()
+                        formatdata.format(p.getDt_pedido())
                     });
                 }
             }

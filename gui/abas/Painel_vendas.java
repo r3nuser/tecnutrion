@@ -18,6 +18,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -153,12 +154,12 @@ public class Painel_vendas extends JPanel {
         quantidade_de_itens.setEditable(false);
         desconto.setEditable(false);
 
-        id_pedido.setPreferredSize(new Dimension(70, 18));
+        id_pedido.setPreferredSize(new Dimension(80, 18));
         dt_pedido.setPreferredSize(new Dimension(120, 18));
         pedido_vl_tot.setPreferredSize(new Dimension(130, 18));
         pedido_lucro_liquido.setPreferredSize(new Dimension(130, 18));
         cliente_nome.setPreferredSize(new Dimension(400, 18));
-        cliente_id.setPreferredSize(new Dimension(70, 18));
+        cliente_id.setPreferredSize(new Dimension(80, 18));
         tipo_pagamento.setPreferredSize(new Dimension(170, 18));
         quantidade_de_itens.setPreferredSize(new Dimension(70, 18));
         desconto.setPreferredSize(new Dimension(30, 18));
@@ -307,9 +308,10 @@ public class Painel_vendas extends JPanel {
     }
 
     private void atualizar_caixas_de_texto() {
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         Pedido p = MiscDAO.search_pedido_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         id_pedido.setText("" + p.getCod_pedido());
-        dt_pedido.setText("" + p.getDt_pedido());
+        dt_pedido.setText("" + formatdata.format(p.getDt_pedido()));
         pedido_vl_tot.setText("" + p.getPedido_vl_tot());
         tipo_pagamento.setText("" + p.getPagamento());
         Cliente c = MiscDAO.search_cliente_por_id(username, password, MiscDAO.get_id_cliente_pedido_item_por_fk(username, password, p.getCod_pedido()));
@@ -343,6 +345,7 @@ public class Painel_vendas extends JPanel {
         modelo_tabela.setNumRows(0);
         ArrayList<Pedido> dados_pedido;
         dados_pedido = PedidoDAO.read(username, password);
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         for (int i = 0; i < dados_pedido.size(); i++) {
             Pedido p = dados_pedido.get(i);
             Pedido_item pi = new Pedido_item();
@@ -358,7 +361,7 @@ public class Painel_vendas extends JPanel {
                     c.getNome(),
                     p.getPedido_vl_tot(),
                     p.getPagamento(),
-                    p.getDt_pedido()
+                    formatdata.format(p.getDt_pedido())
                 });
             }
         }

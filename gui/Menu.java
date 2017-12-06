@@ -5,22 +5,19 @@ import gui.abas.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-
 import javax.swing.JPanel;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-
 import java.awt.event.KeyEvent;
 import java.net.URL;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTabbedPane;
-import javax.swing.plaf.ComponentUI;
+
 
 public class Menu extends JFrame {
 

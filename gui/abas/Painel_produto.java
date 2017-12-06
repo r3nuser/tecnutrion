@@ -22,6 +22,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -127,15 +128,15 @@ public class Painel_produto extends JPanel {
 
         descricao_produto.setLineWrap(true);
 
-        produto_cod.setPreferredSize(new Dimension(250, 18));
-        produto_nome.setPreferredSize(new Dimension(340, 18));
-        preco_uni_compra.setPreferredSize(new Dimension(120, 18));
-        preco_uni_venda.setPreferredSize(new Dimension(120, 18));
+        produto_cod.setPreferredSize(new Dimension(270, 18));
+        produto_nome.setPreferredSize(new Dimension(390, 18));
+        preco_uni_compra.setPreferredSize(new Dimension(160, 18));
+        preco_uni_venda.setPreferredSize(new Dimension(160, 18));
         categoria.setPreferredSize(new Dimension(200, 18));
         unidade_medida_peso.setPreferredSize(new Dimension(130, 18));
         peso_produto.setPreferredSize(new Dimension(200, 18));
         quantidade_estoque.setPreferredSize(new Dimension(120, 18));
-        nome_fornecedor.setPreferredSize(new Dimension(370, 18));
+        nome_fornecedor.setPreferredSize(new Dimension(420, 18));
         descricao_produto.setPreferredSize(new Dimension(330, 48));
         validade.setPreferredSize(new Dimension(80, 18));
 
@@ -329,6 +330,7 @@ public class Painel_produto extends JPanel {
 
     //METODO QUE MOSTRA OS ATRIBUTOS DO PRODUTO NO PAINEL DA ESQUERDA
     private void atualizar_caixas_de_texto() {
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         Produto p = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 1));
         produto_foto.setIcon(p.getProduto_foto_para_tabela());
         produto_cod.setText("" + p.getProduto_cod());
@@ -356,7 +358,7 @@ public class Painel_produto extends JPanel {
         try {
             Estoque e = MiscDAO.search_estoque_por_id(username, password, p.getFk_estoque_cod());
             quantidade_estoque.setText("" + e.getQnt_estoque());
-            validade.setText("" + e.getValidade());
+            validade.setText("" + formatdata.format(e.getValidade()));
         } catch (Exception ex) {
             System.out.println(ex);
         }

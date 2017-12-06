@@ -12,6 +12,7 @@ import bean.Endereco;
 import bean.Estoque;
 import bean.Fornecedor;
 import bean.Pedido;
+import bean.Pedido_item;
 import bean.Produto;
 import bean.Telefone;
 import java.sql.Connection;
@@ -59,22 +60,35 @@ public class MiscDAO extends Sql {
         ResultSet rs = null;
         Connection con = null;
         ArrayList<Pedido> pedidos = new ArrayList<>();
-
+        ArrayList<Pedido_item> ids = new ArrayList<>();
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("SELECT * FROM pedido WHERE cod_pedido="
-                    + "(select fk_cod_pedido from pedido_item where fk_cod_cliente=? limit 1)");
+            stmt = con.prepareStatement("SELECT distinct fk_cod_pedido FROM pedido_item WHERE fk_cod_cliente=?");
             stmt.setInt(1, id);
+
             rs = stmt.executeQuery();
+
             while (rs.next()) {
-                Pedido p = new Pedido();
-                p.setCod_pedido(rs.getInt("cod_pedido"));
-                p.setDt_pedido(rs.getDate("dt_pedido"));
-                p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
-                p.setPagamento(rs.getString("pagamento"));
-                p.setDesconto(rs.getInt("desconto"));
-                pedidos.add(p);
+                Pedido_item pi = new Pedido_item();
+                pi.setFk_cod_pedido(rs.getInt("fk_cod_pedido"));
+                ids.add(pi);
             }
+
+            for (Pedido_item id1 : ids) {
+                stmt = con.prepareStatement("SELECT * FROM pedido WHERE cod_pedido=?");
+                stmt.setInt(1, id1.getFk_cod_pedido());
+                rs = stmt.executeQuery();
+                if (rs.next()) {
+                    Pedido p = new Pedido();
+                    p.setCod_pedido(rs.getInt("cod_pedido"));
+                    p.setDt_pedido(rs.getDate("dt_pedido"));
+                    p.setPedido_vl_tot(rs.getFloat("pedido_vl_tot"));
+                    p.setPagamento(rs.getString("pagamento"));
+                    p.setDesconto(rs.getInt("desconto"));
+                    pedidos.add(p);
+                }
+            }
+
         } catch (Exception e) {
             System.out.println(e);
         } finally {

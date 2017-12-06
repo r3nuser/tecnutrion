@@ -251,6 +251,7 @@ public class Editar_produto extends JFrame {
                 }
                 p.setFk_fornecedor_cod(f.getId());
                 Estoque e = new Estoque();
+                e.setEstoque_cod(p.getFk_estoque_cod());
                 String validade = this.validade.getText();
                 DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
                 try {

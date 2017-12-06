@@ -19,7 +19,7 @@ public class Sql {
             //LOCALIZAÇÃO DO DRIVER
             String driver = "com.mysql.jdbc.Driver";
             //LOCALIZAÇÃO DO BANCO
-            String url = "jdbc:mysql://192.168.15.3:3306/visualnutrion";
+            String url = "jdbc:mysql://127.0.0.1:3306/visualnutrion";
             //CARREGANDO DRIVER
             Class.forName(driver);
             //PEGANDO CONEXÃO DO GERENCIADOR DE DRIVERS

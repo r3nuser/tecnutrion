@@ -11,6 +11,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,12 +58,12 @@ public class Buscar_cliente extends JFrame {
         escolher.setBackground(new Color(30, 30, 30));
         escolher.setForeground(new Color(255, 255, 255));
         escolher.addActionListener((ActionEvent) -> {
-            try{
+            try {
                 id.setText("" + (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
                 nome.setText("" + tabela.getValueAt(tabela.getSelectedRow(), 1));
                 dispose();
-            }catch(Exception e){
-                JOptionPane.showMessageDialog(null,"Por favor, escolha um cliente na tabela e tente novamente.");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Por favor, escolha um cliente na tabela e tente novamente.");
                 atualizar_tabela();
             }
         });
@@ -118,10 +119,7 @@ public class Buscar_cliente extends JFrame {
         modelo_tabela.addColumn("ID");
         modelo_tabela.addColumn("Nome");
         modelo_tabela.addColumn("Dt. Nasc");
-        modelo_tabela.addColumn("DDD");
-        modelo_tabela.addColumn("Prefixo");
-        modelo_tabela.addColumn("Sufixo");
-
+        modelo_tabela.addColumn("Email");
         tabela.getColumnModel().getColumn(0).setPreferredWidth(70);
         tabela.getColumnModel().getColumn(0).setMaxWidth(70);
 
@@ -130,14 +128,9 @@ public class Buscar_cliente extends JFrame {
         tabela.getColumnModel().getColumn(2).setMaxWidth(80);
         tabela.getColumnModel().getColumn(2).setMinWidth(80);
 
-        tabela.getColumnModel().getColumn(3).setMaxWidth(40);
-        tabela.getColumnModel().getColumn(3).setMinWidth(40);
+        tabela.getColumnModel().getColumn(3).setMaxWidth(40 + 60 + 50 + 70);
+        tabela.getColumnModel().getColumn(3).setMinWidth(40 + 60 + 50 + 70);
 
-        tabela.getColumnModel().getColumn(4).setMaxWidth(60);
-        tabela.getColumnModel().getColumn(4).setMinWidth(60);
-
-        tabela.getColumnModel().getColumn(5).setMaxWidth(50);
-        tabela.getColumnModel().getColumn(5).setMinWidth(50);
         scroll = new JScrollPane(tabela);
         scroll.setSize(1024, 768);
         painel_da_tabela.add(scroll);
@@ -147,24 +140,13 @@ public class Buscar_cliente extends JFrame {
 
     private void atualizar_tabela() {
         modelo_tabela.setNumRows(0);
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         ArrayList<Cliente> dados_cliente = MiscDAO.search_cliente_por_nome(username, password, busca_cliente.getText());
         for (int i = 0; i < dados_cliente.size(); i++) {
             c = dados_cliente.get(i);
-            try {
-                try {
-                    t = MiscDAO.search_telefone_individual_por_id(username, password, c.getId());
 
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                }
-            } catch (Exception e) {
-                t.setDdd("");
-                t.setAntesh("");
-                t.setDepoish("");
-                System.out.println(e);
-            }
-            modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), c.getData_nascimento(),
-                t.getDdd(), t.getAntesh(), t.getDepoish()});
+            modelo_tabela.addRow(new Object[]{c.getId(), c.getNome(), formatdata.format(c.getData_nascimento()),
+                c.getEmail()});
         }
     }
 

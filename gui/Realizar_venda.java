@@ -28,10 +28,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import sql.Sql;
 
 public class Realizar_venda extends JFrame {
 
@@ -138,7 +140,7 @@ public class Realizar_venda extends JFrame {
                     EstoqueDAO.update(username, password, e);
                     Pedido_itemDAO.create(username, password, pi);
                 }
-
+                JOptionPane.showMessageDialog(null, "Venda Realizada com Sucesso !");
                 dispose();
             }
         });
@@ -427,11 +429,38 @@ public class Realizar_venda extends JFrame {
             try {
                 Float.parseFloat(desconto.getText());
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null,"Desconto invalido, insira apenas numeros.");
+                JOptionPane.showMessageDialog(null, "Desconto invalido, insira apenas numeros.");
                 valido = false;
                 desconto.setText("0");
                 desconto.setBorder(BorderFactory.createLineBorder(Color.red));
             }
+
+            if (Float.parseFloat(desconto.getText()) > 20) {
+                JPanel panel = new JPanel();
+                JOptionPane.showMessageDialog(null, "Senha de Gerente Necessária Para Realizar um Desconto maior que 20%");
+                JLabel label = new JLabel("Entre com a senha de GERENTE:");
+                JPasswordField pass = new JPasswordField(10);
+                panel.add(label);
+                panel.add(pass);
+                String[] options = new String[]{"Cancelar", "Confirmar"};
+                int option = JOptionPane.showOptionDialog(null, panel, "Confirmação de Senha",
+                        JOptionPane.NO_OPTION, JOptionPane.PLAIN_MESSAGE,
+                        null, options, options[1]);
+                if (option == 1) {
+                    char[] password = pass.getPassword();
+                    String senha = "";
+                    for (int i = 0; i < password.length; i++) {
+                        senha += password[i];
+                    }
+                    if (Sql.getConnection("gerente", senha) == null) {
+                        JOptionPane.showMessageDialog(null, "Senha Invalida !");
+                        valido = false;
+                    }
+                } else {
+                    valido = false;
+                }
+            }
+
         }
 
         return valido;
