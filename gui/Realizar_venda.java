@@ -335,14 +335,14 @@ public class Realizar_venda extends JFrame {
         tipo_pagamento_l = new JLabel("Tipo de Pagamento:");
         tipo_pagamento = new JComboBox(new String[]{"Cartao de Debito", "Cartao de Credito", "Boleto", "A Vista"});
 
-        buscar_cliente = new JButton("Buscar Cliente", new ImageIcon(getClass().getResource("abas/ico_lupa.png")));
+        buscar_cliente = new JButton("Procurar Cliente", new ImageIcon(getClass().getResource("abas/ico_lupa.png")));
         buscar_cliente.setBackground(new Color(30, 30, 30));
         buscar_cliente.setForeground(new Color(255, 255, 255));
         buscar_cliente.addActionListener((ActionEvent) -> {
             new Buscar_cliente(this.username, this.password, cliente_id, cliente_nome);
         });
 
-        dar_desconto = new JCheckBox("Dar Desconto ?  ");
+        dar_desconto = new JCheckBox("Venda com Desconto ?  ");
         dar_desconto.addActionListener((ActionEvent) -> {
             if (dar_desconto.isSelected()) {
                 desconto.setEditable(true);

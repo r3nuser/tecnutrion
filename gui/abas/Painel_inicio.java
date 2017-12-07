@@ -154,7 +154,7 @@ public class Painel_inicio extends JPanel {
 
     private void inicializa_painel_da_tabela() {
         painel_tabela = new JPanel(new GridLayout(3, 1));
-       
+
         painel_tabela.setBorder(b);
         inicializa_itens_painel_tabela();
         painel_principal.add(painel_tabela, BorderLayout.CENTER);
@@ -230,7 +230,7 @@ public class Painel_inicio extends JPanel {
         tabela_validade.getColumnModel().getColumn(0).setMinWidth(100);
 
         scroll_validade = new JScrollPane(tabela_validade);
-        scroll_validade.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS PERTO DE EXCEDER A VALIDADE", 1, 1, f));
+        scroll_validade.setBorder(BorderFactory.createTitledBorder(b, "PRODUTOS PERTO DE EXCEDER A VALIDADE/VENCIDOS", 1, 1, f));
 
         painel_tabela.add(scroll_validade);
 
