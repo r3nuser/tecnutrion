@@ -15,11 +15,20 @@ public class Produto{
     private String categoria;
     private String descricao_produto;
     private String unidade_medida_peso;
+    private String cod_barra;
     private float peso_produto;
     private int fk_estoque_cod;
     private int fk_fornecedor_cod;
     
     //METODOS RESPONSÁVEIS POR ACESSAR OS ATRIBUTOS OU EDITA-LOS
+    public void setCod_barra(String c){
+	this.cod_barra = cod_barra;
+    }
+
+    public String getCod_barra(){
+	return this.cod_barra;
+    }
+
 
     public ImageIcon getProduto_foto_para_tabela() {
         //CONVERSÃO DE ARRAY DE BYTES PARA IMAGEICON        

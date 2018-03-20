@@ -27,7 +27,7 @@ public class ProdutoDAO extends Sql {
         // * EXECUTAR O COMANDO.
         try {
             con = getConnection(username, password);
-            stmt = con.prepareStatement("INSERT INTO produtos VALUES (?,NULL,?,?,?,?,?,?,?,?,?)");
+            stmt = con.prepareStatement("INSERT INTO produtos VALUES (?,NULL,?,?,?,?,?,?,?,?,?,?)");
             stmt.setBytes(1, p.getProduto_foto());
             stmt.setString(2, p.getProduto_nome());
             stmt.setInt(3, p.getFk_fornecedor_cod());
@@ -36,9 +36,9 @@ public class ProdutoDAO extends Sql {
             stmt.setString(6, p.getCategoria());
             stmt.setString(7, p.getDescricao_produto());
             stmt.setString(8, p.getUnidade_medida_peso());
-            stmt.setFloat(9, p.getPeso_produto());
-
-            stmt.setInt(10, p.getFk_estoque_cod());
+	    stmt.setString(9, p.getCod_barra());
+            stmt.setFloat(10, p.getPeso_produto());
+            stmt.setInt(11, p.getFk_estoque_cod());
             stmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Produto Salvo com Sucesso !");
         } catch (Exception e) {
@@ -76,6 +76,7 @@ public class ProdutoDAO extends Sql {
                 p.setUnidade_medida_peso(rs.getString("unidade_medida_peso"));
                 p.setPeso_produto(rs.getFloat("peso_produto"));
                 p.setFk_estoque_cod(rs.getInt("fk_estoque_cod"));
+		p.setCod_barra(rs.getString("cod_barra"));
                 produtos.add(p);
             }
         } catch (Exception e) {
@@ -99,7 +100,7 @@ public class ProdutoDAO extends Sql {
             stmt = con.prepareStatement("UPDATE produtos SET produto_foto=?,"
                     + "produto_nome=?,fk_cod_fornecedor=?,preco_uni_compra=?,"
                     + "preco_uni_venda=?,categoria=?,descricao_produto=?,"
-                    + "unidade_medida_peso=?,peso_produto=?,fk_estoque_cod=? where produto_cod=?");
+                    + "unidade_medida_peso=?,peso_produto=?,fk_estoque_cod=?,cod_barra=?, where produto_cod=?");
 
             stmt.setBytes(1, p.getProduto_foto());
             stmt.setString(2, p.getProduto_nome());
@@ -111,10 +112,9 @@ public class ProdutoDAO extends Sql {
             stmt.setString(8, p.getUnidade_medida_peso());
             stmt.setFloat(9, p.getPeso_produto());
             stmt.setInt(10, p.getFk_estoque_cod());
-            stmt.setInt(11, p.getProduto_cod());
-            
+	    stmt.setString(11, p.getCod_barra());
+            stmt.setInt(12, p.getProduto_cod());
             stmt.executeUpdate();
-            
             JOptionPane.showMessageDialog(null, "Atualizado com Sucesso!");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao atualizar e/ou privilégios insuficientes!");

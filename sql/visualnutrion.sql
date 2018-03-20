@@ -29,6 +29,7 @@ create table if not exists produtos(
 	'Repositor hidroeletrolitico','Aminoacidos','Outro') not null,
 	descricao_produto varchar(255),
         unidade_medida_peso varchar(255),
+	cod_barra varchar(255),
 	peso_produto decimal(8,2),
 	fk_estoque_cod int not null,
 	primary key(produto_cod)
