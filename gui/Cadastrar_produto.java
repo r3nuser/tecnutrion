@@ -56,6 +56,7 @@ public class Cadastrar_produto extends JFrame {
     private JLabel unidade_medida_l;
     private JLabel foto;
     private JLabel validade_l;
+    private JLabel cod_barras_l;
 
     private JTextField produto_nome;
     private JTextField preco_uni_venda;
@@ -64,8 +65,10 @@ public class Cadastrar_produto extends JFrame {
     private JTextField descricao;
     private JTextField uni_compradas;
     private JTextField validade = null;
+    private JTextField cod_barras;
 
     private JButton buscar_fornecedor;
+    private JButton leitura_cod_barras;
     private JTextField fornecedor;
 
     private JComboBox categoria;
@@ -106,6 +109,7 @@ public class Cadastrar_produto extends JFrame {
         categoria_l = new JLabel("Categoria:*");
         produto_foto_l = new JLabel("Foto do produto:*");
         validade_l = new JLabel("Validade:");
+        cod_barras_l = new JLabel("Cód. Barras:");
         foto = new JLabel("");
         produto_nome = new JTextField();
         fornecedor = new JTextField();
@@ -114,10 +118,12 @@ public class Cadastrar_produto extends JFrame {
         peso = new JTextField();
         descricao = new JTextField();
         uni_compradas = new JTextField();
+        cod_barras = new JTextField();
         categoria = new JComboBox();
         unidade_medida = new JComboBox();
         cadastrar = new JButton("Cadastrar !");
         inserir_foto = new JButton("Procurar...");
+        leitura_cod_barras = new JButton("Ler Cod. Barras");
         buscar_fornecedor = new JButton(new ImageIcon(getClass().getResource("abas/ico_lupa2.png")));
         f = new Fornecedor();
 
@@ -127,6 +133,8 @@ public class Cadastrar_produto extends JFrame {
         inserir_foto.setForeground(new Color(255, 255, 255));
         buscar_fornecedor.setBackground(new Color(30, 30, 30));
         buscar_fornecedor.setForeground(new Color(255, 255, 255));
+        leitura_cod_barras.setBackground(new Color(30, 30, 150));
+        leitura_cod_barras.setForeground(new Color(255, 255, 255));
 
         setSize(555, 600);
         setLocationRelativeTo(null);
@@ -157,7 +165,10 @@ public class Cadastrar_produto extends JFrame {
         add(inserir_foto);
         add(foto);
         add(buscar_fornecedor);
-
+        add(leitura_cod_barras);
+        add(cod_barras_l);
+        add(cod_barras);
+        
         titulo_l.setBounds(148, 40, 400, 30);
         titulo_l.setFont(new java.awt.Font("Arial", 1, 19));
 
@@ -202,8 +213,13 @@ public class Cadastrar_produto extends JFrame {
 
         uni_compradas_l.setBounds(30, 340 + 60, 200, 30);
         uni_compradas_l.setFont(new java.awt.Font("Arial", 1, 13));
-
+           
         uni_compradas.setBounds(30, 370 + 60, 200, 30);
+        
+        cod_barras_l.setBounds(30, 400 + 60, 200, 30);
+        cod_barras_l.setFont(new java.awt.Font("Arial", 1, 13));
+        
+        cod_barras.setBounds(30,430+60,200,30);
 
         peso_l.setBounds(300, 220 + 60 + 10, 200, 30);
         peso_l.setFont(new java.awt.Font("Arial", 1, 13));
@@ -214,6 +230,8 @@ public class Cadastrar_produto extends JFrame {
         unidade_medida_l.setFont(new java.awt.Font("Arial", 1, 13));
         unidade_medida.setBounds(300, 190 + 60 + 10, 130, 30);
 
+        leitura_cod_barras.setBounds(250,430+65,200,20);
+        
         unidade_medida.addItem("Kg");
         unidade_medida.addItem("g");
         unidade_medida.addItem("ml");
@@ -241,7 +259,7 @@ public class Cadastrar_produto extends JFrame {
 
         validade.setBounds(300, 310 + 130, 200, 30);
 
-        cadastrar.setBounds(210, 450 + 40, 110, 30);
+        cadastrar.setBounds(210, 450 + 80, 110, 30);
         cadastrar.setFont(new java.awt.Font("Arial", 1, 11));
         //EVENTO DE CADASTRO QUE PEGA TODOS OS DADOS PASSADOS
         //PELO USUÁRIO E CHAMA OS METODOS DE INSERÇÃO
@@ -253,6 +271,7 @@ public class Cadastrar_produto extends JFrame {
                 p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
                 p.setDescricao_produto(descricao.getText());
                 p.setPeso_produto(Float.parseFloat(peso.getText()));
+                p.setCod_barra(cod_barras.getText());
                 if (!("".equals(peso.getText()))) {
                     p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
                 }
@@ -277,7 +296,11 @@ public class Cadastrar_produto extends JFrame {
                 JOptionPane.showMessageDialog(null, textovalidacao);
             }
         });
-
+        
+        leitura_cod_barras.addActionListener((ActionEvent)->{
+            new Cod_barras(cod_barras);
+        });
+        
         produto_foto_l.setBounds(260, 100, 150, 30);
         produto_foto_l.setFont(new java.awt.Font("Arial", 1, 13));
         inserir_foto.setBounds(400, 100, 110, 30);

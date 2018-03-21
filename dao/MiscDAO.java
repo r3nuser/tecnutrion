@@ -801,6 +801,7 @@ public class MiscDAO extends Sql {
                 p.setUnidade_medida_peso(rs.getString("unidade_medida_peso"));
                 p.setPeso_produto(rs.getFloat("peso_produto"));
                 p.setFk_estoque_cod(rs.getInt("fk_estoque_cod"));
+                p.setCod_barra(rs.getString("cod_barra"));
                 produtos.add(p);
             }
         } catch (Exception e) {
@@ -917,6 +918,7 @@ public class MiscDAO extends Sql {
                 p.setUnidade_medida_peso(rs.getString("unidade_medida_peso"));
                 p.setPeso_produto(rs.getFloat("peso_produto"));
                 p.setFk_estoque_cod(rs.getInt("fk_estoque_cod"));
+                p.setCod_barra(rs.getString("cod_barra"));
             }
         } catch (Exception e) {
             System.out.println(e);

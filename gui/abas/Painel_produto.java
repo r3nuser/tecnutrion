@@ -68,6 +68,7 @@ public class Painel_produto extends JPanel {
     private JTextField quantidade_estoque;
     private JTextField nome_fornecedor;
     private JTextField validade;
+    private JTextField cod_barras;
 
     private JButton deletar_produto;
 
@@ -83,6 +84,7 @@ public class Painel_produto extends JPanel {
     private JLabel quantidade_estoque_l;
     private JLabel nome_fornecedor_l;
     private JLabel validade_l;
+    private JLabel cod_barras_l;
 
     //METODO CONSTRUTOR QUE RECEBE USUARIO, SENHA E CHAMA O METODO
     // QUE INICIALIZA TODOS OS COMPONENTES
@@ -123,6 +125,7 @@ public class Painel_produto extends JPanel {
         quantidade_estoque = new JTextField();
         nome_fornecedor = new JTextField();
         validade = new JTextField();
+        cod_barras = new JTextField();
 
         deletar_produto = new JButton("Deletar Produto", new ImageIcon(getClass().getResource("ico_deletar.png")));
 
@@ -137,8 +140,9 @@ public class Painel_produto extends JPanel {
         peso_produto.setPreferredSize(new Dimension(200, 18));
         quantidade_estoque.setPreferredSize(new Dimension(120, 18));
         nome_fornecedor.setPreferredSize(new Dimension(420, 18));
-        descricao_produto.setPreferredSize(new Dimension(330, 48));
-        validade.setPreferredSize(new Dimension(80, 18));
+        descricao_produto.setPreferredSize(new Dimension(400, 48));
+        validade.setPreferredSize(new Dimension(200, 18));
+        cod_barras.setPreferredSize(new Dimension(200,18));
 
         produto_cod.setEditable(false);
         produto_nome.setEditable(false);
@@ -151,6 +155,7 @@ public class Painel_produto extends JPanel {
         quantidade_estoque.setEditable(false);
         nome_fornecedor.setEditable(false);
         validade.setEditable(false);
+        cod_barras.setEditable(false);
 
         produto_foto_l = new JLabel("Foto do Produto:");
         produto_cod_l = new JLabel("ID:");
@@ -164,6 +169,7 @@ public class Painel_produto extends JPanel {
         quantidade_estoque_l = new JLabel("Quantidade em Estoque:");
         nome_fornecedor_l = new JLabel("Nome do Fornecedor:");
         validade_l = new JLabel("Validade:");
+        cod_barras_l = new JLabel("Cod. barras:");
 
         painel_de_dados.add(produto_foto_l);
         painel_de_dados.add(produto_foto);
@@ -187,6 +193,8 @@ public class Painel_produto extends JPanel {
         painel_de_dados.add(nome_fornecedor);
         painel_de_dados.add(validade_l);
         painel_de_dados.add(validade);
+        painel_de_dados.add(cod_barras_l);
+        painel_de_dados.add(cod_barras);
         painel_de_dados.add(descricao_produto_l);
         painel_de_dados.add(descricao_produto);
         painel_de_dados.add(deletar_produto);
@@ -341,6 +349,7 @@ public class Painel_produto extends JPanel {
         descricao_produto.setText(p.getDescricao_produto());
         unidade_medida_peso.setText(p.getUnidade_medida_peso());
         peso_produto.setText("" + p.getPeso_produto());
+        cod_barras.setText(p.getCod_barra());
         if ("Kg".equals(unidade_medida_peso.getText()) || "g".equals(unidade_medida_peso.getText())) {
             peso_produto_l.setText("Peso    :");
         } else if ("L".equals(unidade_medida_peso.getText()) || "ml".equals(unidade_medida_peso.getText())) {

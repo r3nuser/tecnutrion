@@ -22,7 +22,7 @@ public class Produto{
     
     //METODOS RESPONSÁVEIS POR ACESSAR OS ATRIBUTOS OU EDITA-LOS
     public void setCod_barra(String c){
-	this.cod_barra = cod_barra;
+	this.cod_barra = c;
     }
 
     public String getCod_barra(){
