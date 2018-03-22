@@ -69,6 +69,7 @@ public class Realizar_venda extends JFrame {
     private JPanel botoes_pedido;
     private JButton adicionar_produto;
     private JButton remover_produto;
+    private JButton adicionar_produto_cdb;
 
     private JPanel tabela_pedido;
     private JTable tabela;
@@ -176,14 +177,17 @@ public class Realizar_venda extends JFrame {
         botoes_pedido = new JPanel(fl);
         adicionar_produto = new JButton("Adicionar Produto ao Pedido", new ImageIcon(getClass().getResource("abas/ico_mais.png")));
         remover_produto = new JButton("Remover Produto do Pedido", new ImageIcon(getClass().getResource("abas/ico_deletar.png")));
-
+        adicionar_produto_cdb = new JButton("Ler Cod. Barras", new ImageIcon(getClass().getResource("abas/ico_barras.png")));
         botoes_pedido.add(adicionar_produto);
         botoes_pedido.add(remover_produto);
+        botoes_pedido.add(adicionar_produto_cdb);
 
         adicionar_produto.setBackground(new Color(30, 30, 30));
         adicionar_produto.setForeground(new Color(255, 255, 255));
         remover_produto.setBackground(new Color(30, 30, 30));
         remover_produto.setForeground(new Color(255, 255, 255));
+        adicionar_produto_cdb.setBackground(new Color(30,30,30));
+        adicionar_produto_cdb.setForeground(new Color(255,255,255));
 
         adicionar_produto.addActionListener((ActionEvent) -> {
             new Buscar_produto(this.username, this.password, this.modelo_tabela,
