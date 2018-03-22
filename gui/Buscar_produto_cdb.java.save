@@ -5,19 +5,17 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 public class Buscar_produto_cdb extends JFrame{
-    
+
     private final String username;
     private final String password;
-    
+
     private final DefaultTableModel dmt;
-    
+
     private final JTextField vl_tot;
     private final JTextField vl_liq;
     private final JTextField vl_qnt;
-    
-    private JTextField cod_ghost;
-    private JLabel cdb_msg;
 
+    private JTextField cod_ghost;
     public Buscar_produto_cdb(String currentusername, 
             String currentpassword,
             DefaultTableModel dmt,
@@ -34,15 +32,13 @@ public class Buscar_produto_cdb extends JFrame{
     }
     
     private void initAll(){
-	cdb_msg = new JLabel("Por favor, realize a leitura do código de barras");
         cod_ghost = new JTextField();
 
 	add(cod_ghost);
-	add(cdb_msg);
 
-	setTitle("Leitura de Cod. Barras");
 	setSize(400,400);
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	setTitle("Busca por código de barras");
 	setVisible(true);
     }
 }
