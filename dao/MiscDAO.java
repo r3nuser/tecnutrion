@@ -899,13 +899,11 @@ public class MiscDAO extends Sql {
         ResultSet rs = null;
         Connection con = null;
         Produto p = new Produto();
-
         try {
             con = getConnection(username, password);
             stmt = con.prepareStatement("SELECT * FROM produtos WHERE produto_cod=?");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
-
             while (rs.next()) {
                 p.setProduto_foto(rs.getBytes("produto_foto"));
                 p.setProduto_cod(rs.getInt("produto_cod"));
@@ -925,10 +923,41 @@ public class MiscDAO extends Sql {
         } finally {
             closeConnection(con, stmt, rs);
         }
-
         return p;
     }
-
+    //METODO QUE BUSCA O PRODUTO PELO CÓDIGO DE BARRAS
+    public static Produto search_produto_por_cdb(String username, String password, String cdb) {
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        Connection con = null;
+        Produto p = new Produto();
+        try {
+            con = getConnection(username, password);
+            stmt = con.prepareStatement("SELECT * FROM produtos WHERE cod_barra=?");
+            stmt.setString(1, cdb);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                p.setProduto_foto(rs.getBytes("produto_foto"));
+                p.setProduto_cod(rs.getInt("produto_cod"));
+                p.setProduto_nome(rs.getString("produto_nome"));
+                p.setFk_fornecedor_cod(rs.getInt("fk_cod_fornecedor"));
+                p.setPreco_uni_compra(rs.getFloat("preco_uni_compra"));
+                p.setPreco_uni_venda(rs.getFloat("preco_uni_venda"));
+                p.setCategoria(rs.getString("categoria"));
+                p.setDescricao_produto(rs.getString("descricao_produto"));
+                p.setUnidade_medida_peso(rs.getString("unidade_medida_peso"));
+                p.setPeso_produto(rs.getFloat("peso_produto"));
+                p.setFk_estoque_cod(rs.getInt("fk_estoque_cod"));
+                p.setCod_barra(rs.getString("cod_barra"));
+                return p;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return null;
+    }
     //METODO QUE BUSCA O ENDERECO PELO ID DO CLIENTE
     public static Endereco search_endereco_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;

@@ -192,9 +192,13 @@ public class Realizar_venda extends JFrame {
         adicionar_produto.addActionListener((ActionEvent) -> {
             new Buscar_produto(this.username, this.password, this.modelo_tabela,
                     pedido_vl_tot, lucro_liquido, qnt_itens);
-
+        });
+        adicionar_produto_cdb.addActionListener((ActionEvent)->{
+            new Buscar_produto_cdb(this.username, this.password, this.modelo_tabela, 
+                    pedido_vl_tot, lucro_liquido, qnt_itens);
         });
 
+        
         remover_produto.addActionListener((ActionEvent) -> {
             float subt;
             subt = Float.parseFloat("" + tabela.getValueAt(tabela.getSelectedRow(), 4));

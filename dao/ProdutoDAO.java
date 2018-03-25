@@ -100,7 +100,7 @@ public class ProdutoDAO extends Sql {
             stmt = con.prepareStatement("UPDATE produtos SET produto_foto=?,"
                     + "produto_nome=?,fk_cod_fornecedor=?,preco_uni_compra=?,"
                     + "preco_uni_venda=?,categoria=?,descricao_produto=?,"
-                    + "unidade_medida_peso=?,peso_produto=?,fk_estoque_cod=?,cod_barra=?, where produto_cod=?");
+                    + "unidade_medida_peso=?,peso_produto=?,fk_estoque_cod=?,cod_barra=? where produto_cod=?");
 
             stmt.setBytes(1, p.getProduto_foto());
             stmt.setString(2, p.getProduto_nome());

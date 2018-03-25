@@ -50,6 +50,7 @@ public class Menu extends JFrame {
     JPanel painel_produto;
     JPanel painel_fornecedor;
     JPanel painel_estoque;
+    JPanel painel_mensagem;
 
     public Menu(String username, String password) {
         this.currentusername = username;
@@ -145,7 +146,7 @@ public class Menu extends JFrame {
 
         });
         //DEFINIÇÃO E INICIALIZAÇÃO DAS ABAS E SEUS RESPECTIVOS ITENS.
-        abas = new JTabbedPane();
+        abas = new JTabbedPane(JTabbedPane.LEFT);
 
         painel_inicio = new Painel_inicio(this.currentusername, this.currentpassword);
         painel_vendas = new Painel_vendas(this.currentusername, this.currentpassword);
@@ -153,6 +154,7 @@ public class Menu extends JFrame {
         painel_fornecedor = new Painel_fornecedor(this.currentusername, this.currentpassword);
         painel_produto = new Painel_produto(this.currentusername, this.currentpassword);
         painel_estoque = new Painel_estoque(this.currentusername, this.currentpassword);
+        painel_mensagem = new Painel_mensagem(this.currentusername, this.currentpassword);
 
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_inicio.png")), painel_inicio);
 
@@ -165,6 +167,8 @@ public class Menu extends JFrame {
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_fornecedor.png")), painel_fornecedor);
 
         abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_estoque.png")), painel_estoque);
+        
+        abas.addTab("", new ImageIcon(getClass().getResource("abas/ico_message.png")), painel_mensagem);
 
         abas.setMnemonicAt(0, KeyEvent.VK_1);
         abas.setMnemonicAt(1, KeyEvent.VK_2);

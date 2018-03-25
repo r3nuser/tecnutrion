@@ -140,7 +140,7 @@ public class Painel_inicio extends JPanel {
 
         setLayout(new BorderLayout());
         painel_principal = new JPanel(new BorderLayout());
-        painel_principal.setPreferredSize(new Dimension(1024, 760));
+        //painel_principal.setPreferredSize(new Dimension(1024, 760));
         painel_principal.setBorder(b);
         inicializa_painel_da_tabela();
         inicializa_itens_painel_logistica();
@@ -290,11 +290,12 @@ public class Painel_inicio extends JPanel {
         painel_logistica = new JPanel(null);
 
         atualizar_dados = new JButton(new ImageIcon(getClass().getResource("button_update.png")));
-        atualizar_dados.setBounds(10, 10, 64, 64);
+        //atualizar_dados.setBackground(new Color(0,0,0));
+        atualizar_dados.setBounds(10, 10, 40, 40);
 
         atualizacao = new JLabel("");
 
-        atualizacao.setBounds(100, 5, 400, 24);
+        atualizacao.setBounds(60, 5, 400, 24);
 
         atualizar_dados.addActionListener((ActionEvent) -> {
             Locale locale = new Locale("pt", "BR");

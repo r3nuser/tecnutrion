@@ -53,7 +53,7 @@ public class Login extends JFrame {
         clicked_password = false;
         already_digit = false;
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(350, 390);
+        setSize(350, 410);
 
         setLayout(null);
         setLocationRelativeTo(null);

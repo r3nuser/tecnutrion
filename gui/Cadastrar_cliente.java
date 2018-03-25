@@ -9,7 +9,6 @@ import dao.EnderecoDAO;
 import dao.MiscDAO;
 import dao.TelefoneDAO;
 import java.awt.Color;
-import java.awt.ComponentOrientation;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;

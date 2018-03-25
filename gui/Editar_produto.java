@@ -1,5 +1,14 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package gui;
 
+/**
+ *
+ * @author renan
+ */
 import bean.Estoque;
 import bean.Fornecedor;
 import bean.Produto;
@@ -50,6 +59,7 @@ public class Editar_produto extends JFrame {
     private JLabel unidade_medida_l;
     private JLabel foto;
     private JLabel validade_l;
+    private JLabel cod_barras_l;
 
     private JTextField produto_nome;
     private JTextField preco_uni_venda;
@@ -58,8 +68,10 @@ public class Editar_produto extends JFrame {
     private JTextField descricao;
     private JTextField uni_compradas;
     private JTextField validade;
+    private JTextField cod_barras;
 
     private JButton buscar_fornecedor;
+    private JButton leitura_cod_barras;
     private JTextField fornecedor;
 
     private JComboBox categoria;
@@ -100,6 +112,7 @@ public class Editar_produto extends JFrame {
         categoria_l = new JLabel("Categoria:");
         produto_foto_l = new JLabel("Foto do produto:");
         validade_l = new JLabel("Validade:");
+        cod_barras_l = new JLabel("Cód. Barras:");
         foto = new JLabel("");
         produto_nome = new JTextField();
         fornecedor = new JTextField();
@@ -108,10 +121,12 @@ public class Editar_produto extends JFrame {
         peso = new JTextField();
         descricao = new JTextField();
         uni_compradas = new JTextField();
+        cod_barras = new JTextField();
         categoria = new JComboBox();
         unidade_medida = new JComboBox();
         cadastrar = new JButton("Atualizar !");
         inserir_foto = new JButton("Procurar...");
+        leitura_cod_barras = new JButton("Ler Cod. Barras");
         buscar_fornecedor = new JButton(new ImageIcon(getClass().getResource("abas/ico_lupa2.png")));
 
         cadastrar.setBackground(new Color(30, 30, 30));
@@ -120,6 +135,8 @@ public class Editar_produto extends JFrame {
         inserir_foto.setForeground(new Color(255, 255, 255));
         buscar_fornecedor.setBackground(new Color(30, 30, 30));
         buscar_fornecedor.setForeground(new Color(255, 255, 255));
+        leitura_cod_barras.setBackground(new Color(30, 30, 150));
+        leitura_cod_barras.setForeground(new Color(255, 255, 255));
 
         setSize(555, 600);
         setLocationRelativeTo(null);
@@ -148,14 +165,22 @@ public class Editar_produto extends JFrame {
         add(validade);
         add(cadastrar);
         add(inserir_foto);
+        add(leitura_cod_barras);
         add(foto);
         add(buscar_fornecedor);
+        add(cod_barras_l);
+        add(cod_barras);
 
         titulo_l.setBounds(148, 40, 400, 30);
         titulo_l.setFont(new java.awt.Font("Arial", 1, 19));
 
         produto_nome_l.setBounds(30, 100, 200, 30);
         produto_nome_l.setFont(new java.awt.Font("Arial", 1, 13));
+
+        cod_barras_l.setBounds(30, 400 + 60, 200, 30);
+        cod_barras_l.setFont(new java.awt.Font("Arial", 1, 13));
+        leitura_cod_barras.setBounds(250, 430 + 65, 200, 20);
+        cod_barras.setBounds(30, 430 + 60, 200, 30);
 
         produto_nome.setBounds(30, 130, 200, 30);
 
@@ -234,41 +259,51 @@ public class Editar_produto extends JFrame {
 
         validade.setBounds(300, 310 + 130, 200, 30);
 
-        cadastrar.setBounds(210, 450 + 40, 110, 30);
+        cadastrar.setBounds(210, 450 + 80, 110, 30);
         cadastrar.setFont(new java.awt.Font("Arial", 1, 11));
         //EVENTO DE CADASTRO QUE PEGA TODOS OS DADOS PASSADOS
         //PELO USUÁRIO E CHAMA OS METODOS DE INSERÇÃO
         cadastrar.addActionListener((ActionEvent) -> {
-            if (validacao()) {
-                p.setProduto_nome(produto_nome.getText());
-                p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
-                p.setPreco_uni_venda(Float.parseFloat(preco_uni_venda.getText()));
-                p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
-                p.setDescricao_produto(descricao.getText());
-                p.setPeso_produto(Float.parseFloat(peso.getText()));
-                if (!("".equals(peso.getText()))) {
-                    p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
+            if (!cdb_repetido()) {
+                if (validacao()) {
+                    p.setProduto_nome(produto_nome.getText());
+                    p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
+                    p.setPreco_uni_venda(Float.parseFloat(preco_uni_venda.getText()));
+                    p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
+                    p.setDescricao_produto(descricao.getText());
+                    p.setPeso_produto(Float.parseFloat(peso.getText()));
+                    p.setCod_barra(cod_barras.getText());
+                    if (!("".equals(peso.getText()))) {
+                        p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
+                    }
+                    p.setFk_fornecedor_cod(f.getId());
+                    Estoque e = new Estoque();
+                    e.setEstoque_cod(p.getFk_estoque_cod());
+                    String validade = this.validade.getText();
+                    DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                    try {
+                        java.sql.Date data = new java.sql.Date(fmt.parse(validade).getTime());
+                        e.setValidade(data);
+                    } catch (Exception ex) {
+                        System.out.println(ex);
+                    }
+                    e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
+                    //INSERÇÃO : ESTOQUE
+                    EstoqueDAO.update(this.currentusername, this.currentpassword, e);
+                    //INSERÇÃO : PRODUTO            
+                    ProdutoDAO.update(this.currentusername, this.currentpassword, p);
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, textovalidacao);
                 }
-                p.setFk_fornecedor_cod(f.getId());
-                Estoque e = new Estoque();
-                e.setEstoque_cod(p.getFk_estoque_cod());
-                String validade = this.validade.getText();
-                DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-                try {
-                    java.sql.Date data = new java.sql.Date(fmt.parse(validade).getTime());
-                    e.setValidade(data);
-                } catch (Exception ex) {
-                    System.out.println(ex);
-                }
-                e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
-                //INSERÇÃO : ESTOQUE
-                EstoqueDAO.update(this.currentusername, this.currentpassword, e);
-                //INSERÇÃO : PRODUTO            
-                ProdutoDAO.update(this.currentusername, this.currentpassword, p);
-                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, textovalidacao);
+                JOptionPane.showMessageDialog(null, "Este código de barra já consta na base de dados,"
+                        + " impossivel usa-lo");
             }
+        });
+
+        leitura_cod_barras.addActionListener((ActionEvent) -> {
+            new Cod_barras(cod_barras);
         });
 
         produto_foto_l.setBounds(260, 100, 150, 30);
@@ -334,6 +369,7 @@ public class Editar_produto extends JFrame {
         peso.setText(p.getPeso_produto() + "");
         descricao.setText(p.getDescricao_produto());
         uni_compradas.setText(e.getQnt_estoque() + "");
+        cod_barras.setText(p.getCod_barra());
 
         SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -341,6 +377,13 @@ public class Editar_produto extends JFrame {
         fornecedor.setText(f.getNome());
         categoria.setSelectedItem(p.getCategoria());
         unidade_medida.setSelectedItem(p.getUnidade_medida_peso());
+    }
+
+    private boolean cdb_repetido() {
+        if (MiscDAO.search_produto_por_cdb(currentusername, currentpassword, cod_barras.getText()) != null) {
+            return true;
+        }
+        return false;
     }
 
     private boolean validacao() {
