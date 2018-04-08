@@ -44,7 +44,7 @@ public class Buscar_produto_cdb extends JFrame {
         add(cod_barras_l);
         add(cod_ghost);
 
-        cod_barras_l.setFont(new java.awt.Font("Arial", 1, 20));
+        cod_barras_l.setFont(new java.awt.Font("Arial", 1, 18));
         cod_barras_l.setBounds(10, 80, 500, 18);
 
         cod_ghost.requestFocus();

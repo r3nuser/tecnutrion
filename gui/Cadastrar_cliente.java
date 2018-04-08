@@ -240,7 +240,7 @@ public class Cadastrar_cliente extends JFrame {
                         java.sql.Date data = new java.sql.Date(fmt.parse(this.data_nascimento.getText()).getTime());
                         c.setData_nascimento(data);
                     } catch (Exception e) {
-                        System.out.println(e);
+                        c.setData_nascimento(new java.sql.Date(fmt.parse("01/01/1900").getTime()));
                     }
                     //PEGANDO TODOS DADOS DO TELEFONE
                     //DDD= DDD

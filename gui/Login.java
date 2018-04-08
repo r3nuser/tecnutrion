@@ -16,8 +16,6 @@ import java.net.URL;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 import sql.Sql;
 import static sql.Sql.closeConnection;
 
