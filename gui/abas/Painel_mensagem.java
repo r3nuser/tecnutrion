@@ -119,7 +119,7 @@ public class Painel_mensagem extends JPanel {
         });
 
         topnav.add(clear);
-        topnav.add(config);
+        //topnav.add(config);
         topnav.add(att_data);
     }
 
