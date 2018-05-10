@@ -5,6 +5,7 @@
  */
 package gui.abas;
 
+import dao.MiscDAO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,8 +16,6 @@ import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -171,14 +170,16 @@ public class Painel_mensagem extends JPanel {
     private void atualizar_dados() {
         SmsFactory smsfac = new SmsFactory(this.currentusername, this.currentpassword);
         qnt_sms.setText("Quantidade de SMS restante: " + smsfac.checkCredits());
+        qnt_cad_cel.setText("Quantidade de Nº de Celulares cadastrados: "+smsfac.get_qnt_numbers());
+        qnt_email_cad.setText("Quantidade de E-mails cadastrados: "+MiscDAO.clientes_cadastrados(currentusername, currentpassword));
     }
 
     private void initCenter() {
         center = new JPanel(new BorderLayout());
         //center.add(new JButton(new ImageIcon(getClass().getResource("construcao.png"))));
-        qnt_sms = new JLabel("Quantidade de SMS restante:");
-        qnt_cad_cel = new JLabel("Quantidade de Nº de Celulares cadastrados:");
-        qnt_email_cad = new JLabel("Quantidade de E-mails cadastrados:");
+        qnt_sms = new JLabel("Quantidade de SMS restante: ");
+        qnt_cad_cel = new JLabel("Quantidade de Nº de Celulares cadastrados: ");
+        qnt_email_cad = new JLabel("Quantidade de E-mails cadastrados: ");
 
         corpo = new JTextArea();
         assunto = new JTextField("Assunto: ");

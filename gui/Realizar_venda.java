@@ -91,7 +91,7 @@ public class Realizar_venda extends JFrame {
         inicializa_itens_pedido();
 
         realizar_venda = new JButton("Finalizar Venda", new ImageIcon(getClass().getResource("abas/ico_money.png")));
-        realizar_venda.setLocation(402, 750);
+        realizar_venda.setLocation(402, 640);
         realizar_venda.setSize(220, 30);
         add(realizar_venda);
         realizar_venda.setBackground(new Color(30, 30, 30));
@@ -142,11 +142,15 @@ public class Realizar_venda extends JFrame {
                     Pedido_itemDAO.create(username, password, pi);
                 }
                 JOptionPane.showMessageDialog(null, "Venda Realizada com Sucesso !");
+                if(MiscDAO.n_compras_acima_cap(username, password, Integer.parseInt(cliente_id.getText()))%10==0){
+                    JOptionPane.showMessageDialog(null,"Atenção, esse cliente recebeu um vale compras de 100 reais");
+                    new Venda_vale_compra(username,password,Integer.parseInt(cliente_id.getText()));
+                }
                 dispose();
             }
         });
 
-        setSize(1024, 820);
+        setSize(1024, 700);
         setResizable(false);
         setLocationRelativeTo(null);
         setLayout(null);
@@ -165,7 +169,7 @@ public class Realizar_venda extends JFrame {
         inicializa_tabela_pedido();
 
         itens_pedido.setBorder(BorderFactory.createLineBorder(Color.black));
-        itens_pedido.setSize(1004, 590);
+        itens_pedido.setSize(1004, 490);
         itens_pedido.setLocation(5, 140);
         add(itens_pedido);
 
@@ -191,7 +195,7 @@ public class Realizar_venda extends JFrame {
 
         adicionar_produto.addActionListener((ActionEvent) -> {
             new Buscar_produto(this.username, this.password, this.modelo_tabela,
-                    pedido_vl_tot, lucro_liquido, qnt_itens);
+                    pedido_vl_tot, lucro_liquido, qnt_itens, 5);
         });
         adicionar_produto_cdb.addActionListener((ActionEvent)->{
             new Buscar_produto_cdb(this.username, this.password, this.modelo_tabela, 

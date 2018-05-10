@@ -1,10 +1,12 @@
 use visualnutrion;
 
-grant all privileges on *.* to 'admin'@'%' identified by 'senhaadmin';
+GRANT ALL privileges on *.* to 'admin'@'%' identified by 'senhaadmin';
 flush privileges;
-
-create user 'gerente'@'%' identified by 'senhagerente';
+CREATE USER 'gerente'@'%' identified by 'senhagerente';
 flush privileges;
-
-create user 'vendedor'@'%' identified by 'senhavendedor';
+CREATE USER 'vendedor'@'%' identified by 'senhavendedor';
+flush privileges;
+GRANT ALL privileges on visualnutrion.* to gerente@localhost identified by 'senhagerente';
+flush privileges;
+GRANT ALL privileges on visualnutrion.* to vendedor@localhost identified by 'senhavendedor';
 flush privileges;

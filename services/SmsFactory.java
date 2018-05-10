@@ -59,7 +59,37 @@ public class SmsFactory {
             System.out.println(e);
         }
     }
-
+    
+    public int get_qnt_numbers(){
+        ArrayList<String> nmbs;
+        try {
+            nmbs = new ArrayList<String>();
+            Connection con = Sql.getConnection(db_user, db_pass);
+            PreparedStatement stmt = con.prepareStatement(""
+                    + "select ddd,antesh,depoish from telefone;");
+            ResultSet rs;
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Telefone cel = new Telefone();
+                cel.setDdd(rs.getString("ddd"));
+                cel.setAntesh(rs.getString("antesh"));
+                cel.setDepoish(rs.getString("depoish"));
+                if (Integer.parseInt(cel.getAntesh()) > 10000
+                        && Integer.parseInt(cel.getDepoish()) > 999
+                        && Integer.parseInt(cel.getDdd()) > 1) {
+                    String number = cel.getDdd() + cel.getAntesh() + cel.getDepoish();
+                    nmbs.add(number);
+                    
+                }
+            }
+            return nmbs.size();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Algo errado ocorreu :(, erro: " + e);
+        }
+        return 0;
+    }
+    
     public ArrayList<String> get_numbers() {
         ArrayList<String> nmbs;
 

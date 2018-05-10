@@ -63,7 +63,7 @@ create table if not exists pedido(
 	cod_pedido int not null auto_increment,
 	dt_pedido date not null,
 	pedido_vl_tot decimal(8,2) not null,
-	pagamento enum('Cartao de Debito','Cartao de Credito','Boleto','A Vista') not null,
+	pagamento enum('Cartao de Debito','Cartao de Credito','Boleto','A Vista', 'Vale Compra') not null,
 	primary key(cod_pedido),
         desconto int not null
 )ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1;

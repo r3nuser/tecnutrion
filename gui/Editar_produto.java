@@ -180,6 +180,10 @@ public class Editar_produto extends JFrame {
         cod_barras_l.setBounds(30, 400 + 60, 200, 30);
         cod_barras_l.setFont(new java.awt.Font("Arial", 1, 13));
         leitura_cod_barras.setBounds(250, 430 + 65, 200, 20);
+        
+        leitura_cod_barras.setEnabled(false);
+        cod_barras.setEnabled(false);
+        
         cod_barras.setBounds(30, 430 + 60, 200, 30);
 
         produto_nome.setBounds(30, 130, 200, 30);
@@ -264,42 +268,39 @@ public class Editar_produto extends JFrame {
         //EVENTO DE CADASTRO QUE PEGA TODOS OS DADOS PASSADOS
         //PELO USUÁRIO E CHAMA OS METODOS DE INSERÇÃO
         cadastrar.addActionListener((ActionEvent) -> {
-            if (!cdb_repetido()) {
-                if (validacao()) {
-                    p.setProduto_nome(produto_nome.getText());
-                    p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
-                    p.setPreco_uni_venda(Float.parseFloat(preco_uni_venda.getText()));
-                    p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
-                    p.setDescricao_produto(descricao.getText());
-                    p.setPeso_produto(Float.parseFloat(peso.getText()));
-                    p.setCod_barra(cod_barras.getText());
-                    if (!("".equals(peso.getText()))) {
-                        p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
-                    }
-                    p.setFk_fornecedor_cod(f.getId());
-                    Estoque e = new Estoque();
-                    e.setEstoque_cod(p.getFk_estoque_cod());
-                    String validade = this.validade.getText();
-                    DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-                    try {
-                        java.sql.Date data = new java.sql.Date(fmt.parse(validade).getTime());
-                        e.setValidade(data);
-                    } catch (Exception ex) {
-                        System.out.println(ex);
-                    }
-                    e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
-                    //INSERÇÃO : ESTOQUE
-                    EstoqueDAO.update(this.currentusername, this.currentpassword, e);
-                    //INSERÇÃO : PRODUTO            
-                    ProdutoDAO.update(this.currentusername, this.currentpassword, p);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, textovalidacao);
+
+            if (validacao()) {
+                p.setProduto_nome(produto_nome.getText());
+                p.setPreco_uni_compra(Float.parseFloat(preco_uni_compra.getText()));
+                p.setPreco_uni_venda(Float.parseFloat(preco_uni_venda.getText()));
+                p.setCategoria((String) categoria.getItemAt(categoria.getSelectedIndex()));
+                p.setDescricao_produto(descricao.getText());
+                p.setPeso_produto(Float.parseFloat(peso.getText()));
+                p.setCod_barra(cod_barras.getText());
+                if (!("".equals(peso.getText()))) {
+                    p.setUnidade_medida_peso((String) unidade_medida.getItemAt(unidade_medida.getSelectedIndex()));
                 }
+                p.setFk_fornecedor_cod(f.getId());
+                Estoque e = new Estoque();
+                e.setEstoque_cod(p.getFk_estoque_cod());
+                String validade = this.validade.getText();
+                DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                try {
+                    java.sql.Date data = new java.sql.Date(fmt.parse(validade).getTime());
+                    e.setValidade(data);
+                } catch (Exception ex) {
+                    System.out.println(ex);
+                }
+                e.setQnt_estoque(Integer.parseInt(this.uni_compradas.getText()));
+                //INSERÇÃO : ESTOQUE
+                EstoqueDAO.update(this.currentusername, this.currentpassword, e);
+                //INSERÇÃO : PRODUTO            
+                ProdutoDAO.update(this.currentusername, this.currentpassword, p);
+                dispose();
             } else {
-                JOptionPane.showMessageDialog(null, "Este código de barra já consta na base de dados,"
-                        + " impossivel usa-lo");
+                JOptionPane.showMessageDialog(null, textovalidacao);
             }
+
         });
 
         leitura_cod_barras.addActionListener((ActionEvent) -> {
@@ -377,13 +378,6 @@ public class Editar_produto extends JFrame {
         fornecedor.setText(f.getNome());
         categoria.setSelectedItem(p.getCategoria());
         unidade_medida.setSelectedItem(p.getUnidade_medida_peso());
-    }
-
-    private boolean cdb_repetido() {
-        if (MiscDAO.search_produto_por_cdb(currentusername, currentpassword, cod_barras.getText()) != null) {
-            return true;
-        }
-        return false;
     }
 
     private boolean validacao() {

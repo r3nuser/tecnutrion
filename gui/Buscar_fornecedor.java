@@ -97,7 +97,7 @@ public class Buscar_fornecedor extends JFrame {
         cadastrar_fornecedor.setForeground(new Color(255,255,255));
         
         busca_fornecedor_b.setBackground(new Color(30,30,30));
-        busca_fornecedor.setForeground(new Color(255,255,255));
+        //busca_fornecedor.setForeground(new Color(255,255,255));
         painel_de_botoes.add(busca_fornecedor);
         painel_de_botoes.add(busca_fornecedor_b);
         painel_de_botoes.add(cadastrar_fornecedor);

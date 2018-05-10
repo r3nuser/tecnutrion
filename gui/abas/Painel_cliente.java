@@ -65,6 +65,9 @@ public class Painel_cliente extends JPanel {
     private JLabel complemento_l;
     private JLabel cep_l;
 
+    private JLabel[] cupom_imgs;
+    private JPanel cupom_panel;
+
     private JTextField nome_cliente;
     private JTextField email;
     private JTextField data_nascimento;
@@ -194,6 +197,26 @@ public class Painel_cliente extends JPanel {
         email.setEditable(false);
         email.setPreferredSize(new Dimension(260, 18));
 
+        GridLayout fl = new GridLayout(2, 5);
+        cupom_panel = new JPanel(fl);
+
+        cupom_imgs = new JLabel[10];
+        for (int i = 0; i < cupom_imgs.length; i++) {
+            cupom_imgs[i] = new JLabel("");
+            cupom_imgs[i].setSize(80, 80);
+            cupom_imgs[i].setPreferredSize(new Dimension(80, 80));
+            cupom_imgs[i].setBorder(BorderFactory.createLineBorder(Color.white));
+            cupom_panel.add(cupom_imgs[i]);
+        }
+        cupom_panel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(Color.black),
+                "Cupons",
+                1,
+                1,
+                new java.awt.Font("Dialog", 1, 14)
+        ));
+        painel_de_dados.add(cupom_panel);
+
         modelo_telefone = new DefaultTableModel() {
             public boolean isCellEditable(int a, int b) {
                 return false;
@@ -265,25 +288,6 @@ public class Painel_cliente extends JPanel {
         add(painel_de_dados, BorderLayout.LINE_START);
     }
 
-    /*private void inicializa_painel_de_graficos() {
-        painel_de_graficos = new JPanel(new FlowLayout());
-        dt = new DefaultCategoryDataset();
-        grafico_mais_rentaveis_mes = ChartFactory.createBarChart("Clientes mais lucrativos do mês", "Valores", null, dt, PlotOrientation.VERTICAL, true, true, false);
-        cp_mais_rentaveis_mes = new ChartPanel(grafico_mais_rentaveis_mes);
-        cp_mais_rentaveis_mes.removeAll();
-        cp_mais_rentaveis_mes.setPreferredSize(new Dimension(300, 300));
-        painel_de_graficos.add(cp_mais_rentaveis_mes);
-
-        grafico_mais_rentaveis_mes = ChartFactory.createBarChart("Clientes mais lucrativos da semana", "Valores", null, dt, PlotOrientation.VERTICAL, true, true, false);
-        cp_mais_rentaveis_semana = new ChartPanel(grafico_mais_rentaveis_mes);
-        cp_mais_rentaveis_semana.removeAll();
-        cp_mais_rentaveis_semana.setPreferredSize(new Dimension(300, 300));
-
-        painel_de_graficos.add(cp_mais_rentaveis_semana);
-        painel_de_graficos.setPreferredSize(new Dimension(300, 600));
-        add(painel_de_graficos, BorderLayout.LINE_END);
-
-    }*/
     private void inicializa_painel_de_botoes() {
         painel_de_botoes = new JPanel(new FlowLayout());
         cadastrar_clientes = new JButton("Cadastrar Novo Cliente", new ImageIcon(getClass().getResource("ico_mais.png")));
@@ -389,6 +393,21 @@ public class Painel_cliente extends JPanel {
         email.setText(c.getEmail());
         SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         data_nascimento.setText("" + formatdata.format(c.getData_nascimento()));
+        for (JLabel cupom_img : cupom_imgs) {
+            cupom_img.setIcon(null);
+        }
+        
+        try {
+            int ndc = MiscDAO.n_compras_acima_cap(username, password, c.getId());
+            if (ndc % 10 != 0) {
+                for (int i = 0; i < ndc%10; i++) {
+                    cupom_imgs[i].setIcon(new ImageIcon(getClass().getResource("nutrion.jpg")));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
         try {
             modelo_telefone.setNumRows(0);
             for (Telefone t : MiscDAO.search_telefone_por_id(username, password, c.getId())) {

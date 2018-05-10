@@ -57,15 +57,11 @@ public class EmailFactory {
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(email_user));
-
             Address[] toUser = InternetAddress.parse(get_emails());
-
             message.setRecipients(Message.RecipientType.TO, toUser);
             message.setSubject(assunto);
             message.setText(corpo);
-
             Transport.send(message);
-
             JOptionPane.showMessageDialog(null,
                     "Emails enviados com sucesso !");
         } catch (Exception e) {

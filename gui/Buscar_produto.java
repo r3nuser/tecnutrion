@@ -53,14 +53,17 @@ public class Buscar_produto extends JFrame {
     private JTextField vl_liq;
     private JTextField vl_qnt;
 
+    private int v_row;
+
     public Buscar_produto(String currentusername, String currentpassword,
-            DefaultTableModel dmt, JTextField vl_tot, JTextField vl_liq, JTextField vl_qnt) {
+            DefaultTableModel dmt, JTextField vl_tot, JTextField vl_liq, JTextField vl_qnt, int v_row) {
         this.username = currentusername;
         this.password = currentpassword;
         this.dmt = dmt;
         this.vl_tot = vl_tot;
         this.vl_liq = vl_liq;
         this.vl_qnt = vl_qnt;
+        this.v_row = v_row;
         initAll();
 
     }
@@ -77,6 +80,7 @@ public class Buscar_produto extends JFrame {
                 tabela.getValueAt(tabela.getSelectedRow(), 1);
                 try {
                     Integer.parseInt(unidades.getText());
+                    System.out.println("flag 0");
                     if (((int) tabela.getValueAt(tabela.getSelectedRow(), 5) >= Integer.parseInt(unidades.getText()))
                             && (Integer.parseInt(unidades.getText()) != 0)) {
                         p = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 1));
@@ -89,28 +93,35 @@ public class Buscar_produto extends JFrame {
                                 break;
                             }
                         }
+                        System.out.println("flag 1");
                         if (already) {
-                            dmt.setValueAt(Integer.parseInt(dmt.getValueAt(j, 5) + "") + Integer.parseInt(unidades.getText()), j, 5);
+                            dmt.setValueAt(Integer.parseInt(dmt.getValueAt(j, v_row) + "") + Integer.parseInt(unidades.getText()), j, v_row);
                         } else {
-                            dmt.addRow(new Object[]{p.getProduto_foto_para_tabela(),
-                                p.getProduto_cod(), p.getProduto_nome(), p.getPreco_uni_compra(),
-                                p.getPreco_uni_venda(), unidades.getText()});
+                            if (v_row == 5) {
+                                dmt.addRow(new Object[]{p.getProduto_foto_para_tabela(),
+                                    p.getProduto_cod(), p.getProduto_nome(), p.getPreco_uni_compra(),
+                                    p.getPreco_uni_venda(), unidades.getText()});
+                            } else {
+                                dmt.addRow(new Object[]{p.getProduto_foto_para_tabela(),
+                                    p.getProduto_cod(), p.getProduto_nome(), unidades.getText()});
+                            }
                         }
+
                         float sum;
                         sum = p.getPreco_uni_venda();
                         sum *= Float.parseFloat(unidades.getText());
                         sum += Float.parseFloat(vl_tot.getText());
                         vl_tot.setText("" + sum);
+                        if (v_row == 5) {
+                            sum = p.getPreco_uni_venda() - p.getPreco_uni_compra();
+                            sum *= Float.parseFloat(unidades.getText());
+                            sum += Float.parseFloat(vl_liq.getText());
+                            vl_liq.setText("" + sum);
 
-                        sum = p.getPreco_uni_venda() - p.getPreco_uni_compra();
-                        sum *= Float.parseFloat(unidades.getText());
-                        sum += Float.parseFloat(vl_liq.getText());
-                        vl_liq.setText("" + sum);
-
-                        sum = Float.parseFloat(unidades.getText());
-                        sum += Float.parseFloat(vl_qnt.getText());
-                        vl_qnt.setText("" + sum);
-
+                            sum = Float.parseFloat(unidades.getText());
+                            sum += Float.parseFloat(vl_qnt.getText());
+                            vl_qnt.setText("" + sum);
+                        }
                         dispose();
 
                     } else {
@@ -120,6 +131,8 @@ public class Buscar_produto extends JFrame {
                     }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Por favor, insira apenas numeros inteiros nas unidades.");
+                    System.out.println(e);
+                    System.out.println("Unidades: " + unidades.getText());
                     unidades.setBorder(BorderFactory.createLineBorder(Color.red));
                 }
 

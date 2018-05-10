@@ -27,6 +27,30 @@ import sql.Sql;
 //NOME DA CLASSE + HERANÇA DE TODOS OS METODOS DA CLASSE Sql
 public class MiscDAO extends Sql {
 
+    //MÉTODO RESPONSÁVEL POR RETORNAR O NUMERO DE COMPRAS ACIMA DE 150 REAIS DO CLIENTE
+    public static int n_compras_acima_cap(String username, String password, int id) {
+        int ndc = 0;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = getConnection(username,password);
+            stmt = con.prepareStatement("select count(cod_pedido) from"
+                    + " pedido, clientes, pedido_item where"
+                    + " ?=fk_cod_cliente and fk_cod_pedido=cod_pedido and pedido_vl_tot >= 150");
+            stmt.setInt(1, id);
+            rs = stmt.executeQuery();
+            if(rs.next()){
+                ndc = rs.getInt("count(cod_pedido)");
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        } finally {
+            closeConnection(con, stmt, rs);
+        }
+        return ndc;
+    }
+
     //MÉTODO RESPONSÁVEL POR PROCURAR O PRODUTO PELO FORNECEDOR
     public static ArrayList<Produto> search_produto_pelo_fornecedor(String username, String password, int id) {
         ArrayList<Produto> dados_produto = new ArrayList<>();
@@ -925,6 +949,7 @@ public class MiscDAO extends Sql {
         }
         return p;
     }
+
     //METODO QUE BUSCA O PRODUTO PELO CÓDIGO DE BARRAS
     public static Produto search_produto_por_cdb(String username, String password, String cdb) {
         PreparedStatement stmt = null;
@@ -958,6 +983,7 @@ public class MiscDAO extends Sql {
         }
         return null;
     }
+
     //METODO QUE BUSCA O ENDERECO PELO ID DO CLIENTE
     public static Endereco search_endereco_por_id(String username, String password, int id) {
         PreparedStatement stmt = null;
