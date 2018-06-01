@@ -16,6 +16,7 @@ import java.net.URL;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
+import services.BackupFactory;
 import sql.Sql;
 import static sql.Sql.closeConnection;
 
@@ -131,8 +132,9 @@ public class Login extends JFrame {
             Connection con = Sql.getConnection(Username, Password);
             if (con != null) {
                 dispose();
+                BackupFactory bk = new BackupFactory("visualnutrion", "root", "root");
                 new Menu(Username, Password);
-
+                bk.makeBackup();
             } else {
                 JOptionPane.showMessageDialog(null, "Senha ou Usuário inválidos");
             }

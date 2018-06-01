@@ -1,33 +1,49 @@
-public class BackupFactory extends Sql{
+package services;
 
-    public BackupFactory(){
-        
+import java.io.File;
+import java.io.IOException;
+import java.util.Scanner;
+
+public class BackupFactory {
+
+    private String database;
+    private String username;
+    private String password;
+
+    public BackupFactory(String database, String username, String password) {
+        this.database = database;
+        this.username = username;
+        this.password = password;
     }
 
-    static void AllTimeBackup(){
-        ArrayList<Cliente> clientes = ClienteDAO().read("root","root");
-        //telefones e endereços
-        ArrayList<Produto> produtos = ProdutoDAO().read("root","root")
-        //estoques + pedidos + pedido_item
-        ArrayList<Fornecedor> fornecedores = FornecedorDAO().read("root","root");
-        
-    }
-
-    static void BackupDate(){
-
-    }
-
-    private Date converterData(String datatexto){
-        DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-        java.sql.Date data = null;
-        try{
-            data = new java.sql.Date(fmt.parse(datatexto).getTime());
-        }catch(Exception e){
-            System.out.println(e);
+    public void makeBackup() {
+        int numerodobackup = 0;
+        String dir = "c:/TecnutrionBackup";
+        File diretorio = new File(dir);
+        File bck = new File(dir + "/backup000000.sql");
+// os zeros é para diferenciar um backup do outro
+        // Cria diretório
+        if (!diretorio.isDirectory()) {
+            new File(dir).mkdir();
+        } else {
         }
-        return data;
+                // Cria Arquivo de Backup
+        try {
+            if (!bck.isFile()) {
+                Runtime.getRuntime().exec("cmd /c mysqldump -u " + username + " -p" + password + " " + database + " > "+ dir + "/backup000000.sql");
+                     
+            } else {
+                while (bck.isFile()) {
+                    numerodobackup++;
+                    bck = new File(dir + "/backup000000" + numerodobackup + ".sql");
+                }
+                System.out.println(bck);
+                Runtime.getRuntime().exec("cmd /c mysqldump -u " + username + " -p" + password + " " + database + " > " + bck);
+            }
+        } catch (IOException ex) {
+            System.out.println(ex);
+            ex.printStackTrace();
+        }
     }
-
-    
 
 }
