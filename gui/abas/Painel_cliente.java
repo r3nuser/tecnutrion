@@ -396,9 +396,11 @@ public class Painel_cliente extends JPanel {
         for (JLabel cupom_img : cupom_imgs) {
             cupom_img.setIcon(null);
         }
-        
+        System.out.println("flag");
         try {
             int ndc = MiscDAO.n_compras_acima_cap(username, password, c.getId());
+            System.out.println("Numero de compras acima do CAP "+ndc);
+            System.out.println("FOR : "+ndc%10);
             if (ndc % 10 != 0) {
                 for (int i = 0; i < ndc%10; i++) {
                     cupom_imgs[i].setIcon(new ImageIcon(getClass().getResource("nutrion.jpg")));
@@ -418,6 +420,7 @@ public class Painel_cliente extends JPanel {
         } catch (Exception e) {
             System.out.println(e);
         }
+        System.out.println("flag2");
         try {
             Endereco e = MiscDAO.search_endereco_por_id(username, password, c.getId());
             tipolog.setText(e.getTipolog());
@@ -438,6 +441,7 @@ public class Painel_cliente extends JPanel {
             cep.setText("");
             System.out.println(e);
         }
+        System.out.println("flag3");
     }
 
     private void atualizar_tabela(byte mode) {

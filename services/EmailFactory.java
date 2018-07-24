@@ -1,16 +1,26 @@
 package services;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Properties;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.swing.JOptionPane;
 import sql.Sql;
 
@@ -41,9 +51,7 @@ public class EmailFactory {
         props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
-       
-        
-        
+
         session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(email_user, email_pass);
@@ -69,22 +77,54 @@ public class EmailFactory {
         }
     }
 
+    public void SendEmailAnexo(String from, String to, String subject, String message, String attach) throws AddressException {
+        MimeMessage mimeMessage = new MimeMessage(session);
+        try {
+            mimeMessage.setSubject(subject);
+            Address addressFrom = new InternetAddress(from);
+            mimeMessage.setFrom(addressFrom);
+            mimeMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            Multipart multipart = new MimeMultipart();
+            // Texto
+            BodyPart messageBodyPart = new MimeBodyPart();
+            messageBodyPart.setContent(message, "text/plain");
+            multipart.addBodyPart(messageBodyPart);
+            //Anexo
+            File file = new File(attach);
+            DataSource ds = new FileDataSource(file) {
+                public String getContentType() {
+                    return "application/octet-stream";
+                }
+            };
+            BodyPart mbp = new MimeBodyPart();
+            mbp.setDataHandler(new DataHandler(ds));
+            mbp.setFileName(file.getName());
+            mbp.setDisposition(Part.ATTACHMENT);
+            multipart.addBodyPart(mbp);
+            mimeMessage.setContent(multipart);
+            Transport.send(mimeMessage);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
     public String get_emails() {
         try {
             Connection con = Sql.getConnection(db_user, db_pass);
             PreparedStatement stmt = con.prepareStatement("SELECT email FROM clientes;");
             ResultSet rs = stmt.executeQuery();
-            
-            String emails="closer@cloclo.com";
-            
-            while(rs.next()){
-                emails+=", "+rs.getString("email");
+
+            String emails = "closer@cloclo.com";
+
+            while (rs.next()) {
+                emails += ", " + rs.getString("email");
             }
-            
+
             return emails;
         } catch (Exception e) {
             System.out.println(e);
         }
         return "";
     }
+
 }

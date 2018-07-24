@@ -96,6 +96,10 @@ public class Realizar_venda extends JFrame {
         add(realizar_venda);
         realizar_venda.setBackground(new Color(30, 30, 30));
         realizar_venda.setForeground(new Color(255, 255, 255));
+        
+        //TRAVAMENTO DO DESCONTO
+        dar_desconto.setEnabled(false);
+        
         realizar_venda.addActionListener((ActionEvent) -> {
             if (validacao()) {
                 Pedido p = new Pedido();
@@ -121,6 +125,8 @@ public class Realizar_venda extends JFrame {
                 for (int i = 0; i < modelo_tabela.getRowCount(); i++) {
                     pi.setFk_cod_produto(Integer.parseInt("" + tabela.getValueAt(i, 1)));
                     pi.setQuantidade(Integer.parseInt("" + tabela.getValueAt(i, 5)));
+                    
+                    
                     if (dar_desconto.isSelected()) {
                         pi.setPedido_item_vl_tot(
                                 (pi.getQuantidade()
@@ -135,14 +141,23 @@ public class Realizar_venda extends JFrame {
                         pi.setPedido_item_vl_tot(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 4)));
                         pi.setPedido_item_vl_liq(pi.getQuantidade() * Float.parseFloat("" + tabela.getValueAt(i, 3)));
                     }
+                    
+                    
                     Produto pro = MiscDAO.search_produto_por_id(username, password, (int) tabela.getValueAt(i, 1));
                     Estoque e = MiscDAO.search_estoque_por_id(username, password, pro.getFk_estoque_cod());
-                    e.setQnt_estoque(e.getQnt_estoque() - pi.getQuantidade());
-                    EstoqueDAO.update(username, password, e);
+                    try{
+                        e.setQnt_estoque(e.getQnt_estoque() - pi.getQuantidade());
+                        EstoqueDAO.update(username, password, e);
+                    }catch(Exception ex){
+                        System.out.println("ERRO DE ESTOQUE: "+ex);
+                    }
+                    
                     Pedido_itemDAO.create(username, password, pi);
                 }
                 JOptionPane.showMessageDialog(null, "Venda Realizada com Sucesso !");
-                if(MiscDAO.n_compras_acima_cap(username, password, Integer.parseInt(cliente_id.getText()))%10==0){
+                int ndc = MiscDAO.n_compras_acima_cap(username, password, Integer.parseInt(cliente_id.getText()));
+                System.out.println(ndc);
+                if(ndc%10==0 && ndc!=0){
                     JOptionPane.showMessageDialog(null,"Atenção, esse cliente recebeu um vale compras de 100 reais");
                     new Venda_vale_compra(username,password,Integer.parseInt(cliente_id.getText()));
                 }

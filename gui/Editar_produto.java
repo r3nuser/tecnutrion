@@ -373,8 +373,11 @@ public class Editar_produto extends JFrame {
         cod_barras.setText(p.getCod_barra());
 
         SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
-
+        try{
         validade.setText(formatdata.format(e.getValidade()) + "");
+        }catch(Exception e){
+            validade.setText("");
+        }
         fornecedor.setText(f.getNome());
         categoria.setSelectedItem(p.getCategoria());
         unidade_medida.setSelectedItem(p.getUnidade_medida_peso());

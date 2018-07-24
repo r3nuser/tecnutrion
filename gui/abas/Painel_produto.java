@@ -262,9 +262,11 @@ public class Painel_produto extends JPanel {
         });
         editar_dados.addActionListener((ActionEvent) -> {
             try {
+                System.out.println((int) this.tabela.getValueAt(tabela.getSelectedRow(), 1) + " << ID");
                 new Editar_produto(this.username, this.password, (int) this.tabela.getValueAt(tabela.getSelectedRow(), 1));
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erro ao editar: Por favor, escolha um produto na tabela e tente novamente");
+                System.out.println(e);
                 atualizar_tabela((byte) 0);
             }
         });

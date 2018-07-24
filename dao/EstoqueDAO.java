@@ -9,6 +9,7 @@ package dao;
 
 import bean.Estoque;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.text.DateFormat;
@@ -61,9 +62,14 @@ public class EstoqueDAO extends Sql {
                 Estoque e = new Estoque();
                 e.setEstoque_cod(rs.getInt("estoque_cod"));
                 DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-                String data = fmt.format(rs.getDate("validade"));
-                java.sql.Date dt = new java.sql.Date(fmt.parse(data).getTime());
-                e.setValidade(dt);
+                try {
+                    String data = fmt.format(rs.getDate("validade"));
+                    java.sql.Date dt = new java.sql.Date(fmt.parse(data).getTime());
+                    e.setValidade(dt);
+                } catch (Exception ex) {
+                    e.setValidade(null);
+                }
+
                 e.setQnt_estoque(rs.getInt("qnt_estoque"));
                 dados_estoque.add(e);
             }

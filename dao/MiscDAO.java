@@ -35,13 +35,13 @@ public class MiscDAO extends Sql {
         ResultSet rs = null;
         try {
             con = getConnection(username,password);
-            stmt = con.prepareStatement("select count(cod_pedido) from"
-                    + " pedido, clientes, pedido_item where"
-                    + " ?=fk_cod_cliente and fk_cod_pedido=cod_pedido and pedido_vl_tot >= 150");
+            stmt = con.prepareStatement("select count(distinct fk_cod_pedido) "
+                    + "from pedido,clientes,pedido_item where fk_cod_cliente=? and fk_cod_cliente=cliente_cod "
+                    + "and fk_cod_pedido = cod_pedido and pedido_vl_tot >= 150;");
             stmt.setInt(1, id);
             rs = stmt.executeQuery();
             if(rs.next()){
-                ndc = rs.getInt("count(cod_pedido)");
+                ndc = rs.getInt("count(distinct fk_cod_pedido)");
             }
         } catch (Exception e) {
             System.out.println(e);
@@ -1075,11 +1075,16 @@ public class MiscDAO extends Sql {
 
             while (rs.next()) {
                 e.setEstoque_cod(rs.getInt("estoque_cod"));
-                e.setQnt_estoque(rs.getInt("qnt_estoque"));
                 DateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
-                String data = fmt.format(rs.getDate("validade"));
-                java.sql.Date dt = new java.sql.Date(fmt.parse(data).getTime());
-                e.setValidade(dt);
+                try {
+                    String data = fmt.format(rs.getDate("validade"));
+                    java.sql.Date dt = new java.sql.Date(fmt.parse(data).getTime());
+                    e.setValidade(dt);
+                } catch (Exception ex) {
+                    e.setValidade(null);
+                }
+
+                e.setQnt_estoque(rs.getInt("qnt_estoque"));
             }
 
         } catch (Exception ex) {

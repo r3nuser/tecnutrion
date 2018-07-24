@@ -14,9 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.sql.Connection;
+import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import services.BackupFactory;
+import services.PdfReport;
 import sql.Sql;
 import static sql.Sql.closeConnection;
 
@@ -135,6 +137,14 @@ public class Login extends JFrame {
                 BackupFactory bk = new BackupFactory("visualnutrion", "root", "root");
                 new Menu(Username, Password);
                 bk.makeBackup();
+
+                GregorianCalendar calendar = new GregorianCalendar();
+                if (calendar.get(GregorianCalendar.DAY_OF_MONTH) == 3
+                        || calendar.get(GregorianCalendar.DAY_OF_MONTH) == 15) {
+                    new PdfReport("root","root").ReportPDF(0);
+                    new PdfReport("root","root").ReportPDF(1);
+                }
+                 
             } else {
                 JOptionPane.showMessageDialog(null, "Senha ou Usuário inválidos");
             }

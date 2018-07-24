@@ -160,7 +160,7 @@ public class Painel_estoque extends JPanel {
         produto_cod = new JTextField();
         validade = new JTextField();
         quantidade = new JTextField();
-        
+
         estoque_cod.setEditable(false);
         produto_nome.setEditable(false);
         produto_cod.setEditable(false);
@@ -175,8 +175,7 @@ public class Painel_estoque extends JPanel {
         produto_nome.setPreferredSize(new Dimension(420, 18));
         validade.setPreferredSize(new Dimension(120, 18));
         quantidade.setPreferredSize(new Dimension(170, 18));
-        
-        
+
         painel_de_dados.add(produto_foto_l);
         painel_de_dados.add(produto_foto);
         painel_de_dados.add(produto_cod_l);
@@ -197,23 +196,30 @@ public class Painel_estoque extends JPanel {
 
     private void atualizar_tabela() {
         modelo_tabela.setNumRows(0);
+        String validade;
         ArrayList<Estoque> dados_estoque;
         dados_estoque = EstoqueDAO.read(username, password);
-                SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         for (int i = 0; i < dados_estoque.size(); i++) {
             Estoque e = dados_estoque.get(i);
             Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, e.getEstoque_cod());
+            try {
+                validade = formatdata.format(e.getValidade());
+            } catch (Exception ex) {
+                validade = "S/V";
+                System.out.println(ex);
+
+            }
             modelo_tabela.addRow(new Object[]{
                 e.getEstoque_cod(),
                 p.getProduto_nome(),
                 e.getQnt_estoque(),
-                formatdata.format(e.getValidade())
-            });
+                validade});
         }
     }
 
     private void atualizar_caixas_de_texto() {
-                SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatdata = new SimpleDateFormat("dd/MM/yyyy");
         Produto p = MiscDAO.get_produto_por_fk_cod_estoque(username, password, (int) tabela.getValueAt(tabela.getSelectedRow(), 0));
         Estoque e = MiscDAO.search_estoque_por_id(username, password, p.getFk_estoque_cod());
         produto_foto.setIcon(p.getProduto_foto_para_tabela());
